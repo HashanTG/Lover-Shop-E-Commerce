@@ -72,8 +72,8 @@ Use Docker Compose to build and start all services in detached mode:
 docker-compose up --build -d
 ```
 
-The frontend service will be accessible at: http://localhost:5173
-The backend service will be accessible at: http://localhost:8080
+- The frontend service will be accessible at: http://localhost:5173
+- The backend service will be accessible at: http://localhost:8080
 
 ---
 
