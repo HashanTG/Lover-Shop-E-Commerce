@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+#Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/frontend.Dockerfile
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    
+    command: ["npm", "run", "dev"]
+
+#Backend service
+  backend:
+    build:
+      context: ./backend  
+      dockerfile: ../docker/backend.Dockerfile  
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8080:8080"
+    env:
+      .env
+    environment:
+    - SPRING_DATA_MONGODB_URI=${SPRING_DATA_MONGODB_URI}
+    - SPRING_DATA_MONGODB_DATABASE=${SPRING_DATA_MONGODB_DATABASE}
+   
+volumes:
+  mongo_data:
