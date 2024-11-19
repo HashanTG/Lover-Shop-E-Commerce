@@ -20,7 +20,8 @@ services:
       context: ./backend  
       dockerfile: ../docker/backend.Dockerfile  
     volumes:
-      - ./backend:/app
+      - ./backend/src:/app/src  # Mount source code directory for live reload
+      - ./backend/target:/app/target  # Optionally mount target directory to avoid full rebuild
     ports:
       - "8080:8080"
     env_file:
