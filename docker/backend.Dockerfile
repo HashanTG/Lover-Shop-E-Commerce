@@ -17,6 +17,7 @@ COPY src /app/src
 EXPOSE 8080
 
 #Run the Application
+<<<<<<< HEAD
 CMD ["mvn", "spring-boot:run"]FROM openjdk:17-jdk-slim
 
 # Install Maven
@@ -36,4 +37,6 @@ COPY src /app/src
 EXPOSE 8080
 
 #Run the Application
+=======
+>>>>>>> 02beba863486090680b0a3ce308012f6289c82ef
 CMD ["mvn", "spring-boot:run"]
