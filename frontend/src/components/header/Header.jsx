@@ -8,8 +8,9 @@ const Header = () => {
   return (
     <header className="header">
       <div className="logo">
-        <img src="your-logo.png" alt="Rosa Lover" />
         <span>ROSA LOVER</span>
+        <img src="https://via.placeholder.com/150" alt="Rosa Lover" />
+
       </div>
       <nav className="nav">
         <ul>
