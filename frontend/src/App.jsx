@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
+import './App.css';
 import Layout from './Layout';
 import { CartProvider } from './context/CartContext'
 import Home from './pages/Home/Home'; // Home page
