@@ -45,7 +45,8 @@ public class GiftController {
     @PutMapping("/{id}")
     public ResponseEntity<Gift> updateGift(@PathVariable String id, @RequestBody Gift gift) {
         Gift updatedGift = giftService.updateGift(id, gift);
-        return updatedGift != null ? ResponseEntity.ok(updatedGift) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return updatedGift != null ? ResponseEntity.ok(updatedGift)
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     // Delete a gift by ID
