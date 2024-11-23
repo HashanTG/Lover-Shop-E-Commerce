@@ -21,28 +21,31 @@ const ShopCollection = () => {
 
         {/* Right side: Two smaller items */}
         <div className="collection-item small">
-          <div>
-            <img
-              src="https://via.placeholder.com/200x200"
-              alt="Personalized T-Shirt"
-              className="collection-image"
-            />
+          {/* Small Content Wrapper */}
+          
+          <div className="small-container">
             <div className="collection-text">
-              <h3>Personalized T-Shirt</h3>
+              <h3>Teddy</h3>
               <a href="#tshirt">Collection →</a>
             </div>
-          </div>
-          <div className="collection-item small">
             <img
               src="https://via.placeholder.com/200x200"
               alt="Teddy"
               className="collection-image"
             />
+          </div>
+          <div className="small-container">
             <div className="collection-text">
               <h3>Teddy</h3>
-              <a href="#teddy">Collection →</a>
+              <a href="#tshirt">Collection →</a>
             </div>
+            <img
+              src="https://via.placeholder.com/200x200"
+              alt="Teddy"
+              className="collection-image"
+            />
           </div>
+
         </div>
       </div>
     </div>

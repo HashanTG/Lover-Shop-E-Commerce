@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./header.css";
+import CartIndicatorCard from '../../components/shared/CartIndicator/CartIndicatorCard'
 
 const Header = () => {
   const [shopDropdown, setShopDropdown] = useState(false);
@@ -20,7 +21,7 @@ const Header = () => {
             onMouseEnter={() => setShopDropdown(true)}
             onMouseLeave={() => setShopDropdown(false)}
           >
-            <a href="#shop">Shop</a>
+            <a href="#shop">Shop <span>&#9662;</span></a>
             {shopDropdown && (
               <ul className="dropdown-menu">
                 <li><a href="#shop-category1">Category 1</a></li>
@@ -34,7 +35,7 @@ const Header = () => {
             onMouseEnter={() => setProductDropdown(true)}
             onMouseLeave={() => setProductDropdown(false)}
           >
-            <a href="#product">Product</a>
+            <a href="#product">Product <span>&#9662;</span></a>
             {productDropdown && (
               <ul className="dropdown-menu">
                 <li><a href="#product-1">Product 1</a></li>
@@ -49,9 +50,7 @@ const Header = () => {
       <div className="icons">
         <a href="#search" className="icon">🔍</a>
         <a href="#account" className="icon">👤</a>
-        <a href="#cart" className="icon">
-          🛒<span className="cart-count">2</span>
-        </a>
+        <CartIndicatorCard />
       </div>
     </header>
   );
