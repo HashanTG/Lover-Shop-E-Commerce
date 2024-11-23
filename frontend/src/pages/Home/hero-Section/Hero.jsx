@@ -1,5 +1,5 @@
 import React from "react";
-import "./Hero.css";
+import "./hero.css";
 import Button from "../../../components/shared/button/Button";
 const Hero = () => {
   return (
@@ -13,10 +13,10 @@ const Hero = () => {
         </div>
         <div className="hero-text">
           <h1>
-            Feel the <span className="highlight">Rythom</span> of Love
+            Feel the <br/><span className="highlight">Rythom</span> of<br/> Love 
           </h1>
           <p>Unleash the Power of Music Together</p>
-          <Button label="Shopping Now" onClick={() => alert("Button Clicked")} />
+          <Button label="Shopping Now" onClick={() => alert("Button Clicked")} class="hero-btn" />
         </div>
       </div>
       <div className="hero-bg"></div>
