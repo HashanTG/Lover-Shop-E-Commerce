@@ -37,28 +37,32 @@
 }
 
 .footer_links div{
-    margin-right: 60px;
+    margin-right: 100px;
 
 }
 
 .footer_links h3{
     font-size: 16px;
     margin-bottom: 10px;
+    font-weight: 500;
 }
 
 .footer_links ul{
     list-style: none;
     padding: 0;
+    margin-top: 40px;
 }
 
 .footer_links li{
-    margin-bottom: 24px;
+    margin-bottom: 20px;
+    font-size: 14px;
 }
 
 .footer_links a{
     color: #FFFFFF;
     text-decoration: none;
     transition: color 0.3s;
+    font-size: 14px;
 
 }
 
