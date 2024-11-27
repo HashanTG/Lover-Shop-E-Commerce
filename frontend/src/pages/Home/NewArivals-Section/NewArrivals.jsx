@@ -88,7 +88,7 @@ const products = [
     price: 575,
     image: "/images/image3.png",
     isNew: true,
-    rating: 5,
+    rating: 3,
   },
   {
     id: 12,
@@ -96,7 +96,7 @@ const products = [
     price: 20,
     image: "/images/image.png",
     isNew: true,
-    rating: 5,
+    rating: 4,
   },
 ];
 
