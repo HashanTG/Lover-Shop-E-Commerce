@@ -2,8 +2,7 @@ import React, { useContext } from 'react';
 import { CartContext } from '../../../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import './CartCard.css' 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import shopping from '../../../assets/Header/shopping-bag.svg';
 
 
 const CartIndicatorCard = () => {
@@ -26,7 +25,7 @@ const CartIndicatorCard = () => {
     <div className="cart-indicator" onClick={handleClick}>
       <div className="cart-icon">
         {/* Here you can add your cart icon */}
-        <FontAwesomeIcon icon={faShoppingCart} />
+        <img src={shopping} alt="Shopping Cart" />
       </div>
       <span className="cart-count">{cartItemCount || 0}</span>
     </div>
