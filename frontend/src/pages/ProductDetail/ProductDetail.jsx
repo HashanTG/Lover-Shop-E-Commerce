@@ -1,9 +1,50 @@
 import React, { useState } from "react";
-import "./ProductDetailComponent.css"; // Add custom styles for this component
-import product from "../../assets/ProductDetail/productDetail.png"
+import "./ProductDetailComponent.css";
+
+import ProductImageSection from "./productImageSection/ProductImageSection";
+
+import product1 from "../../assets/ProductDetail/product1.jpg";
+import product2 from "../../assets/ProductDetail/product2.png";
 
 const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
+
+  // Hardcoded product data
+  const product = {
+    _id: "productId",
+    name: "Gift Box",
+    category: "Gifts",
+    price: 25.99,
+    previousPrice: 1000,
+    stock: 100,
+    description: "A perfect gift for loved ones.",
+    images: [product1, product2],
+    createdAt: "2024-11-19T12:00:00Z",
+    variations: [
+      {
+        type: "Color",
+        options: [
+          { value: "Red", stock: 20 },
+          { value: "Blue", stock: 30 },
+        ],
+      },
+      {
+        type: "Size",
+        options: [
+          { value: "Small", stock: 50 },
+          { value: "Large", stock: 50 },
+        ],
+      },
+    ],
+  };
+
+  // State to track selected variation options
+  const [selectedVariations, setSelectedVariations] = useState(
+    product.variations.reduce((acc, variation) => {
+      acc[variation.type] = variation.options[0].value; // Default to the first option
+      return acc;
+    }, {})
+  );
 
   // Handle quantity increment and decrement
   const handleQuantityChange = (type) => {
@@ -11,45 +52,50 @@ const ProductDetail = () => {
     if (type === "decrement" && quantity > 1) setQuantity(quantity - 1);
   };
 
+  // Handle variation change
+  const handleVariationChange = (type, value) => {
+    setSelectedVariations((prev) => ({
+      ...prev,
+      [type]: value,
+    }));
+  };
+
   return (
     <div className="product-detail-container">
-      <div className="product-image-section">
-        <div className="badge-container">
-          <span className="badge-new">NEW</span>
-          <span className="badge-sale">-50%</span>
-        </div>
-        <img
-          className="product-image"
-          src={product} 
-          alt="Teddy Bear"
-        />
-        <div className="image-navigation">
-          <button className="nav-button">{"<"}</button>
-          <button className="nav-button">{">"}</button>
-        </div>
-      </div>
+      {/* Image Section */}
 
+      <ProductImageSection product={product} />
+
+      {/* Product Info Section */}
       <div className="product-info-section">
-        <h1 className="product-title">Teddy Bear</h1>
-        <p className="product-description">
-          Buy one or buy a few and make every space where you sit more convenient. Light and easy to move around with a removable tray top, handy for serving snacks.
-        </p>
+        <h1 className="product-title">{product.name}</h1>
+        <p className="product-description">{product.description}</p>
 
         <div className="price-section">
-          <span className="current-price">Rs5500</span>
-          <span className="original-price">Rs11000</span>
+          <span className="current-price">Rs {product.price}</span>
+          <span className="original-price">Rs {product.previousPrice}</span>
         </div>
-
-        <div className="measurements">
-          <h3>Measurements</h3>
-          <p>17 1/2 × 20 5/8 "</p>
-        </div>
-
-        <div className="color-section">
-          <h3>Choose Color</h3>
-          <p>Black</p>
-        </div>
-
+    <hr />
+        {/* Variations */}
+        {product.variations.map((variation) => (
+          <div key={variation.type} className="variation-section">
+            <h3>Choose {variation.type}</h3>
+            <select
+              className="variation-dropdown"
+              value={selectedVariations[variation.type]}
+              onChange={(e) => handleVariationChange(variation.type, e.target.value)}
+            >
+              {variation.options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.value} ({option.stock} in stock)
+                </option>
+              ))}
+            </select>
+          </div>
+        ))}
+  <hr />
+        {/* Quantity Selector */}
+        <div className="quantity-wrapper">
         <div className="quantity-section">
           <button
             className="quantity-button"
@@ -65,18 +111,22 @@ const ProductDetail = () => {
             +
           </button>
         </div>
+        <button className="wishlist-button">♡ Wishlist</button></div>
 
+
+        {/* Action Buttons */}
         <div className="action-buttons">
-          <button className="wishlist-button">♡ Wishlist</button>
+          
           <button className="add-to-cart-button">Add to Cart</button>
         </div>
 
+        {/* Product Metadata */}
         <div className="product-meta">
           <p>
-            <strong>SKU:</strong> 1117
+            <strong>Category:</strong> {product.category}
           </p>
           <p>
-            <strong>Category:</strong> Birthday, Teddy
+            <strong>SKU:</strong> {product._id}
           </p>
         </div>
       </div>
