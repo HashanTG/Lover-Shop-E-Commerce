@@ -5,6 +5,7 @@ import './App.css';
 import Layout from './Layout';
 import { CartProvider } from './context/CartContext'
 import Home from './pages/Home/Home'; // Home page
+import ProductDetail from './pages/ProductDetail/ProductDetail';
 
 
 const App = () => {
@@ -28,6 +29,7 @@ const App = () => {
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/product" element={<ProductDetail />} />
            
           </Routes>
         </Layout>
