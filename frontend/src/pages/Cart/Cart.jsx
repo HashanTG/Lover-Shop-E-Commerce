@@ -192,6 +192,7 @@ const Cart = () => {
                   name="shipping"
                   checked={shipping === 0}
                   onChange={() => handleShippingChange(0)}
+                  className="shipping-radio"
                 />
                 <span>Free shipping</span>
               </span>
@@ -205,8 +206,9 @@ const Cart = () => {
                   name="shipping"
                   checked={shipping === 245}
                   onChange={() => handleShippingChange(245)}
+                  className="shipping-radio"
                 />
-                <span>Express shipping</span>
+                <span >Express shipping</span>
               </span>
 
               <span className="price">+Rs.245.00</span>
@@ -218,6 +220,7 @@ const Cart = () => {
                   name="shipping"
                   checked={shipping === 21}
                   onChange={() => handleShippingChange(21)}
+                  className="shipping-radio"
                 />
                 <span>Pick Up</span>
               </span>
