@@ -2,6 +2,8 @@
 import React from "react";
 import "./contact.css";
 
+import Button from "../../../components/shared/button/Button"
+
 const contact = () => {
   return (
     <div className="contact_us">
@@ -32,7 +34,7 @@ const contact = () => {
             <input type="email" placeholder='Your Email' className='form_input' />
             <label htmlFor="messsage">MESSAGE</label>
             <textarea placeholder='Your Message' className='form_input'/>
-            <button type="submit" className="form_submit_button">Send Message</button>
+            <Button label={"Contact Now"} onClick={() =>alert("Send Form")}/>
 
         </form>
         <div className="map_container">

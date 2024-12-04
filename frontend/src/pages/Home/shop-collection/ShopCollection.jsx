@@ -1,5 +1,8 @@
 import React from "react";
 import "./ShopCollection.css";
+import mug from "../../../assets/Home/Shop-Collection/mug.png"
+import teddy from "../../../assets/Home/Shop-Collection/teddy.png"
+import tshirt from "../../../assets/Home/Shop-Collection/tshirt.png"
 
 const ShopCollection = () => {
   return (
@@ -9,7 +12,7 @@ const ShopCollection = () => {
         {/* Left side: Large item */}
         <div className="collection-item large">
           <img
-            src="https://via.placeholder.com/400x400"
+            src={mug}
             alt="Customized Mug"
             className="collection-image"
           />
@@ -28,22 +31,14 @@ const ShopCollection = () => {
               <h3>Teddy</h3>
               <a href="#tshirt">Collection →</a>
             </div>
-            <img
-              src="https://via.placeholder.com/200x200"
-              alt="Teddy"
-              className="collection-image"
-            />
+            
           </div>
           <div className="small-container">
             <div className="collection-text">
               <h3>Teddy</h3>
-              <a href="#tshirt">Collection →</a>
+              <a href="#teddy">Collection →</a>
             </div>
-            <img
-              src="https://via.placeholder.com/200x200"
-              alt="Teddy"
-              className="collection-image"
-            />
+            
           </div>
 
         </div>
