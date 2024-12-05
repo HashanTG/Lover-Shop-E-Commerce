@@ -97,14 +97,22 @@
 }
 
 .variation-dropdown {
-  padding: 10px;
-  
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #fff;
-  cursor: pointer;
-  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+    padding: 10px;
+    background-color: #fff;
+    border:none;
+    font-size: 16px;
+    cursor: pointer;
+    width: 50%;
+
 }
+
+
+
+/* Optional: Style options */
+.variation-dropdown option {
+  border: none;
+}
+
 
 .quantity-section {
   display: flex;

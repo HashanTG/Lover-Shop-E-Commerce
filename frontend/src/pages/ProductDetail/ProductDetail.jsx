@@ -93,7 +93,7 @@ const ProductDetail = () => {
             </select>
           </div>
         ))}
-  <hr />
+  
         {/* Quantity Selector */}
         <div className="quantity-wrapper">
         <div className="quantity-section">
@@ -119,7 +119,7 @@ const ProductDetail = () => {
           
           <button className="add-to-cart-button">Add to Cart</button>
         </div>
-
+       <hr />
         {/* Product Metadata */}
         <div className="product-meta">
           <p>
