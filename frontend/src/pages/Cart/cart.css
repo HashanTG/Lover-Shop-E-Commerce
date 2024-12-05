@@ -2,7 +2,6 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  font-family: Arial, sans-serif;
   margin-top: 100px;
   display: flex;
   flex-direction: column;
@@ -178,6 +177,7 @@
   font-size: 14px;
   font-weight: normal;
   color: #333;
+  cursor: pointer;
 }
 
 .shipping-options input[type="radio"] {

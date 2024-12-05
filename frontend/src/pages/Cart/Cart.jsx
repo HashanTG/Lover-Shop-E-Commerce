@@ -147,6 +147,7 @@ const Cart = () => {
                       className="remove-btn"
                       onClick={() => handleRemoveItem(item.productId)}
                     >
+                      
                       Remove
                     </button>
                   </div>
@@ -232,6 +233,7 @@ const Cart = () => {
               <span>Subtotal:</span>
               <span>Rs.{subtotal.toFixed(2)}</span>
             </div>
+            <hr />
             <div className="total">
               <span>Total:</span>
               <span>Rs.{total.toFixed(2)}</span>
