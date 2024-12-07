@@ -1,0 +1,95 @@
+.footer {
+    background-color: #E1AFD1;
+    padding: 80px 160px 32px 160px;
+    color: #FEFEFE ;
+    font-family: Poppins;
+
+}
+
+.footer_content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 32px;
+}
+
+.brand{
+    max-width: 250px;
+}
+
+.brand h2{
+    font-size: 24px;
+
+}
+
+.brand p {
+    margin: 10px 0;
+    font-size: 20px;
+}
+
+.social_icons a {
+    color: #FEFEFE;
+}
+
+.footer_links {
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer_links div{
+    margin-right: 100px;
+
+}
+
+.footer_links h3{
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.footer_links ul{
+    list-style: none;
+    padding: 0;
+    margin-top: 40px;
+}
+
+.footer_links li{
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.footer_links a{
+    color: #FFFFFF;
+    text-decoration: none;
+    transition: color 0.3s;
+    font-size: 14px;
+
+}
+
+.footer_links a:hover{
+    color: rgb(230, 238, 180) ;
+}
+
+.footer_bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    border-top:  1px solid #FFFFFF;
+    padding-top:  20px;
+}
+
+.footer_bottom p{
+    font-size: 12px;
+}
+
+.footer_bottom p a{
+    text-decoration: none;
+    color: #6C7275;
+}
+
+.payment_methods img{
+    width: 40px;
+    margin-right: 10px;
+}
+
