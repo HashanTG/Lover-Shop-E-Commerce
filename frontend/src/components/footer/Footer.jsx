@@ -1,3 +1,7 @@
+import React from 'react';
+import './Footer.css';
+import React from 'react';
+import './Footer.css';
 import React from "react";
 import "./Footer.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
