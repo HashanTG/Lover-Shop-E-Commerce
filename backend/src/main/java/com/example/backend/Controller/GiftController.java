@@ -2,7 +2,6 @@ package com.example.backend.Controller;
 
 import com.example.backend.Model.Gift;
 import com.example.backend.Service.GiftService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,6 @@ public class GiftController {
 
     private final GiftService giftService;
 
-    @Autowired
     public GiftController(GiftService giftService) {
         this.giftService = giftService;
     }
@@ -45,7 +43,8 @@ public class GiftController {
     @PutMapping("/{id}")
     public ResponseEntity<Gift> updateGift(@PathVariable String id, @RequestBody Gift gift) {
         Gift updatedGift = giftService.updateGift(id, gift);
-        return updatedGift != null ? ResponseEntity.ok(updatedGift) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return updatedGift != null ? ResponseEntity.ok(updatedGift)
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     // Delete a gift by ID

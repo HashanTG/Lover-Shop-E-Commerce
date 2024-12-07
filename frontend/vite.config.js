@@ -10,5 +10,5 @@ export default defineConfig({
     },
     host: true,         // Allows access from the host machine
     port: 5173,         // Ensure Vite is using the correct port
-  },
+  }
 })
