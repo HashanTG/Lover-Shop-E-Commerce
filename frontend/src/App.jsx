@@ -7,6 +7,8 @@ import { CartProvider } from './context/CartContext'
 import Home from './pages/Home/Home'; // Home page
 
 
+
+
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -28,6 +30,7 @@ const App = () => {
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
+
            
           </Routes>
         </Layout>
