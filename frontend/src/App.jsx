@@ -6,6 +6,7 @@ import Layout from './Layout';
 import { CartProvider } from './context/CartContext'
 import Home from './pages/Home/Home'; // Home page
 import ProductDetail from './pages/ProductDetail/ProductDetail';
+import Cart from './pages/Cart/Cart';
 
 
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/product" element={<ProductDetail />} />
+            <Route path="/cart" element={<Cart />} />
            
           </Routes>
         </Layout>
