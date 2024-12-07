@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./header.css";
 import CartIndicatorCard from '../../components/shared/CartIndicator/CartIndicatorCard'
+import searchIcon from "../../assets/Header/search.svg";
+import userCircle from "../../assets/Header/user-circle.svg";
 
 const Header = () => {
   const [shopDropdown, setShopDropdown] = useState(false);
@@ -48,8 +50,8 @@ const Header = () => {
         </ul>
       </nav>
       <div className="icons">
-        <a href="#search" className="icon">🔍</a>
-        <a href="#account" className="icon">👤</a>
+        <a href="#search" className="icon"><img src={searchIcon} alt="Search" /></a>
+        <a href="#account" className="icon"> <img src={userCircle} alt="UserCircle" /></a>
         <CartIndicatorCard />
       </div>
     </header>

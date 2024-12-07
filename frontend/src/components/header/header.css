@@ -85,20 +85,7 @@
     position: relative;
   }
   
-  .cart-count {
-    position: absolute;
-    top: -5px;
-    right: -10px;
-    background-color: #000;
-    color: #fff;
-    font-size: 0.8em;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+ 
   
   /* Responsive Design */
   @media (max-width: 768px) {

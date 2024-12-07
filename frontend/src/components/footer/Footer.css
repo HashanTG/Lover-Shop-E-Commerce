@@ -28,7 +28,12 @@
 }
 
 .social_icons a {
-    color: #FEFEFE;
+   
+}
+
+.socialFontawesome{
+    color: white;
+    padding: 10px;
 }
 
 .footer_links {
@@ -88,6 +93,11 @@
     color: #6C7275;
 }
 
+.payment_methods{
+    display: flex;
+    align-items: center;
+
+}
 .payment_methods img{
     width: 40px;
     margin-right: 10px;

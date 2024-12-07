@@ -4,6 +4,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  
 }
 
 .shop-collection h2 {
@@ -48,6 +49,21 @@
   background-color: #a7a7a769;
   height: 100%; 
   gap: 20px;
+  min-width: 250px;
+}
+
+.small-container:nth-child(1){
+  background-image: url(../../../assets/Home/Shop-Collection/tshirt.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.small-container:nth-child(2){
+  background-image: url(../../../assets/Home/Shop-Collection/teddy.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .collection-item img {
