@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "./header.css";
+import CartIndicatorCard from '../../components/shared/CartIndicator/CartIndicatorCard'
+import searchIcon from "../../assets/Header/search.svg";
+import userCircle from "../../assets/Header/user-circle.svg";
 
 const Header = () => {
   const [shopDropdown, setShopDropdown] = useState(false);
@@ -20,7 +23,7 @@ const Header = () => {
             onMouseEnter={() => setShopDropdown(true)}
             onMouseLeave={() => setShopDropdown(false)}
           >
-            <a href="#shop">Shop</a>
+            <a href="#shop">Shop <span>&#9662;</span></a>
             {shopDropdown && (
               <ul className="dropdown-menu">
                 <li><a href="#shop-category1">Category 1</a></li>
@@ -34,7 +37,7 @@ const Header = () => {
             onMouseEnter={() => setProductDropdown(true)}
             onMouseLeave={() => setProductDropdown(false)}
           >
-            <a href="#product">Product</a>
+            <a href="#product">Product <span>&#9662;</span></a>
             {productDropdown && (
               <ul className="dropdown-menu">
                 <li><a href="#product-1">Product 1</a></li>
@@ -47,11 +50,9 @@ const Header = () => {
         </ul>
       </nav>
       <div className="icons">
-        <a href="#search" className="icon">🔍</a>
-        <a href="#account" className="icon">👤</a>
-        <a href="#cart" className="icon">
-          🛒<span className="cart-count">2</span>
-        </a>
+        <a href="#search" className="icon"><img src={searchIcon} alt="Search" /></a>
+        <a href="#account" className="icon"> <img src={userCircle} alt="UserCircle" /></a>
+        <CartIndicatorCard />
       </div>
     </header>
   );

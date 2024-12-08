@@ -1,14 +1,24 @@
 import React from 'react'
 import Hero from './hero-Section/Hero'
 import ShopCollection from './shop-collection/ShopCollection'
-import CartIndicatorCard from '../../components/shared/CartIndicator/CartIndicatorCard'
+import Contact from './contact-Section/contact';
+import Information from './Info-Section/info';
+import NewArrivals from './NewArivals-Section/NewArrivals';
+import './home.css'
+
+
 
 function Home() {
   return (
-    <div>
+    <div className='home'>
         <Hero />
+        <NewArrivals />
         <ShopCollection />
-        <CartIndicatorCard />
+        <Information />
+        <Contact />
+        
+        
+        
     </div>
   )
 }

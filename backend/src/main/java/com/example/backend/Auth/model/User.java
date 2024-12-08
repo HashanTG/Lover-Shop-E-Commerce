@@ -1,23 +1,26 @@
-package com.example.backend.Model;
+package com.example.backend.Auth.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.Id; // Missing import
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "gifts") // MongoDB collection name
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Gift {
-
+@Document(collection = "users")
+public class User {
+    @Id
     private String id;
-    private String name;
-    private String description;
-    private double price;
-    private String imageUrl; // Optional, for an image link
+
+    private String email;
+
+    private String password;
+
+    private String role; // e.g., ROLE_USER, ROLE_ADMIN
 }
