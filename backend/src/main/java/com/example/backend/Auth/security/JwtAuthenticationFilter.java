@@ -1,6 +1,8 @@
 package com.example.backend.Auth.security;
 
-import io.jsonwebtoken.ExpiredJwtException;
+import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,33 +36,51 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String email = null;
         String jwtToken = null;
 
+        // Extract token if it exists in the header
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwtToken = authorizationHeader.substring(7);
             try {
+                // Extract username from token
                 email = jwtUtil.extractUsername(jwtToken);
-            } catch (ExpiredJwtException e) {
-                logger.warn("JWT token is expired: {}");
+                if (email != null && !jwtUtil.isTokenExpired(jwtToken)) {
+                    // Validate token signature using nimbus-jose-jwt
+                    if (validateToken(jwtToken)) {
+                        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                            // Authenticate user
+                            Optional<User> userOptional = userService.findByEmail(email);
+                            if (userOptional.isPresent()) {
+                                User user = userOptional.get();
+
+                                // Set security context
+                                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                                        user, null, null // Fetch roles or authorities if needed
+                                );
+                                SecurityContextHolder.getContext().setAuthentication(authToken);
+                            }
+                        }
+                    }
+                }
             } catch (Exception e) {
                 logger.warn("Invalid JWT token: {}");
             }
         }
 
-
-    // Validate the email and set security context
-    if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-        // Fetch user details without requiring password authentication
-        Optional<User> userOptional = userService.findByEmail(email); // Create this method in UserService
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    user, null,null// Fetch authorities if needed
-            );
-
-            SecurityContextHolder.getContext().setAuthentication(authToken);
-        }
+        chain.doFilter(request, response);
     }
 
-        chain.doFilter(request, response);
+    /**
+     * Validate token using Nimbus signature logic.
+     */
+    private boolean validateToken(String jwtToken) {
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(jwtToken);
+
+            // Use MACVerifier for signature validation with the secret key
+            JWSVerifier verifier = new MACVerifier(jwtUtil.getSecretKeyBytes());
+            return signedJWT.verify(verifier);
+        } catch (Exception e) {
+            logger.warn("Error validating token", e);
+        }
+        return false;
     }
 }

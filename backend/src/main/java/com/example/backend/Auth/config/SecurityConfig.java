@@ -12,6 +12,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @Configuration
 public class SecurityConfig {
 
@@ -27,33 +29,37 @@ public class SecurityConfig {
             // Disable CSRF for stateless APIs
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/login", "/static/**", "/oauth2/**").permitAll() // Public endpoints
-                .anyRequest().authenticated()
+                // Publicly accessible endpoints
+                .requestMatchers("/api/auth/**", "/oauth2/**").permitAll()
+                // Routes requiring authentication
+                .requestMatchers("/api/**").authenticated()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
             )
-            // Form login configuration
+            // Handle JWT filter logic
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            // Handle form login configuration
             .formLogin(form -> form
-                .loginPage("/login") // Serve static login.html
-                .defaultSuccessUrl("/home", true) // Redirect to /home after login
+                .loginPage("/login")
+                .defaultSuccessUrl("/home", true)
                 .permitAll()
             )
-            // OAuth2 login configuration
             .oauth2Login(oauth2 -> oauth2
-                .loginPage("/login") // Shared login page
+                .loginPage("/login")
                 .successHandler((request, response, authentication) -> {
-                    // Extract user details from authentication
-                    OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
-                    String email = oauthUser.getAttribute("email");
+                    try {
+                        OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
+                        String email = oauthUser.getAttribute("email");
+                        String jwt = jwtUtil.generateToken(email, "USER");
 
-                    // Generate JWT
-                    String jwt = jwtUtil.generateToken(email, "USER");
-
-                    // Return JWT in response
-                    response.setContentType("application/json");
-                    response.getWriter().write("{\"token\": \"" + jwt + "\"}");
+                        response.setHeader("Authorization", "Bearer " + jwt);
+                        response.setContentType("application/json");
+                        response.getWriter().write("{\"token\": \"" + jwt + "\"}");
+                    } catch (Exception e) {
+                        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Token Generation Failed");
+                    }
                 })
-            )
-            // Add JWT filter
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            );
 
         return http.build();
     }

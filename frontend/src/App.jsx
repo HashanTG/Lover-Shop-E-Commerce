@@ -12,24 +12,17 @@ import AuthPage from './pages/AuthPage/AuthPage';
 import ProductDetail from './pages/ProductDetail/ProductDetail';
 import Cart from './pages/Cart/Cart';
 
+import { AuthProvider } from './context/AuthContext';
+
 
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Simulate login and logout functionality
-  const login = () => {
-    setIsAuthenticated(true);
-    localStorage.setItem('authToken', 'user-auth-token'); // Save auth token
-  };
-
-  const logout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem('authToken'); // Remove auth token
-  };
 
   return (
     <Router>
+      <AuthProvider>
       <CartProvider>
         {/* Wrap the entire app in Layout */}
         <Layout>
@@ -45,6 +38,7 @@ const App = () => {
           </Routes>
         </Layout>
       </CartProvider>
+      </AuthProvider>
     </Router>
   );
 };
