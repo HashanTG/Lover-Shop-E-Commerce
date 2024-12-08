@@ -5,7 +5,7 @@ import './App.css';
 import Layout from './Layout';
 import { CartProvider } from './context/CartContext'
 import Home from './pages/Home/Home'; // Home page
-
+import AuthPage from './pages/AuthPage/AuthPage';
 
 
 
@@ -30,7 +30,7 @@ const App = () => {
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
-
+            <Route path='auth' element={<AuthPage/>} />
            
           </Routes>
         </Layout>
