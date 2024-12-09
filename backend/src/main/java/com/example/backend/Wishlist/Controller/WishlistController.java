@@ -1,7 +1,7 @@
-package com.example.backend.Controller;
+package com.example.backend.Wishlist.Controller;
 
-import com.example.backend.Service.WishlistService;
-import com.example.backend.Model.WishlistItem;
+import com.example.backend.Wishlist.Service.WishlistService;
+import com.example.backend.Wishlist.Model.WishlistItem;
 
 import java.util.List;
 

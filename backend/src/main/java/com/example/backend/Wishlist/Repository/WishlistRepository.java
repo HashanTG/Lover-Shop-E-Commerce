@@ -1,6 +1,6 @@
-package com.example.backend.Repository;
+package com.example.backend.Wishlist.Repository;
 
-import com.example.backend.Model.WishlistItem;
+import com.example.backend.Wishlist.Model.WishlistItem;
 
 import java.util.List;
 
