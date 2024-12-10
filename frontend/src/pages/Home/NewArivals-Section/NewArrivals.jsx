@@ -97,6 +97,29 @@ const products = [
     image: "/images/image.png",
     isNew: true,
     rating: 4,
+  },{
+    id: 13,
+    name: "Fogg Body Spray",
+    price: 1500,
+    image: "/images/image2.png",
+    isNew: true,
+    rating: 5,
+  },
+  {
+    id: 14,
+    name: "Facial Trimmer",
+    price: 575,
+    image: "/images/image3.png",
+    isNew: true,
+    rating: 3,
+  },
+  {
+    id: 15,
+    name: "Bra Strap",
+    price: 20,
+    image: "/images/image.png",
+    isNew: true,
+    rating: 4,
   },
 ];
 
