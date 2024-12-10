@@ -62,17 +62,7 @@ const AuthPage = () => {
     window.location.href = 'http://localhost:8080/oauth2/authorization/google';
   };
 
-  // Listen for the token response
-  const checkToken = async () => {
-    try {
-      const tokenResponse = await axios.get('http://localhost:8080/login/oauth2/code/google');
-      if (tokenResponse?.data?.token) {
-        saveToken(tokenResponse.data.token);
-      }
-    } catch (error) {
-      console.error('Error during token fetch');
-    }
-  };
+
 
 
   return (

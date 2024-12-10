@@ -24,11 +24,12 @@ public class JwtUtil {
     /**
      * Generate JWT token with email and role
      */
-    public String generateToken(String email, String role) {
+    public String generateToken(String userId,String email, String role) {
         try {
             // Create JWT claims
             JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                     .subject(email)
+                    .claim("userId",userId)
                     .claim("role", role)
                     .issueTime(new Date())
                     .expirationTime(new Date(System.currentTimeMillis() + EXPIRATION_TIME))

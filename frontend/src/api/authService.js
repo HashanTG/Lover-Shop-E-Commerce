@@ -14,6 +14,7 @@ export const registerUser = async (data) => {
 export const loginUser = async (data) => {
   try {
     const response = await axios.post(`${BASE_URL}/login`, data);
+    console.log(response);
     return response.data;
   } catch (error) {
     throw error.response?.data || { message: "Invalid credentials." };

@@ -2,7 +2,9 @@ package com.example.backend.Auth.Controller;
 
 import com.example.backend.Auth.model.User;
 import com.example.backend.Auth.service.UserService;
-import com.example.backend.Auth.security.JwtUtil; // Add this import
+import com.example.backend.Auth.security.JwtUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,14 +13,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class AuthController {
 
     @Autowired
     private UserService userService;
 
     @Autowired
-    private JwtUtil jwtUtil; // Inject JwtUtil for token generation
+    private JwtUtil jwtUtil;
 
     @GetMapping("/hello")
     public String hello() {
@@ -26,29 +28,32 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) {
+    public ResponseEntity<String> login(@RequestBody User user, HttpServletResponse response) {
         String email = user.getEmail();
         String password = user.getPassword();
 
-        System.out.println("Login request received for email: " + email);
-
         if (email == null || password == null) {
-            System.out.println("Email or password is missing");
             return ResponseEntity.badRequest().body("Email and password are required.");
         }
 
         Optional<User> authenticatedUser = userService.authenticateUser(email, password);
+        String userId = authenticatedUser.get().getId();
+        System.out.println(userId);
         if (authenticatedUser.isPresent()) {
-            System.out.println("User authenticated successfully");
-            
             String role = authenticatedUser.get().getRole();
-            // Generate a JWT token after successful authentication
-            String jwtToken = jwtUtil.generateToken(email, role);
+            String jwtToken = jwtUtil.generateToken(userId,email, role);
 
-            return ResponseEntity.ok(jwtToken); // Return the token as the response
+            // Create and set the cookie with the JWT
+            Cookie jwtCookie = new Cookie("jwt", jwtToken);
+            jwtCookie.setHttpOnly(true); // Prevent JavaScript access to the cookie
+            jwtCookie.setSecure(true); // Only send over HTTPS in production
+            jwtCookie.setPath("/"); // Make cookie available to all endpoints
+            jwtCookie.setMaxAge(3600); // Expiration time: 1 hour
+            response.addCookie(jwtCookie);
+
+            return ResponseEntity.ok("Login successful!");
         }
 
-        System.out.println("Authentication failed");
         return ResponseEntity.status(401).body("Invalid email or password.");
     }
 
@@ -57,19 +62,15 @@ public class AuthController {
         String email = user.getEmail();
         String password = user.getPassword();
 
-
         if (email == null || password == null) {
-            System.out.println("Email or password is missing");
             return ResponseEntity.badRequest().body("Email and password are required.");
         }
 
         boolean isRegistered = userService.registerUser(user);
         if (isRegistered) {
-            System.out.println("User registered successfully");
             return ResponseEntity.ok("Registration successful!");
         }
 
-        System.out.println("Registration failed");
         return ResponseEntity.status(400).body("Registration failed. Email might already be in use.");
     }
 }

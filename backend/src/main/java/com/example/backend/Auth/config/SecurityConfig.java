@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
@@ -26,35 +27,35 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // Disable CSRF for stateless APIs
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
             .authorizeHttpRequests(auth -> auth
-                // Publicly accessible endpoints
-                .requestMatchers("/api/auth/**", "/oauth2/**").permitAll()
-                // Routes requiring authentication
-                .requestMatchers("/api/**").authenticated()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/api/auth/**", "/oauth2/**").permitAll() // Public endpoints
+                .requestMatchers("/api/**").authenticated() // Protected endpoints
+                .requestMatchers("/admin/**").hasRole("ADMIN") // Admin routes
+                .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // User routes
             )
-            // Handle JWT filter logic
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            // Handle form login configuration
-            .formLogin(form -> form
-                .loginPage("/login")
-                .defaultSuccessUrl("/home", true)
-                .permitAll()
-            )
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Add custom JWT filter
             .oauth2Login(oauth2 -> oauth2
-                .loginPage("/login")
                 .successHandler((request, response, authentication) -> {
                     try {
                         OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
                         String email = oauthUser.getAttribute("email");
-                        String jwt = jwtUtil.generateToken(email, "USER");
+                        
+                        // Generate JWT with user email as subject
+                        String jwt = jwtUtil.generateToken("s",email, "USER");
 
-                        response.setHeader("Authorization", "Bearer " + jwt);
-                        response.setContentType("application/json");
-                        response.getWriter().write("{\"token\": \"" + jwt + "\"}");
+                        // Create a secure, HttpOnly cookie to store the JWT
+                        Cookie jwtCookie = new Cookie("jwt", jwt);
+                        jwtCookie.setHttpOnly(true); // Prevent JavaScript access
+                        jwtCookie.setSecure(true); // Only send over HTTPS in production
+                        jwtCookie.setPath("/"); // Available across the application
+                        jwtCookie.setMaxAge(60 * 60); // 1 hour expiration
+
+                        // Add the cookie to the response
+                        response.addCookie(jwtCookie);
+
+                        // Redirect to the frontend
+                        response.sendRedirect("http://localhost:5173");
                     } catch (Exception e) {
                         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Token Generation Failed");
                     }
