@@ -28,7 +28,7 @@ const Contact = () => {
           <input type="email" placeholder="Your Email" className="form_input" />
           <label htmlFor="message">MESSAGE</label>
           <textarea placeholder="Your Message" className="form_input" />
-          <Button label={"Send Message"} onClick={() => alert("Form Submitted!")} />
+          <Button className="button_width" label={"Send Message"} onClick={() => alert("Form Submitted!")} />
         </form>
         <div className="map_container">
           <iframe
