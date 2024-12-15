@@ -13,10 +13,28 @@ export const registerUser = async (data) => {
 
 export const loginUser = async (data) => {
   try {
-    const response = await axios.post(`${BASE_URL}/login`, data);
-    console.log(response);
-    return response.data;
+      const response = await axios.post(
+          `${BASE_URL}/login`,
+          data,
+          { withCredentials: true } // Include cookies in the request/response
+      );
+      console.log(response);
+      return response.data;
   } catch (error) {
-    throw error.response?.data || { message: "Invalid credentials." };
+      throw error.response?.data || { message: "Invalid credentials." };
   }
 };
+
+
+export const checkAuthStatus = async () => {
+        try {
+            const response = await axios.get("http://localhost:8080/api/auth/status", { withCredentials: true });
+            if (response.status === 200 && response.data === "Authenticated") {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            return false;
+        }
+    };

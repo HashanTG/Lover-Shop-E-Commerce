@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Cookie;
 
 import java.util.Optional;
 
@@ -46,7 +48,7 @@ public class AuthController {
                 // Create and set the cookie with the JWT
                 Cookie jwtCookie = new Cookie("jwt", jwtToken);
                 jwtCookie.setHttpOnly(true); // Prevent JavaScript access to the cookie
-                jwtCookie.setSecure(true); // Only send over HTTPS in production
+                jwtCookie.setSecure(false); // Only send over HTTPS in production
                 jwtCookie.setPath("/"); // Make cookie available to all endpoints
                 jwtCookie.setMaxAge(3600); // Expiration time: 1 hour
                 response.addCookie(jwtCookie);
@@ -76,4 +78,31 @@ public class AuthController {
 
         return ResponseEntity.status(400).body("Registration failed. Email might already be in use.");
     }
+
+    @GetMapping("/status")
+    public ResponseEntity<String> checkAuthStatus(HttpServletRequest request) {
+        // Extract JWT token from the cookies
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwt".equals(cookie.getName())) {
+                    String token = cookie.getValue();
+                    try {
+                        // Validate the JWT token
+                        if (jwtUtil.validateToken(token)) {
+                            return ResponseEntity.ok("Authenticated");
+                        } else {
+                            return ResponseEntity.status(401).body("Invalid token");
+                        }
+                    } catch (Exception e) {
+                        return ResponseEntity.status(500).body("Error validating token");
+                    }
+                }
+            }
+        }
+
+        return ResponseEntity.status(401).body("No token provided");
+    }
+
+
 }

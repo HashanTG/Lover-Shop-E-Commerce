@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -20,6 +22,8 @@ public class JwtUtil {
 
 
     private static final long EXPIRATION_TIME = 3600000; // 1 hour in milliseconds
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 
     /**
      * Generate JWT token with email and role
@@ -105,7 +109,21 @@ public class JwtUtil {
         }
         return null;
     }
+    /**
+     * Validate token using Nimbus signature logic.
+     */
+    public boolean validateToken(String jwtToken) {
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(jwtToken);
 
+            // Use MACVerifier for signature validation with the secret key
+            JWSVerifier verifier = new MACVerifier(getSecretKeyBytes());
+            return signedJWT.verify(verifier);
+        } catch (Exception e) {
+            logger.warn("Error validating token");
+        }
+        return false;
+    }
 
 
 }

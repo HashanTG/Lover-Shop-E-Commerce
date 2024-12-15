@@ -1,29 +1,53 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
+import { checkAuthStatus } from "../api/authService";
 
 // Create the AuthContext
 const AuthContext = createContext();
 
 // AuthProvider component to wrap your app
 export const AuthProvider = ({ children }) => {
-    const [authToken, setAuthToken] = useState(() => {
-        return localStorage.getItem("authToken") || null;
-    });
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    // Function to save token
-    const login = (token) => {
-        setAuthToken(token); // Save the token
-        localStorage.setItem("authToken", token); // Optional: Persist to localStorage
+    // Check if the user is authenticated on mount
+    useEffect(() => {
+        const storedAuthStatus = localStorage.getItem("isAuthenticated");
+        if (storedAuthStatus === "true") {
+            setIsAuthenticated(true);
+        } else {
+            // Check authentication status from backend
+            const checkAuth = async () => {
+                const authStatus = await checkAuthStatus();
+                if (authStatus) {
+                    console.log("User is authenticated");
+                    setIsAuthenticated(true);
+                    localStorage.setItem("isAuthenticated", "true"); // Persist in localStorage
+                } else {
+                    console.log("User is not authenticated");
+                    setIsAuthenticated(false);
+                    localStorage.setItem("isAuthenticated", "false"); // Persist in localStorage
+                }
+            };
+
+            checkAuth();
+        }
+    }, []);
+
+    // Function to log in (for use when the user is authenticated)
+    const login = () => {
+        setIsAuthenticated(true);
+        localStorage.setItem("isAuthenticated", "true"); // Persist in localStorage
     };
 
-    // Function to clear token (logout)
+    // Function to log out (clear the token, etc.)
     const logout = () => {
-        setAuthToken(null); // Clear the token
-        localStorage.removeItem("authToken"); // Optional: Remove from localStorage
+        setIsAuthenticated(false);
+        localStorage.setItem("isAuthenticated", "false"); // Clear authentication status in localStorage
+        document.cookie = "jwt=; path=/; max-age=0"; // Clear JWT cookie
     };
 
-    // Provide token and actions to children
+    // Provide auth status and actions to children
     return (
-        <AuthContext.Provider value={{ authToken, login, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

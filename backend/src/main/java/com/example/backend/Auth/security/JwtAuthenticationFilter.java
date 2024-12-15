@@ -53,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // Validate token and check expiration
                 if (email != null && userId != null && !jwtUtil.isTokenExpired(jwtToken)) {
                     // Validate signature
-                    if (validateToken(jwtToken)) {
+                    if (jwtUtil.validateToken(jwtToken)) {
                         // Authenticate user if not already authenticated
                         if (SecurityContextHolder.getContext().getAuthentication() == null) {
                             // You can optionally fetch user details from the database
@@ -83,19 +83,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
-    /**
-     * Validate token using Nimbus signature logic.
-     */
-    private boolean validateToken(String jwtToken) {
-        try {
-            SignedJWT signedJWT = SignedJWT.parse(jwtToken);
 
-            // Use MACVerifier for signature validation with the secret key
-            JWSVerifier verifier = new MACVerifier(jwtUtil.getSecretKeyBytes());
-            return signedJWT.verify(verifier);
-        } catch (Exception e) {
-            logger.warn("Error validating token");
-        }
-        return false;
-    }
 }

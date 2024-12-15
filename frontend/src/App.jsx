@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+//Context Import
 import { CartProvider } from './context/CartContext'
 import { AuthProvider } from './context/AuthContext';
-
+import { ModalProvider } from './context/ModelContext';
+//CSS Import
 import './App.css';
 import Layout from './Layout';
 
-
+//Component Import
 import Home from './pages/Home/Home'; // Home page
 import AuthPage from './pages/AuthPage/AuthPage';
 import ProductDetail from './pages/ProductDetail/ProductDetail';
 import Cart from './pages/Cart/Cart';
-import { ModalProvider } from './context/ModelContext';
+
 
 
 
 
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
 
   return (

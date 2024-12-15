@@ -56,7 +56,7 @@ public class SecurityConfig {
                                 // Create a secure, HttpOnly cookie to store the JWT
                                 Cookie jwtCookie = new Cookie("jwt", jwt);
                                 jwtCookie.setHttpOnly(true);
-                                jwtCookie.setSecure(true); // Use true in production
+                                jwtCookie.setSecure(false); // 
                                 jwtCookie.setPath("/");
                                 jwtCookie.setMaxAge(60 * 60);
 
@@ -64,7 +64,7 @@ public class SecurityConfig {
                                 response.addCookie(jwtCookie);
 
                                 // Redirect to the frontend
-                                response.sendRedirect("localhost:5173");
+                                response.sendRedirect("http://localhost:5173");
                             } catch (Exception e) {
                                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             }
