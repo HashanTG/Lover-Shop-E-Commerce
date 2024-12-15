@@ -11,6 +11,7 @@ import Home from './pages/Home/Home'; // Home page
 import AuthPage from './pages/AuthPage/AuthPage';
 import ProductDetail from './pages/ProductDetail/ProductDetail';
 import Cart from './pages/Cart/Cart';
+import { ModalProvider } from './context/ModelContext';
 
 
 
@@ -23,6 +24,7 @@ const App = () => {
   return (
     <Router>
       <AuthProvider>
+      <ModalProvider>
       <CartProvider>
         {/* Wrap the entire app in Layout */}
         <Layout>
@@ -39,6 +41,7 @@ const App = () => {
           </Routes>
         </Layout>
       </CartProvider>
+      </ModalProvider>
       </AuthProvider>
     </Router>
   );

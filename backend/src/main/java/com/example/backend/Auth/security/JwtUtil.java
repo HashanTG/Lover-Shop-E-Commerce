@@ -87,4 +87,25 @@ public class JwtUtil {
     return SECRET_KEY.getBytes();
 }
 
+    public String extractUserId(String token) {
+        try {
+            // Parse the signed JWT token
+            SignedJWT signedJWT = SignedJWT.parse(token);
+
+            // Create a verifier using the secret key
+            JWSVerifier verifier = new MACVerifier(SECRET_KEY.getBytes());
+
+            // Verify the token's signature
+            if (signedJWT.verify(verifier)) {
+                // Extract custom claim "userId" from the token claims
+                return (String) signedJWT.getJWTClaimsSet().getClaim("userId");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid token", e);
+        }
+        return null;
+    }
+
+
+
 }

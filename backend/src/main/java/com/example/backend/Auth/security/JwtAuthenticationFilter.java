@@ -46,23 +46,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (jwtToken != null) {
             try {
-                // Extract username (email) from token
+                // Extract email and userId from the token
                 String email = jwtUtil.extractUsername(jwtToken);
+                String userId = jwtUtil.extractUserId(jwtToken);
 
                 // Validate token and check expiration
-                if (email != null && !jwtUtil.isTokenExpired(jwtToken)) {
+                if (email != null && userId != null && !jwtUtil.isTokenExpired(jwtToken)) {
                     // Validate signature
                     if (validateToken(jwtToken)) {
                         // Authenticate user if not already authenticated
                         if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                            // You can optionally fetch user details from the database
                             Optional<User> userOptional = userService.findByEmail(email);
+
                             if (userOptional.isPresent()) {
                                 User user = userOptional.get();
 
-                                // Set authentication in security context
+                                // Create a UsernamePasswordAuthenticationToken with userId as the principal
                                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                                        user, null, null // Add user roles/authorities here if applicable
+                                        userId, // Store userId as the principal
+                                        null,   // No credentials
+                                        null    // Add user roles/authorities if needed
                                 );
+
+                                // Set authentication in security context
                                 SecurityContextHolder.getContext().setAuthentication(authToken);
                             }
                         }
@@ -87,7 +94,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             JWSVerifier verifier = new MACVerifier(jwtUtil.getSecretKeyBytes());
             return signedJWT.verify(verifier);
         } catch (Exception e) {
-            logger.warn("Error validating token", e);
+            logger.warn("Error validating token");
         }
         return false;
     }

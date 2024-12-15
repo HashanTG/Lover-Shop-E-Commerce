@@ -2,16 +2,50 @@ package com.example.backend.Cart.Service;
 
 import com.example.backend.Cart.Model.CartModel;
 import com.example.backend.Cart.Repository.CartRepository;
+import com.example.backend.Product.Model.ProductModel;
+import com.example.backend.Product.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
 
     @Autowired
     private CartRepository cartRepository;
+
+    @Autowired
+    private ProductService productService;
+
+    // Get cart with product details for the user
+    public CartModel getCartWithProductDetails(String userId) {
+        CartModel cart = getCartByUserId(userId);
+
+        // Extract product IDs from the cart items
+        List<String> productIds = cart.getItems().stream()
+                .map(CartModel.Item::getProductId)
+                .collect(Collectors.toList());
+
+        // Fetch product details in batch from MongoDB
+        List<ProductModel> products = productService.getProductsByIds(productIds);
+
+        // Map product details to cart items
+        for (CartModel.Item item : cart.getItems()) {
+            ProductModel product = products.stream()
+                    .filter(p -> p.getProductId().equals(item.getProductId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (product != null) {
+                item.setProductDetails(product);
+            }
+        }
+
+        return cart;
+    }
 
     // Get cart by userId
     public CartModel getCartByUserId(String userId) {

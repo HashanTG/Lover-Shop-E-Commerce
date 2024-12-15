@@ -1,21 +1,25 @@
 import React, { useState } from "react";
-import { registerUser, loginUser } from "../../api/authService"
+import { registerUser, loginUser } from "../../api/authService";
+import ModalComponent from "../../components/shared/Model/Model"
 import "./AuthPage.css";
 import { useAuth } from "../../context/AuthContext";
 
 const AuthPage = () => {
   const [isSignUp, setIsSignUp] = useState(true);
-  const [formData, setFormData] = useState({ name: "", username: "", email: "", password: "" });
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+  });
+  const [modal, setModal] = useState({ isOpen: false, title: "", message: "", type: "" });
 
-  const {login} = useAuth();
+  const { login } = useAuth();
 
   const toggleAuthMode = () => {
     setIsSignUp(!isSignUp);
     setFormData({ name: "", username: "", email: "", password: "" });
-    setError(null);
-    setSuccess(null);
+    setModal({ isOpen: false, title: "", message: "", type: "" }); // Reset modal
   };
 
   const handleInputChange = (e) => {
@@ -25,8 +29,7 @@ const AuthPage = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(null);
+    setModal({ isOpen: false, title: "", message: "", type: "" });
     try {
       const response = await registerUser({
         name: formData.name,
@@ -34,36 +37,54 @@ const AuthPage = () => {
         email: formData.email,
         password: formData.password,
       });
-      setSuccess(response.message || "Registration successful!");
+      setModal({
+        isOpen: true,
+        title: "Success",
+        message: response.message || "Registration successful!",
+        type: "success",
+      });
     } catch (err) {
-      setError(err.message || "An error occurred during registration.");
+      setModal({
+        isOpen: true,
+        title: "Error",
+        message: err.message || "An error occurred during registration.",
+        type: "error",
+      });
     }
   };
 
   const handleSignIn = async (e) => {
-   
     e.preventDefault();
-    setError(null);
-    setSuccess(null);
+    setModal({ isOpen: false, title: "", message: "", type: "" });
     try {
       const response = await loginUser({
-        email: formData.email, // Assumes either username or email is accepted
+        email: formData.email,
         password: formData.password,
       });
       login(response);
-      setSuccess(response.message || "Login successful!");
+      setModal({
+        isOpen: true,
+        title: "Success",
+        message: response.message || "Login successful!",
+        type: "success",
+      });
     } catch (err) {
-      setError(err.message || "Invalid credentials. Please try again.");
+      setModal({
+        isOpen: true,
+        title: "Error",
+        message: err.message || "Invalid credentials. Please try again.",
+        type: "error",
+      });
     }
   };
 
-
   const handleGoogleLogin = async () => {
-    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+    window.location.href = "http://localhost:8080/oauth2/authorization/google";
   };
 
-
-
+  const closeModal = () => {
+    setModal({ isOpen: false, title: "", message: "", type: "" });
+  };
 
   return (
     <div className="auth-container">
@@ -77,7 +98,11 @@ const AuthPage = () => {
             <h2>Sign up</h2>
             <p>
               Already have an account?{" "}
-              <button type="button" onClick={toggleAuthMode} className="auth-link">
+              <button
+                type="button"
+                onClick={toggleAuthMode}
+                className="auth-link"
+              >
                 Sign in
               </button>
             </p>
@@ -128,21 +153,27 @@ const AuthPage = () => {
             <div className="form-group terms">
               <input type="checkbox" id="terms" required />
               <label htmlFor="terms">
-                I agree with <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Use</a>
+                I agree with <a href="/privacy">Privacy Policy</a> and{" "}
+                <a href="/terms">Terms of Use</a>
               </label>
             </div>
-            {error && <p className="error-message">{error}</p>}
-            {success && <p className="success-message">{success}</p>}
-            <button type="submit" className="auth-button">Sign Up</button>
-            <button className="auth-button" onClick={handleGoogleLogin}>Sign Up Using Google</button>
-
+            <button type="submit" className="auth-button">
+              Sign Up
+            </button>
+            <button className="auth-button" onClick={handleGoogleLogin}>
+              Sign Up Using Google
+            </button>
           </form>
         ) : (
           <form className="auth-form" onSubmit={handleSignIn}>
             <h2>Sign In</h2>
             <p>
               Don't have an account yet?{" "}
-              <button type="button" onClick={toggleAuthMode} className="auth-link">
+              <button
+                type="button"
+                onClick={toggleAuthMode}
+                className="auth-link"
+              >
                 Sign Up
               </button>
             </p>
@@ -168,20 +199,23 @@ const AuthPage = () => {
                 required
               />
             </div>
-            <div className="form-group remember-me">
-              <input type="checkbox" id="remember" />
-              <label htmlFor="remember">Remember me</label>
-              <a href="/forgot-password" className="forgot-password">
-                Forgot password?
-              </a>
-            </div>
-            {error && <p className="error-message">{error}</p>}
-            {success && <p className="success-message">{success}</p>}
-            <button type="submit" className="auth-button">Sign In</button>
+            <button type="submit" className="auth-button">
+              Sign In
+            </button>
             <button className="auth-button">Sign In Using Google</button>
           </form>
         )}
       </div>
+
+      {/* Modal Component */}
+      {modal.isOpen && (
+        <ModalComponent
+          title={modal.title}
+          message={modal.message}
+          type={modal.type}
+          onClose={closeModal}
+        />
+      )}
     </div>
   );
 };

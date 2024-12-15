@@ -37,21 +37,24 @@ public class AuthController {
         }
 
         Optional<User> authenticatedUser = userService.authenticateUser(email, password);
-        String userId = authenticatedUser.get().getId();
-        System.out.println(userId);
         if (authenticatedUser.isPresent()) {
+            String userId = authenticatedUser.get().getId();
             String role = authenticatedUser.get().getRole();
-            String jwtToken = jwtUtil.generateToken(userId,email, role);
+            try {
+                String jwtToken = jwtUtil.generateToken(userId, email, role);
 
-            // Create and set the cookie with the JWT
-            Cookie jwtCookie = new Cookie("jwt", jwtToken);
-            jwtCookie.setHttpOnly(true); // Prevent JavaScript access to the cookie
-            jwtCookie.setSecure(true); // Only send over HTTPS in production
-            jwtCookie.setPath("/"); // Make cookie available to all endpoints
-            jwtCookie.setMaxAge(3600); // Expiration time: 1 hour
-            response.addCookie(jwtCookie);
+                // Create and set the cookie with the JWT
+                Cookie jwtCookie = new Cookie("jwt", jwtToken);
+                jwtCookie.setHttpOnly(true); // Prevent JavaScript access to the cookie
+                jwtCookie.setSecure(true); // Only send over HTTPS in production
+                jwtCookie.setPath("/"); // Make cookie available to all endpoints
+                jwtCookie.setMaxAge(3600); // Expiration time: 1 hour
+                response.addCookie(jwtCookie);
 
-            return ResponseEntity.ok("Login successful!");
+                return ResponseEntity.ok("Login successful!");
+            } catch (Exception e) {
+                return ResponseEntity.status(500).body("Error generating JWT token.");
+            }
         }
 
         return ResponseEntity.status(401).body("Invalid email or password.");

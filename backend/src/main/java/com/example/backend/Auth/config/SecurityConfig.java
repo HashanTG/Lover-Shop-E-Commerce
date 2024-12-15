@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import com.example.backend.Auth.service.UserService;
+import com.example.backend.Auth.model.User;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,45 +24,51 @@ public class SecurityConfig {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private JwtUtil jwtUtil;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/oauth2/**").permitAll() // Public endpoints
-                .requestMatchers("/api/**").authenticated() // Protected endpoints
-                .requestMatchers("/admin/**").hasRole("ADMIN") // Admin routes
-                .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // User routes
-            )
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Add custom JWT filter
-            .oauth2Login(oauth2 -> oauth2
-                .successHandler((request, response, authentication) -> {
-                    try {
-                        OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
-                        String email = oauthUser.getAttribute("email");
-                        
-                        // Generate JWT with user email as subject
-                        String jwt = jwtUtil.generateToken("s",email, "USER");
+                .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**", "/oauth2/**").permitAll() // Public endpoints
+                        .requestMatchers("/api/**").authenticated() // Protected endpoints
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // Admin routes
+                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // User routes
+                )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Add custom JWT
+                                                                                                      // filter
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler((request, response, authentication) -> {
+                            try {
+                                OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
+                                String email = oauthUser.getAttribute("email");
 
-                        // Create a secure, HttpOnly cookie to store the JWT
-                        Cookie jwtCookie = new Cookie("jwt", jwt);
-                        jwtCookie.setHttpOnly(true); // Prevent JavaScript access
-                        jwtCookie.setSecure(true); // Only send over HTTPS in production
-                        jwtCookie.setPath("/"); // Available across the application
-                        jwtCookie.setMaxAge(60 * 60); // 1 hour expiration
+                                // Use UserService to handle OAuth registration or lookup
+                                User user = userService.registerOrFindUserWithOAuth(email, oauthUser.getAttributes());
 
-                        // Add the cookie to the response
-                        response.addCookie(jwtCookie);
+                                // Generate JWT with user details
+                                String jwt = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
 
-                        // Redirect to the frontend
-                        response.sendRedirect("http://localhost:5173");
-                    } catch (Exception e) {
-                        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Token Generation Failed");
-                    }
-                })
-            );
+                                // Create a secure, HttpOnly cookie to store the JWT
+                                Cookie jwtCookie = new Cookie("jwt", jwt);
+                                jwtCookie.setHttpOnly(true);
+                                jwtCookie.setSecure(true); // Use true in production
+                                jwtCookie.setPath("/");
+                                jwtCookie.setMaxAge(60 * 60);
+
+                                // Add the cookie to the response
+                                response.addCookie(jwtCookie);
+
+                                // Redirect to the frontend
+                                response.sendRedirect("localhost:5173");
+                            } catch (Exception e) {
+                                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            }
+                        }));
 
         return http.build();
     }
