@@ -7,6 +7,7 @@ import { CartProvider } from './context/CartContext'
 import Home from './pages/Home/Home'; // Home page
 import ProductDetail from './pages/ProductDetail/ProductDetail';
 import Cart from './pages/Cart/Cart';
+import ProductPage from './pages/ProductPage';
 
 
 const App = () => {
@@ -32,6 +33,9 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/product" element={<ProductDetail />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/products/teddy" element={<ProductPage category="Teddy" />} />
+            <Route path="/products/jewelry" element={<ProductPage category="Jewelry" />} />
+            <Route path="/products/flowers" element={<ProductPage category="Flowers" />} />
            
           </Routes>
         </Layout>
