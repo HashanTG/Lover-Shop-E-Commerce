@@ -44,7 +44,9 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler((request, response, authentication) -> {
                             try {
+
                                 OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
+                                System.out.println("OAuth2 Success: " + oauthUser.getAttributes());
                                 String email = oauthUser.getAttribute("email");
 
                                 // Use UserService to handle OAuth registration or lookup
