@@ -52,7 +52,7 @@ const ProductPage = ({ category }) => {
     <div className="product-page">
       {/* Header Banner */}
       <div className="banner">
-        <img src="https://via.placeholder.com/1200x300" alt="Banner" className="banner-image" />
+        <img src="/productpagefooter.png" alt="Banner" className="banner-image" />
         <div className="banner-content">
           <h1>{selectedCategory} Products</h1>
           <p>Explore the best collection of {selectedCategory.toLowerCase()} products at affordable prices!</p>

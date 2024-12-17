@@ -67,23 +67,38 @@
 /* Product Card */
 .product-card {
   border: 1px solid #ddd;
-  padding: 10px;
+  /* padding: 10px; */
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
+  position: relative;
 }
 
 .product-card img {
   width: 100%;
   height: auto;
   border-radius: 5px;
-  border-bottom: 1px solid #f0f0f0;
+  /* border-bottom: 1px solid #f0f0f0; */
 }
 
 .product-card h3 {
   margin: 10px 0 5px;
 }
+.product-card .add-to-cart {
+  display: block; /* Ensure the button is always visible */
+  position: absolute; /* Position the button within the card */
+  bottom: 7px; /* Adjust as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 12px;
+  background-color: #7469B6;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 
 .product-card p {
   font-size: 0.9rem;
@@ -95,8 +110,8 @@
 .card-buttons {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 20px;
+  margin-top: 15px;
   flex-wrap: wrap;
 }
 
@@ -104,7 +119,7 @@
 .buy-now
 {
   border: none;
-  color: white;
+  color: rgb(255, 255, 255);
   padding: 5px 10px;
   cursor: pointer;
   border-radius: 5px;
@@ -112,20 +127,8 @@
   transition: background-color 0.3s;
 }
 
-.add-to-cart {
-  border: none;
-  color: white;
-  padding: 5px 10px;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 0.9rem;
-  transition: background-color 0.3s;
-}
-/* Add to Cart Button */
-.add-to-cart {
-  background-color: #ffc0cb;
-}
+
 
 .add-to-cart:hover {
-  background-color: #ff8f9a;
+  background-color: #AD88C6;
 }
