@@ -7,6 +7,10 @@
     align-items: center;
     color: var(--Black-900, #121212);
     font-family: Poppins, sans-serif;
+    background-image: url('/back_contact.png'); /* Add this line */
+    background-size: cover; /* Ensure the image covers the entire section */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
 }
 
 .contact_title {
