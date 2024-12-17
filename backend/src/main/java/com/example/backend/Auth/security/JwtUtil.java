@@ -1,12 +1,17 @@
 package com.example.backend.Auth.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.*;
+import com.nimbusds.jwt.*;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.crypto.spec.SecretKeySpec;
 
 @Component
 public class JwtUtil {
@@ -14,47 +19,111 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String SECRET_KEY;
 
+
+
     private static final long EXPIRATION_TIME = 3600000; // 1 hour in milliseconds
 
-    // Generate a JWT token for a User (with email and role)
-    @SuppressWarnings("deprecation")
-    public String generateToken(String email, String role) {
-        return Jwts.builder()
-                   .setSubject(email) // Set the subject (email)
-                   .setIssuedAt(new Date()) // Set issued date
-                   .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)) // Set expiration date
-                   .claim("role", role) // Custom claim for role
-                   .signWith(SignatureAlgorithm.HS256, SECRET_KEY) // Sign with the secret key
-                   .compact(); // Build the JWT token
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
+
+    /**
+     * Generate JWT token with email and role
+     */
+    public String generateToken(String userId,String email, String role) {
+        try {
+            // Create JWT claims
+            JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+                    .subject(email)
+                    .claim("userId",userId)
+                    .claim("role", role)
+                    .issueTime(new Date())
+                    .expirationTime(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                    .build();
+
+            // Create the signing key and signer
+            SecretKeySpec secretKey = new SecretKeySpec(SECRET_KEY.getBytes(), "HmacSHA256");
+            JWSSigner signer = new MACSigner(secretKey);
+
+            // Create the JWT with the claims and sign it
+            SignedJWT signedJWT = new SignedJWT(
+                    new JWSHeader.Builder(JWSAlgorithm.HS256).build(),
+                    claimsSet
+            );
+
+            signedJWT.sign(signer);
+
+            return signedJWT.serialize();
+        } catch (Exception e) {
+            throw new RuntimeException("Error while generating JWT", e);
+        }
     }
 
-    // Extract the username (subject) from the token (i.e., the email)
+    /**
+     * Parse and validate token
+     */
     public String extractUsername(String token) {
-        return extractClaims(token).getSubject();
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(token);
+
+            JWSVerifier verifier = new MACVerifier(SECRET_KEY.getBytes());
+
+            if (signedJWT.verify(verifier)) {
+                return signedJWT.getJWTClaimsSet().getSubject();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid token", e);
+        }
+        return null;
     }
 
-    // Extract the role from the token
-    public String extractRole(String token) {
-        return (String) extractClaims(token).get("role");
-    }
-
-    // Extract claims (payload) from the token
-    @SuppressWarnings("deprecation")
-    private Claims extractClaims(String token) {
-        return Jwts.parser()
-                   .setSigningKey(SECRET_KEY) // Set the signing key
-                   .build() // Build the JwtParser
-                   .parseClaimsJws(token) // Parse the token
-                   .getBody(); // Extract the claims
-    }
-
-    // Check if the token has expired
+    /**
+     * Validate token expiration
+     */
     public boolean isTokenExpired(String token) {
-        return extractClaims(token).getExpiration().before(new Date());
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(token);
+            return signedJWT.getJWTClaimsSet().getExpirationTime().before(new Date());
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid token", e);
+        }
     }
 
-    // Validate the token for a given username (email) and check if it's not expired
-    public boolean validateToken(String token, String email) {
-        return (email.equals(extractUsername(token)) && !isTokenExpired(token));
+    public byte[] getSecretKeyBytes() {
+    return SECRET_KEY.getBytes();
+}
+
+    public String extractUserId(String token) {
+        try {
+            // Parse the signed JWT token
+            SignedJWT signedJWT = SignedJWT.parse(token);
+
+            // Create a verifier using the secret key
+            JWSVerifier verifier = new MACVerifier(SECRET_KEY.getBytes());
+
+            // Verify the token's signature
+            if (signedJWT.verify(verifier)) {
+                // Extract custom claim "userId" from the token claims
+                return (String) signedJWT.getJWTClaimsSet().getClaim("userId");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid token", e);
+        }
+        return null;
     }
+    /**
+     * Validate token using Nimbus signature logic.
+     */
+    public boolean validateToken(String jwtToken) {
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(jwtToken);
+
+            // Use MACVerifier for signature validation with the secret key
+            JWSVerifier verifier = new MACVerifier(getSecretKeyBytes());
+            return signedJWT.verify(verifier);
+        } catch (Exception e) {
+            logger.warn("Error validating token");
+        }
+        return false;
+    }
+
+
 }
