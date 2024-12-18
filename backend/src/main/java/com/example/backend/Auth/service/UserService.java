@@ -1,5 +1,6 @@
 package com.example.backend.Auth.service;
 
+import com.example.backend.Auth.service.UserService;
 import com.example.backend.Auth.model.User;
 import com.example.backend.Auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -62,4 +64,31 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
     
+
+    //For OAuth registration
+
+    /**
+ * Register or find a user using OAuth2 details.
+ * @param email the email from OAuth2
+ * @param attributes additional attributes from OAuth2 (e.g., name, picture)
+ * @return the registered or existing user
+ */
+public User registerOrFindUserWithOAuth(String email, Map<String, Object> attributes) {
+    // Check if the user already exists by email
+    Optional<User> existingUser = userRepository.findByEmail(email);
+    if (existingUser.isPresent()) {
+        return existingUser.get(); // Return the existing user
+    }
+
+    // Create a new user for OAuth
+    User newUser = new User();
+    newUser.setEmail(email);
+    newUser.setRole("ROLE_USER"); // Default role for OAuth2 users
+    newUser.setPassword(""); // No password as it’s OAuth2
+ 
+
+    // Save the new user to the database
+    return userRepository.save(newUser);
+}
+
 }
