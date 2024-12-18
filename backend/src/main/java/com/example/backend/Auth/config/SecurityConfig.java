@@ -22,7 +22,7 @@ public class SecurityConfig {
     private JwtUtil jwtUtil;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             // Disable CSRF for stateless APIs
             .csrf(csrf -> csrf.disable())
