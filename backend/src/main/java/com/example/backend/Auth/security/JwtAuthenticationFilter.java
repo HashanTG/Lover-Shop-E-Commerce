@@ -1,6 +1,8 @@
 package com.example.backend.Auth.security;
 
-import io.jsonwebtoken.ExpiredJwtException;
+import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +14,7 @@ import com.example.backend.Auth.model.User;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -29,38 +32,56 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        final String authorizationHeader = request.getHeader("Authorization");
-
-        String email = null;
         String jwtToken = null;
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwtToken = authorizationHeader.substring(7);
+        // Extract JWT from cookies
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("jwt".equals(cookie.getName())) {
+                    jwtToken = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (jwtToken != null) {
             try {
-                email = jwtUtil.extractUsername(jwtToken);
-            } catch (ExpiredJwtException e) {
-                logger.warn("JWT token is expired: {}");
+                // Extract email and userId from the token
+                String email = jwtUtil.extractUsername(jwtToken);
+                String userId = jwtUtil.extractUserId(jwtToken);
+
+                // Validate token and check expiration
+                if (email != null && userId != null && !jwtUtil.isTokenExpired(jwtToken)) {
+                    // Validate signature
+                    if (jwtUtil.validateToken(jwtToken)) {
+                        // Authenticate user if not already authenticated
+                        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                            // You can optionally fetch user details from the database
+                            Optional<User> userOptional = userService.findByEmail(email);
+
+                            if (userOptional.isPresent()) {
+                                User user = userOptional.get();
+
+                                // Create a UsernamePasswordAuthenticationToken with userId as the principal
+                                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                                        userId, // Store userId as the principal
+                                        null,   // No credentials
+                                        null    // Add user roles/authorities if needed
+                                );
+
+                                // Set authentication in security context
+                                SecurityContextHolder.getContext().setAuthentication(authToken);
+                            }
+                        }
+                    }
+                }
             } catch (Exception e) {
                 logger.warn("Invalid JWT token: {}");
             }
         }
 
-
-    // Validate the email and set security context
-    if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-        // Fetch user details without requiring password authentication
-        Optional<User> userOptional = userService.findByEmail(email); // Create this method in UserService
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    user, null,null// Fetch authorities if needed
-            );
-
-            SecurityContextHolder.getContext().setAuthentication(authToken);
-        }
-    }
-
         chain.doFilter(request, response);
     }
+
+
 }

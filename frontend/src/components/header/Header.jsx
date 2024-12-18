@@ -33,19 +33,20 @@ const Header = () => {
             )}
           </li>
           <li
-            className="dropdown"
-            onMouseEnter={() => setProductDropdown(true)}
-            onMouseLeave={() => setProductDropdown(false)}
-          >
-            <a href="#product">Product <span>&#9662;</span></a>
-            {productDropdown && (
-              <ul className="dropdown-menu">
-                <li><a href="#product-1">Product 1</a></li>
-                <li><a href="#product-2">Product 2</a></li>
-                <li><a href="#product-3">Product 3</a></li>
-              </ul>
-            )}
-          </li>
+               className="dropdown"
+               onMouseEnter={() => setProductDropdown(true)}
+               onMouseLeave={() => setProductDropdown(false)}
+              >
+      <a href="#product">Product <span>&#9662;</span></a>
+        {productDropdown && (
+        <ul className="dropdown-menu">
+      <li><a href="/products/teddy">Teddy</a></li>
+      <li><a href="/products/jewelry">Jewelry</a></li>
+      <li><a href="/products/flowers">Flowers</a></li>
+             </ul>
+           )}
+      </li>
+
           <li><a href="#contact">Contact Us</a></li>
         </ul>
       </nav>
