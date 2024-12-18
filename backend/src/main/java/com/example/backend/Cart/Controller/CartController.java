@@ -1,5 +1,6 @@
 package com.example.backend.Cart.Controller;
 
+import com.example.backend.Auth.UtilSecurity.SecurityUtil;
 import com.example.backend.Cart.Model.CartModel;
 import com.example.backend.Cart.Service.CartService;
 import lombok.Data;
@@ -9,63 +10,67 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/api/cart")
 public class CartController {
 
     @Autowired
     private CartService cartService;
 
-    // Get cart by userId (unchanged)
-    @GetMapping("/{userId}")
-    public ResponseEntity<CartModel> getCart(@PathVariable String userId) {
+    // Get cart details for the authenticated user
+    @GetMapping
+    public ResponseEntity<CartModel> getCart() {
+        String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically from SecurityContext
         CartModel cart = cartService.getCartByUserId(userId);
         return ResponseEntity.ok(cart);
     }
 
-    // Add item to cart
+    @GetMapping("/details")
+    public ResponseEntity<CartModel> getCartWithDetails() {
+        String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically from SecurityContext
+        CartModel cart = cartService.getCartWithProductDetails(userId); // Fetch cart with product details
+        return ResponseEntity.ok(cart);
+    }
+
+    // Add item to cart for the authenticated user
     @PostMapping("/add")
     public ResponseEntity<CartModel> addItemToCart(@RequestBody AddItemRequest addItemRequest) {
+        String userId = com.example.backend.Auth.UtilSecurity.SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically
         CartModel updatedCart = cartService.addItemToCart(
-                addItemRequest.getUserId(),
+                userId,
                 addItemRequest.getProductId(),
                 addItemRequest.getQuantity()
         );
         return ResponseEntity.ok(updatedCart);
     }
 
-    // Remove item from cart
+    // Remove item from cart for the authenticated user
     @DeleteMapping("/item/remove")
     public ResponseEntity<CartModel> removeItemFromCart(@RequestBody RemoveItemRequest removeItemRequest) {
+        String userId = com.example.backend.Auth.UtilSecurity.SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically
         CartModel updatedCart = cartService.removeItemFromCart(
-                removeItemRequest.getUserId(),
+                userId,
                 removeItemRequest.getProductId()
         );
         return ResponseEntity.ok(updatedCart);
     }
 
-    // Clear entire cart
+    // Clear entire cart for the authenticated user
     @DeleteMapping("/clear")
-    public ResponseEntity<Void> clearCart(@RequestBody ClearCartRequest clearCartRequest) {
-        cartService.clearCart(clearCartRequest.getUserId());
+    public ResponseEntity<Void> clearCart() {
+        String userId = com.example.backend.Auth.UtilSecurity.SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically
+        cartService.clearCart(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     // DTOs with Lombok annotations
     @Data
     public static class AddItemRequest {
-        private String userId;
         private String productId;
         private int quantity;
     }
 
     @Data
     public static class RemoveItemRequest {
-        private String userId;
         private String productId;
-    }
-
-    @Data
-    public static class ClearCartRequest {
-        private String userId;
     }
 }
