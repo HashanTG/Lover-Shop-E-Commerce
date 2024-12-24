@@ -16,4 +16,10 @@ public interface ProductService {
 
     void deleteProduct(String id);
 
+    void reduceProductStock(String productId, String variationType, String variationValue, int quantity);
+
+    List<Product> searchProductsByName(String keyword);
+
+    List<Product> getProductsByCategory(String category);
+
 }
