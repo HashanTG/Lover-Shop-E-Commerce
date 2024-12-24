@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./ProductPage.css";
-
+import ProductCard from "../components/ProductCard";
 const ProductPage = ({ category }) => {
   // Static product data
   const allProducts = {
@@ -75,20 +75,10 @@ const ProductPage = ({ category }) => {
       </div>
 
       <div className="product-grid">
-  {products.map((product) => (
-    <div key={product.id} className="product-card">
-      <img src={product.image} alt={product.name} />
-      <h3>{product.name}</h3>
-      <p>{product.description}</p>
-      <p>Price: Rs. {product.price}</p>
-      <div className="card-buttons">
-        <button className="buy-now">Buy Now</button>
-        <button className="add-to-cart">Add to Cart</button>
+        {products.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
       </div>
-    </div>
-  ))}
-</div>
-
     </div>
   );
 };
