@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.example.backend.Product.Model.Product;
 import com.example.backend.Product.Repository.ProductRepository;
 import com.example.backend.Product.Service.ProductService;
+import org.springframework.stereotype.Service;
 
+
+@Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
