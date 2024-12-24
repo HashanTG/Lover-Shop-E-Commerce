@@ -22,6 +22,7 @@ services:
     volumes:
       - ./backend/src:/app/src  # Mount source code directory for live reload
       - ./backend/target:/app/target  # Optionally mount target directory to avoid full rebuild
+      - ./backend/pom.xml:/app/pom.xml  # Bind pom.xml for dependency changes
 
     ports:
       - "8080:8080"
