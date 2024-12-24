@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/cart")
@@ -18,6 +19,7 @@ public class CartController {
 
     // Get cart details for the authenticated user
     @GetMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<CartModel> getCart() {
         String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically from SecurityContext
         CartModel cart = cartService.getCartByUserId(userId);
@@ -26,6 +28,7 @@ public class CartController {
     
 
     @GetMapping("/details")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<CartModel> getCartWithDetails() {
         String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically from SecurityContext
         CartModel cart = cartService.getCartWithProductDetails(userId); // Fetch cart with product details
@@ -33,6 +36,7 @@ public class CartController {
     }
 
     // Add item to cart for the authenticated user
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/add")
     public ResponseEntity<CartModel> addItemToCart(@RequestBody AddItemRequest addItemRequest) {
         String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically
@@ -45,6 +49,7 @@ public class CartController {
     }
 
     // Remove item from cart for the authenticated user
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/item/remove")
     public ResponseEntity<CartModel> removeItemFromCart(@RequestBody RemoveItemRequest removeItemRequest) {
         String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically
@@ -56,6 +61,7 @@ public class CartController {
     }
 
     // Clear entire cart for the authenticated user
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/clear")
     public ResponseEntity<Void> clearCart() {
         String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically
