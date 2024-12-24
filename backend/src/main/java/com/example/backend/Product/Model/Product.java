@@ -1,6 +1,6 @@
 package com.example.backend.Product.Model;
 
-import java.sql.Date;
+import java.util.Date;  // Use java.util.Date
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -20,7 +20,7 @@ public class Product {
     private int stock;
     private String description;
     private List<String> images;
-    private Date createdAt;
+    private Date createdAt;  // Keep it as java.util.Date
     private List<Variation> variations;
 
     @Data

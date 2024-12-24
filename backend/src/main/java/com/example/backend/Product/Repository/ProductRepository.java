@@ -2,11 +2,11 @@ package com.example.backend.Product.Repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-
+import com.example.backend.Product.Repository.ProductRepositoryCustom;
 import com.example.backend.Product.Model.Product;
 import java.util.List;
 
-public interface ProductRepository extends MongoRepository<Product, String> {
+public interface ProductRepository extends MongoRepository<Product, String> ,ProductRepositoryCustom{
 
     // Find products by category
     List<Product> findByCategory(String category);
@@ -17,4 +17,6 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     // Custom query to find products with stock greater than a specified value
     @Query("{ 'stock' : { $gt: ?0 } }")
     List<Product> findByStockGreaterThan(int stock);
+
+    List<Product> findByIdIn(List<String> ids);
 }

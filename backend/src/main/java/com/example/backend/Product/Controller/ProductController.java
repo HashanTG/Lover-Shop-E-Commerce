@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import com.example.backend.Product.Model.Product;
 import com.example.backend.Product.Service.ProductService;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -15,10 +19,10 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    // Get all products
+    // Get all products by Page by Page
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public Page<Product> getAllProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
+    return productService.getProductsPage(page, size);
     }
 
     // Get product by ID
@@ -45,17 +49,18 @@ public class ProductController {
         productService.deleteProduct(id);
     }
 
-    // Get products by category
-    @GetMapping("/category/{category}")
-    public List<Product> getProductsByCategory(@PathVariable String category) {
-        return productService.getProductsByCategory(category);
+    //Filter of recieving Products
+    @GetMapping("/filter")
+    public Page<Product> filterProducts(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return productService.filterProducts(name, category, minPrice, maxPrice, page, size);
     }
-
-    // Search for products by name (optional feature)
-    @GetMapping("/search")
-    public List<Product> searchProductsByName(@RequestParam String keyword) {
-        return productService.searchProductsByName(keyword);
-    }
+    
 
     // Reduce stock for a specific variation (optional feature)
     @PutMapping("/{id}/reduce-stock")

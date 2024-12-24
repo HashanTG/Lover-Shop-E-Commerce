@@ -11,16 +11,23 @@ import com.example.backend.Product.Model.Product;
 import com.example.backend.Product.Repository.ProductRepository;
 import com.example.backend.Product.Service.ProductService;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+
+
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
 
-    // Retrieve all products
+    // Retrieve all products by Page by Page
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public Page<Product> getProductsPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productRepository.findAll(pageable);
     }
 
     // Retrieve a product by its ID
@@ -58,22 +65,13 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(id);
     }
 
-    // Retrieve products by category
+    // Retrieve products by Filter
     @Override
-    public List<Product> getProductsByCategory(String category) {
-        return productRepository.findAll()
-                .stream()
-                .filter(product -> product.getCategory().equalsIgnoreCase(category))
-                .collect(Collectors.toList());
+    public Page<Product> filterProducts(String name, String category, Double minPrice, Double maxPrice, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productRepository.filterProducts(name, category, minPrice, maxPrice, pageable);
     }
 
-    // Search for products by name (optional)
-    public List<Product> searchProductsByName(String keyword) {
-        return productRepository.findAll()
-                .stream()
-                .filter(product -> product.getName().toLowerCase().contains(keyword.toLowerCase()))
-                .collect(Collectors.toList());
-    }
 
     // Reduce stock for a product variation (optional for inventory management)
     public void reduceProductStock(String productId, String variationType, String variationValue, int quantity) {
@@ -92,5 +90,10 @@ public class ProductServiceImpl implements ProductService {
             }
         });
         productRepository.save(product);
+    }
+    //Get prodcts by a Id List
+    @Override
+    public List<Product> getProductsByIds(List<String> productIds) {
+        return productRepository.findByIdIn(productIds);
     }
 }
