@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 import com.example.backend.Product.Model.Product;
 import com.example.backend.Product.Repository.ProductRepository;
@@ -37,12 +38,24 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found with ID: " + id));
     }
 
-    // Add a new product
+
+    // Add a new product only if it doesn't exist
     @Override
     public Product addProduct(Product product) {
-        product.setCreatedAt(new Date(System.currentTimeMillis())); // Use current date as creation timestamp
-        return productRepository.save(product);
+        // Check if the product with the given SKU already exists
+        Optional<Product> existingProduct = productRepository.findBySku(product.getSku());
+    
+        if (existingProduct.isPresent()) {
+            // If the product exists, throw an exception or handle the duplication
+            throw new RuntimeException("Product already exists with SKU: " + product.getSku());
+        } else {
+            // If the product doesn't exist, set the creation date and save as new
+            product.setCreatedAt(new Date(System.currentTimeMillis())); // Set creation date for new product
+            return productRepository.save(product); // Save the new product
+        }
     }
+    
+
 
     // Update an existing product
     @Override

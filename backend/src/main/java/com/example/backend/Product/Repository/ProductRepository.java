@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.repository.Query;
 import com.example.backend.Product.Repository.ProductRepositoryCustom;
 import com.example.backend.Product.Model.Product;
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository extends MongoRepository<Product, String> ,ProductRepositoryCustom{
 
@@ -19,4 +20,6 @@ public interface ProductRepository extends MongoRepository<Product, String> ,Pro
     List<Product> findByStockGreaterThan(int stock);
 
     List<Product> findByIdIn(List<String> ids);
+
+    Optional<Product> findBySku(String sku);
 }

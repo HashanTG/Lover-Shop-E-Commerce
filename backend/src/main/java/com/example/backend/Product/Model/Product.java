@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+import java.util.Optional;
 import lombok.Data;
 
 @Data
@@ -20,8 +20,9 @@ public class Product {
     private int stock;
     private String description;
     private List<String> images;
-    private Date createdAt;  // Keep it as java.util.Date
+    private Date createdAt;  
     private List<Variation> variations;
+    private String sku;
 
     @Data
     public static class Variation {

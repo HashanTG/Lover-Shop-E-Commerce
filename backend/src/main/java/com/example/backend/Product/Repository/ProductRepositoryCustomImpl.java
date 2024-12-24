@@ -27,7 +27,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             query.addCriteria(Criteria.where("name").regex(name, "i")); // Case-insensitive search
         }
         if (category != null && !category.isEmpty()) {
-            query.addCriteria(Criteria.where("category").is(category), "i"); // Case-insensitive search
+            query.addCriteria(Criteria.where("category").regex(category,"i")); // Case-insensitive search
         }
         if (minPrice != null) {
             query.addCriteria(Criteria.where("price").gte(minPrice));
@@ -36,11 +36,12 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             query.addCriteria(Criteria.where("price").lte(maxPrice));
         }
 
-        // Apply pagination
-        long total = mongoTemplate.count(query, Product.class); // Get total count
-        query.with(pageable); // Apply pagination
+        query.with(pageable); // Apply pagination first
 
-        List<Product> products = mongoTemplate.find(query, Product.class);
-        return new PageImpl<>(products, pageable, total); // Create a Page object
+        long total = mongoTemplate.count(query, Product.class); // Get total count based on the query criteria
+
+        List<Product> products = mongoTemplate.find(query, Product.class); // Execute the query with pagination applied
+        return new PageImpl<>(products, pageable, total); // Create and return the Page object
+
     }
 }
