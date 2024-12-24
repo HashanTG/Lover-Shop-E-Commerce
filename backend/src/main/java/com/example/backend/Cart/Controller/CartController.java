@@ -23,6 +23,7 @@ public class CartController {
         CartModel cart = cartService.getCartByUserId(userId);
         return ResponseEntity.ok(cart);
     }
+    
 
     @GetMapping("/details")
     public ResponseEntity<CartModel> getCartWithDetails() {
@@ -34,7 +35,7 @@ public class CartController {
     // Add item to cart for the authenticated user
     @PostMapping("/add")
     public ResponseEntity<CartModel> addItemToCart(@RequestBody AddItemRequest addItemRequest) {
-        String userId = com.example.backend.Auth.UtilSecurity.SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically
+        String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically
         CartModel updatedCart = cartService.addItemToCart(
                 userId,
                 addItemRequest.getProductId(),
@@ -46,7 +47,7 @@ public class CartController {
     // Remove item from cart for the authenticated user
     @DeleteMapping("/item/remove")
     public ResponseEntity<CartModel> removeItemFromCart(@RequestBody RemoveItemRequest removeItemRequest) {
-        String userId = com.example.backend.Auth.UtilSecurity.SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically
+        String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically
         CartModel updatedCart = cartService.removeItemFromCart(
                 userId,
                 removeItemRequest.getProductId()
@@ -57,7 +58,7 @@ public class CartController {
     // Clear entire cart for the authenticated user
     @DeleteMapping("/clear")
     public ResponseEntity<Void> clearCart() {
-        String userId = com.example.backend.Auth.UtilSecurity.SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically
+        String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically
         cartService.clearCart(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

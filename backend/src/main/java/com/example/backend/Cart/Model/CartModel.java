@@ -1,9 +1,9 @@
 package com.example.backend.Cart.Model;
 
-// import com.example.backend.Product.Model.ProductModel;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import com.example.backend.Product.Model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,6 @@ public class CartModel {
     public static class Item {
         private String productId; // Product ID for the item
         private int quantity; // Quantity of the product
-        // private ProductModel productDetails; // Added field to store product details
+        private Product productDetails; // Field to store product details (to be set when product is fetched)
     }
 }
-
