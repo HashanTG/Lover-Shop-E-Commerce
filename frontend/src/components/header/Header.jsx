@@ -1,17 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useAuth } from "../../context/AuthContext";
 import "./header.css";
 import CartIndicatorCard from "../../components/shared/CartIndicator/CartIndicatorCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [shopDropdown, setShopDropdown] = useState(false);
   const [productDropdown, setProductDropdown] = useState(false);
   const [profileMenuVisible, setProfileMenuVisible] = useState(false);
 
+  const navigate = useNavigate();
+
+  const profileMenuRef = useRef(null); // Ref for the profile menu
+  const { isAuthenticated, login, logout } = useAuth(); // Auth context values
+
+  // Toggle profile menu
   const toggleProfileMenu = () => {
-    setProfileMenuVisible(!profileMenuVisible);
+    setProfileMenuVisible((prev) => !prev);
   };
+
+  // Close the profile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(event.target)
+      ) {
+        setProfileMenuVisible(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  }
+
+  const hadleLogin = () => {
+    navigate("/login");
+  }
 
   return (
     <header className="header">
@@ -21,7 +55,7 @@ const Header = () => {
       </div>
       <nav className="nav">
         <ul>
-          <li><a href="#home">Home</a></li>
+          <li><Link to="/">Home</Link></li>
           <li
             className="dropdown"
             onMouseEnter={() => setShopDropdown(true)}
@@ -50,26 +84,44 @@ const Header = () => {
               </ul>
             )}
           </li>
-          <li><a href="#contact">Contact Us</a></li>
+          <li><Link to="/contactus">Contact US</Link></li>
         </ul>
       </nav>
       <div className="icons">
         <a href="#search" className="icon">
           <FontAwesomeIcon icon={faSearch} />
         </a>
-        <div className="icon user-icon" onClick={toggleProfileMenu}>
+        <div
+          className="icon user-icon"
+          onClick={toggleProfileMenu}
+          ref={profileMenuRef}
+        >
           <FontAwesomeIcon icon={faUserCircle} />
           {profileMenuVisible && (
             <div className="profile-menu">
-              <button className="profile-menu-btn">Sign In</button>
-              <button className="profile-menu-btn">Register</button>
-              <hr />
-              <ul>
-                <li><a href="#my-orders">My Orders</a></li>
-                <li><a href="#wishlist">Wish List</a></li>
-                <li><a href="#settings">Settings</a></li>
-                <li><a href="#help-center">Help Center</a></li>
-              </ul>
+              {isAuthenticated ? (
+                <>
+                  <button className="profile-menu-btn" onClick={handleLogout}>
+                    Log Out
+                  </button>
+                  <hr />
+                  <ul>
+                    <li><a href="#my-orders">My Orders</a></li>
+                    <li><a href="#wishlist">Wish List</a></li>
+                    <li><a href="#settings">Settings</a></li>
+                    <li><a href="#help-center">Help Center</a></li>
+                  </ul>
+                </>
+              ) : (
+                <>
+                  <button className="profile-menu-btn" onClick={hadleLogin}>
+                    Log In
+                  </button>
+                  <button className="profile-menu-btn">
+                    <Link to="/register">Register</Link>
+                  </button>
+                </>
+              )}
             </div>
           )}
         </div>

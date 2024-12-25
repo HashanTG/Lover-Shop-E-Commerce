@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const AuthPage = () => {
   const [isSignUp, setIsSignUp] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // State for loading
   const [formData, setFormData] = useState({
     name: "",
     username: "",
@@ -29,23 +30,26 @@ const AuthPage = () => {
     const storedAuthStatus = localStorage.getItem("isAuthenticated");
     if (storedAuthStatus === "true") {
       console.log("User is authenticated (from localStorage)");
-      login(); // Update context to authenticated
+      login();
       navigate("/"); // Redirect to home
     }
   }, [login, navigate]);
 
+  // Toggle between Sign Up and Sign In
   const toggleAuthMode = () => {
     setIsSignUp(!isSignUp);
     setFormData({ name: "", username: "", email: "", password: "" });
     setModal({ isOpen: false, title: "", message: "", type: "" });
   };
 
+  // Handle input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
+  // Handle Sign Up
   const handleSignUp = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
     setModal({ isOpen: false, title: "", message: "", type: "" });
     try {
@@ -70,10 +74,13 @@ const AuthPage = () => {
         type: "error",
         onConfirm: null,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
-
+// Handle Sign In
   const handleSignIn = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
     setModal({ isOpen: false, title: "", message: "", type: "" });
 
@@ -102,13 +109,15 @@ const AuthPage = () => {
         type: "error",
         onConfirm: null,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
-
+// Handle Google Login
   const handleGoogleLogin = async () => {
     window.location.href = "http://localhost:8080/oauth2/authorization/google";
   };
-
+// Close the modal
   const closeModal = () => {
     if (modal.onConfirm) modal.onConfirm(); // Trigger onConfirm callback
     setModal({
@@ -191,8 +200,12 @@ const AuthPage = () => {
                 <a href="/terms">Terms of Use</a>
               </label>
             </div>
-            <button type="submit" className="auth-button">
-              Sign Up
+            <button type="submit" className="auth-button" disabled={isLoading}>
+              {isLoading ? (
+                <span className="spinner">Loading...</span>
+              ) : (
+                "Sign In"
+              )}
             </button>
             <button
               type="button"
@@ -240,8 +253,12 @@ const AuthPage = () => {
                 required
               />
             </div>
-            <button type="submit" className="auth-button">
-              Sign In
+            <button type="submit" className="auth-button" disabled={isLoading}>
+              {isLoading ? (
+                <span className="spinner">Loading...</span>
+              ) : (
+                "Sign In"
+              )}
             </button>
             <button
               type="button"

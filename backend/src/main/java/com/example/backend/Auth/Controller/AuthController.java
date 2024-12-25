@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Cookie;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
+
 
 import com.example.backend.Auth.Enums.Role;
 import com.example.backend.Auth.UtilSecurity.SecurityUtil;
@@ -103,6 +105,21 @@ public class AuthController {
         }
 
         return ResponseEntity.status(401).body("No token provided");
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response) {
+        // Create a cookie with the same name as your JWT cookie, set it to expire immediately
+        ResponseCookie cookie = ResponseCookie.from("jwt", "")
+                .path("/")
+                .httpOnly(true)
+                .maxAge(0) // Expire immediately
+                .build();
+
+        // Add the cookie to the response header
+        response.addHeader("Set-Cookie", cookie.toString());
+
+        return ResponseEntity.ok("Logout successful");
     }
 
     // Endpoint to assign a role to a user
