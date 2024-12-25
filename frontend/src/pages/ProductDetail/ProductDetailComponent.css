@@ -3,10 +3,10 @@
   align-items: flex-start; /* Adjust alignment for better readability */
   justify-content: center;
   gap: 2rem;
-  padding: 2rem;
+  padding: 4rem;
   margin-top: 50px;
   max-width: 1200px; /* Limit container width */
-  margin: 50px auto; /* Center on the page */
+  margin: 75px auto; /* Center on the page */
 }
 
 .product-image-section {

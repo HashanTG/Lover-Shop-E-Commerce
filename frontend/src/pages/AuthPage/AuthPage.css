@@ -1,8 +1,8 @@
 .auth-container {
     display: flex;
-    height: 100vh;
-    margin: 150px;
+    margin-top: 150px;
     padding: 50px;
+    min-height: 700px;
   }
   
   .auth-left {
@@ -29,6 +29,7 @@
   }
   
   .auth-right {
+    padding: 10px;
     flex: 1;
     display: flex;
     align-items: center;
@@ -39,6 +40,7 @@
   .auth-form {
     width: 80%;
     max-width: 400px;
+    min-width: 300px;
     text-align: center;
   }
   
