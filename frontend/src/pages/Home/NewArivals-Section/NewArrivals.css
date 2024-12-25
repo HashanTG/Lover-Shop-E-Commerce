@@ -1,7 +1,7 @@
 /* General container */
 .new-arrivals {
     padding: 20px;
-    text-align: center;
+    text-align: left;
     max-width: 1200px;
     width: 100%;
   }
@@ -76,7 +76,7 @@
   /* Product Info */
   .product-info {
     padding: 15px;
-    text-align: left;
+    text-align: center;
   }
   
   .product-info h3 {
@@ -87,10 +87,5 @@
   .product-info p {
     font-size: 14px;
     color: #555;
-  }
-  
-  .product-rating {
-    font-size: 14px;
-    color: #ffa41b;
   }
   

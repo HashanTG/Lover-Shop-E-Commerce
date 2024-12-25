@@ -132,16 +132,12 @@ function NewArrivals() {
           <div className="product-card" key={product.id}>
             <div className="product-image">
               <img src={product.image} alt={product.name} />
-              {product.isNew && <span className="new-label">NEW</span>}
-              <button className="add-to-cart">Add to cart</button>
+              {product.isNew && <span className="new-label">NEW</span>}  
             </div>
             <div className="product-info">
               <h3>{product.name}</h3>
               <p>Rs.{product.price}</p>
-              <div className="product-rating">
-                {"★".repeat(product.rating)}
-                {"☆".repeat(5 - product.rating)}
-              </div>
+              <button className="add-to-cart">Add to cart</button>
             </div>
           </div>
         ))}
