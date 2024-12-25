@@ -1,5 +1,6 @@
 package com.example.backend.Auth.security;
 
+import com.example.backend.Auth.Enums.Role;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.*;
 import com.nimbusds.jwt.*;
@@ -28,13 +29,13 @@ public class JwtUtil {
     /**
      * Generate JWT token with email and role
      */
-    public String generateToken(String userId,String email, String role) {
+    public String generateToken(String userId,String email, Role role) {
         try {
             // Create JWT claims
             JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                     .subject(email)
                     .claim("userId",userId)
-                    .claim("role", role)
+                    .claim("role", "ROLE_" + role.name())
                     .issueTime(new Date())
                     .expirationTime(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                     .build();
@@ -58,7 +59,7 @@ public class JwtUtil {
     }
 
     /**
-     * Parse and validate token
+     * Extract email from token
      */
     public String extractUsername(String token) {
         try {
@@ -68,6 +69,21 @@ public class JwtUtil {
 
             if (signedJWT.verify(verifier)) {
                 return signedJWT.getJWTClaimsSet().getSubject();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid token", e);
+        }
+        return null;
+    }
+
+    public String getRoleFromToken(String token) {
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(token);
+
+            JWSVerifier verifier = new MACVerifier(SECRET_KEY.getBytes());
+
+            if (signedJWT.verify(verifier)) {
+                return (String) signedJWT.getJWTClaimsSet().getClaim("role");
             }
         } catch (Exception e) {
             throw new RuntimeException("Invalid token", e);

@@ -6,9 +6,14 @@ import com.example.backend.Auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.example.backend.Auth.Enums.Role;
+import org.springframework.security.access.AccessDeniedException;
 
+import com.example.backend.Auth.UtilSecurity.SecurityUtil;
+import com.example.backend.Auth.UtilSecurity.SecurityUtil.*;
 import java.util.Optional;
 import java.util.Map;
+import com.example.backend.Auth.Enums.Role;
 
 @Service
 public class UserService {
@@ -24,9 +29,11 @@ public class UserService {
 
     /**
      * Authenticate a user by email and raw password.
-     * @param email the email of the user
+     * 
+     * @param email       the email of the user
      * @param rawPassword the raw password to validate
-     * @return an Optional containing the authenticated user, or empty if authentication fails
+     * @return an Optional containing the authenticated user, or empty if
+     *         authentication fails
      */
     public Optional<User> authenticateUser(String email, String rawPassword) {
         Optional<User> user = userRepository.findByEmail(email);
@@ -38,8 +45,10 @@ public class UserService {
 
     /**
      * Register a new user.
+     * 
      * @param user the user to register
-     * @return true if the registration is successful, false if the email already exists
+     * @return true if the registration is successful, false if the email already
+     *         exists
      */
     public boolean registerUser(User user) {
         // Check if the email is already in use
@@ -49,6 +58,7 @@ public class UserService {
 
         // Hash the password before saving the user
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.USER); // Default role for new users
 
         // Save the new user to the database
         userRepository.save(user);
@@ -57,38 +67,56 @@ public class UserService {
 
     /**
      * Find a user by email.
+     * 
      * @param email the email of the user
      * @return an Optional containing the user, or empty if the user is not found
      */
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
-    
 
-    //For OAuth registration
+    // For OAuth registration
 
     /**
- * Register or find a user using OAuth2 details.
- * @param email the email from OAuth2
- * @param attributes additional attributes from OAuth2 (e.g., name, picture)
- * @return the registered or existing user
- */
-public User registerOrFindUserWithOAuth(String email, Map<String, Object> attributes) {
-    // Check if the user already exists by email
-    Optional<User> existingUser = userRepository.findByEmail(email);
-    if (existingUser.isPresent()) {
-        return existingUser.get(); // Return the existing user
+     * Register or find a user using OAuth2 details.
+     * 
+     * @param email      the email from OAuth2
+     * @param attributes additional attributes from OAuth2 (e.g., name, picture)
+     * @return the registered or existing user
+     */
+    public User registerOrFindUserWithOAuth(String email, Map<String, Object> attributes) {
+        // Check if the user already exists by email
+        Optional<User> existingUser = userRepository.findByEmail(email);
+        if (existingUser.isPresent()) {
+            return existingUser.get(); // Return the existing user
+        }
+
+        // Create a new user for OAuth
+        User newUser = new User();
+        newUser.setEmail(email);
+        newUser.setRole(Role.USER);// Default role for OAuth2 users
+        newUser.setPassword(""); // No password as it’s OAuth2
+
+        // Save the new user to the database
+        return userRepository.save(newUser);
     }
 
-    // Create a new user for OAuth
-    User newUser = new User();
-    newUser.setEmail(email);
-    newUser.setRole("ROLE_USER"); // Default role for OAuth2 users
-    newUser.setPassword(""); // No password as it’s OAuth2
- 
+    public User assignRoleToUser(String userId, Role role) {
+        // Ensure only admin can assign roles
+        if (SecurityUtil.currentUserHasRole(Role.ADMIN)) {
+            // Fetch the user by ID
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-    // Save the new user to the database
-    return userRepository.save(newUser);
-}
+            // Set the new role
+            user.setRole(role);
+
+            // Save and return the updated user
+            return userRepository.save(user);
+        } else {
+            // If the current user is not an admin, throw an exception
+            throw new AccessDeniedException("You are not authorized to assign roles.");
+        }
+    }
 
 }

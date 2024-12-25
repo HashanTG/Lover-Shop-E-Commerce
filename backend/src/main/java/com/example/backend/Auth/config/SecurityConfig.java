@@ -13,11 +13,14 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.example.backend.Auth.service.UserService;
 import com.example.backend.Auth.model.User;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Autowired
@@ -34,7 +37,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/oauth2/**").permitAll() // Public endpoints
+                        .requestMatchers("/api/auth/**", "/oauth2/**","/api/products/**").permitAll() // Public endpoints
                         .requestMatchers("/api/**").authenticated() // Protected endpoints
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Admin routes
                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // User routes

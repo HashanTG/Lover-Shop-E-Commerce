@@ -11,6 +11,8 @@ import com.example.backend.Product.Service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/products")
@@ -32,18 +34,21 @@ public class ProductController {
     }
 
     // Add a new product
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public Product addProduct(@RequestBody Product product) {
         return productService.addProduct(product);
     }
 
     // Update an existing product
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public Product updaProduct(@PathVariable String id, @RequestBody Product product) {
         return productService.updaProduct(id, product);
     }
 
     // Delete a product by ID
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable String id) {
         productService.deleteProduct(id);
@@ -63,6 +68,7 @@ public class ProductController {
     
 
     // Reduce stock for a specific variation (optional feature)
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}/reduce-stock")
     public void reduceProductStock(
             @PathVariable String id,
