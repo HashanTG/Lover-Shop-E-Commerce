@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173" ,allowCredentials = "true")
 @RequestMapping("/api/cart")
 public class CartController {
 
@@ -27,8 +28,8 @@ public class CartController {
     }
     
 
-    @GetMapping("/details")
     @PreAuthorize("hasRole('USER')")
+    @GetMapping("/details")
     public ResponseEntity<CartModel> getCartWithDetails() {
         String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically from SecurityContext
         CartModel cart = cartService.getCartWithProductDetails(userId); // Fetch cart with product details

@@ -35,7 +35,7 @@ const ProductImageSection = ({ product }) => {
       />
       <div className="image-navigation">
         <button className="nav-button" onClick={() => handleImageNavigation("prev")}><img src={arrowLeft} className="arrows" /></button>
-        <button className="nav-button" onClick={() => handleImageNavigation("next")}><img src={arrowRight} lassName="arrows"/></button>
+        <button className="nav-button" onClick={() => handleImageNavigation("next")}><img src={arrowRight} className="arrows"/></button>
       </div>
     </div>
   );

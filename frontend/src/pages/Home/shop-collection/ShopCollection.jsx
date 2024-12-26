@@ -1,8 +1,8 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./ShopCollection.css";
 import mug from "../../../assets/Home/Shop-Collection/mug.png"
-import teddy from "../../../assets/Home/Shop-Collection/teddy.png"
-import tshirt from "../../../assets/Home/Shop-Collection/tshirt.png"
+
 
 const ShopCollection = () => {
   return (
@@ -18,7 +18,7 @@ const ShopCollection = () => {
           />
           <div className="collection-text">
             <h3>Customized Mug</h3>
-            <a href="#mug">Collection →</a>
+            <Link to="/products/teddy">Collection →</Link>
           </div>
         </div>
 
@@ -29,14 +29,14 @@ const ShopCollection = () => {
           <div className="small-container">
             <div className="collection-text">
               <h3>Teddy</h3>
-              <a href="#tshirt">Collection →</a>
+              <Link to="/products/teddy">Collection →</Link>
             </div>
             
           </div>
           <div className="small-container">
             <div className="collection-text">
               <h3>Teddy</h3>
-              <a href="#teddy">Collection →</a>
+              <Link to="/products/teddy">Collection →</Link>
             </div>
             
           </div>

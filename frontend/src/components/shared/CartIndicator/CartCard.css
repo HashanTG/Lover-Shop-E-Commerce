@@ -5,7 +5,7 @@
     align-items: center;
     justify-content: center;
     background-color:var(--primary-color); /* Background color */
-    border-radius: 50px; /* Makes the indicator circular */
+   
   
     cursor: pointer; /* Indicates clickable behavior */
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Adds hover effects */
@@ -14,7 +14,7 @@
   /* Hover effect for cart-indicator */
   .cart-indicator:hover {
     transform: scale(1.05); /* Slight zoom effect */
-    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow */
+
   }
   
   /* Cart icon styles */

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { checkAuthStatus } from "../api/authService";
+import { checkAuthStatus, logoutUser } from "../api/authService";
 
 // Create the AuthContext
 const AuthContext = createContext();
@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         setIsAuthenticated(false);
         localStorage.setItem("isAuthenticated", "false"); // Clear authentication status in localStorage
-        document.cookie = "jwt=; path=/; max-age=0"; // Clear JWT cookie
+        logoutUser(); // Call the logout service function
     };
 
     // Provide auth status and actions to children

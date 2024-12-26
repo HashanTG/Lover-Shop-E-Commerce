@@ -12,6 +12,7 @@
 .product-image-section {
   flex: 1;
   position: relative;
+  min-height: 500px;
 }
 
 .badge-container {
