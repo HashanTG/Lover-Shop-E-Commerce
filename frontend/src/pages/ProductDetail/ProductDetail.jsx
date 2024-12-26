@@ -1,90 +1,115 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { useParams } from "react-router-dom";
+import { CartContext } from "../../context/CartContext";
+import { useAuth } from "../../context/AuthContext";
+import axios from "axios";
+import ProductImageSection from "./productImageSection/ProductImageSection";
 import "./ProductDetailComponent.css";
 
-import ProductImageSection from "./productImageSection/ProductImageSection";
-
-import product1 from "../../assets/ProductDetail/product1.jpg";
-import product2 from "../../assets/ProductDetail/product2.png";
+// API endpoint to fetch product by ID
+const PRODUCT_API_ENDPOINT = "http://localhost:8080/api/products";
 
 const ProductDetail = () => {
+  const { productId } = useParams(); // Get the productId from the URL
+  const [product, setProduct] = useState(null); // State for the product data
   const [quantity, setQuantity] = useState(1);
+  const [wishlist, setWishlist] = useState([]); // Wishlist state
+  const [isLoading, setIsLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
+  const [loading, setLoading] = useState(false);
+  const { addToCart } = useContext(CartContext);
+  const { isAuthenticated } = useAuth();
 
-  const [wishlist, setWishlist] = useState([
-    { userId: "user123", productId: "product1" },
-    { userId: "user123", productId: "product3" },
+  const userId = "user123"; // Hardcoded user ID for now
 
-  ]);
+  // Add item to cart
+  const handleAddToCart = async () => {
+    if (!isAuthenticated) {
+      alert("Please log in to add items to the cart.");
+      return;
+    }
 
-  let userId = "user123";
-  // Hardcoded product data
-  const product = {
-    id: "productId",
-    name: "Gift Box",
-    category: "Gifts",
-    price: 25.99,
-    previousPrice: 1000,
-    stock: 100,
-    description: "A perfect gift for loved ones.",
-    images: [product1, product2],
-    createdAt: "2024-11-19T12:00:00Z",
-    variations: [
-      {
-        type: "Color",
-        options: [
-          { value: "Red", stock: 20 },
-          { value: "Blue", stock: 30 },
-        ],
-      },
-      {
-        type: "Size",
-        options: [
-          { value: "Small", stock: 50 },
-          { value: "Large", stock: 50 },
-        ],
-      },
-    ],
+    setLoading(true); // Start loading
+    try {
+      // Call the service to add the product to the cart
+      const result = await addToCart(productId, 1);
+
+      if (result.success) {
+        // Refresh the cart context
+        console.log("Item added to cart successfully");
+      } else {
+        alert(result.message);
+      }
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+      alert("An error occurred while adding the item to the cart.");
+    } finally {
+      setLoading(false); // End loading
+    }
+  };
+  // Fetch product details by ID
+  const fetchProductDetails = async (id) => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(`${PRODUCT_API_ENDPOINT}/${id}`);
+      setProduct(response.data);
+      setIsLoading(false);
+    } catch (err) {
+      setError(err.message || "Failed to fetch product details.");
+      setIsLoading(false);
+    }
   };
 
-// Check if the current product is in the wishlist
-const isInWishlist = wishlist.some(
-  (item) => item.productId === product.id && item.userId === userId
-);
+  useEffect(() => {
+    if (productId) fetchProductDetails(productId);
+  }, [productId]);
 
-// Toggle the wishlist status
-const toggleWishlist = () => {
-  setWishlist((prevWishlist) => {
-    if (isInWishlist) {
-      // Remove the product from the wishlist
-      return prevWishlist.filter(
-        (item) => item.productId !== product.id || item.userId !== userId
-      );
-    } else {
-      // Add the product to the wishlist
-      return [...prevWishlist, { userId, productId: product.id }];
-    }
-  });
-};
-
-  // State to track selected variation options
-  const [selectedVariations, setSelectedVariations] = useState(
-    product.variations.reduce((acc, variation) => {
+  // Initialize variations and stock based on product data
+  const initializeVariations = (product) => {
+    return product.variations.reduce((acc, variation) => {
       acc[variation.type] = variation.options[0].value; // Default to the first option
       return acc;
-    }, {})
-  );
+    }, {});
+  };
 
-  //State to track variation stock
-  const [selectedStock, setSelectedStock] = useState(
-    product.variations.reduce((stk, variation) => {
+  const initializeStock = (product) => {
+    return product.variations.reduce((stk, variation) => {
       variation.options.forEach((option) => {
         stk[option.value] = option.stock; // Map option value to its stock
       });
       return stk;
-    }, {})
+    }, {});
+  };
+
+  const [selectedVariations, setSelectedVariations] = useState({});
+  const [selectedStock, setSelectedStock] = useState({});
+
+  useEffect(() => {
+    if (product) {
+      setSelectedVariations(initializeVariations(product));
+      setSelectedStock(initializeStock(product));
+    }
+  }, [product]);
+
+  // Check if the product is in the wishlist
+  const isInWishlist = wishlist.some(
+    (item) => item.productId === productId && item.userId === userId
   );
 
+  // Toggle the wishlist status
+  const toggleWishlist = () => {
+    setWishlist((prevWishlist) => {
+      if (isInWishlist) {
+        return prevWishlist.filter(
+          (item) => item.productId !== productId || item.userId !== userId
+        );
+      } else {
+        return [...prevWishlist, { userId, productId }];
+      }
+    });
+  };
+
   const handleQuantityChange = (type) => {
-    // Get the stock for the currently selected options
     const selectedStockValue = Object.values(selectedVariations).reduce(
       (minStock, selectedOption) =>
         Math.min(minStock, selectedStock[selectedOption]),
@@ -99,7 +124,6 @@ const toggleWishlist = () => {
     }
   };
 
-  // Handle variation change
   const handleVariationChange = (type, value) => {
     setSelectedVariations((prev) => ({
       ...prev,
@@ -107,87 +131,87 @@ const toggleWishlist = () => {
     }));
   };
 
+  if (isLoading) return <p>Loading product details...</p>;
+  if (error) return <p>{error}</p>;
+
   return (
-    <div className="product-detail-container">
-      {/* Image Section */}
-
-      <ProductImageSection product={product} />
-
-      {/* Product Info Section */}
-      <div className="product-info-section">
-        <h1 className="product-title">{product.name}</h1>
-        <p className="product-description">{product.description}</p>
-
-        <div className="price-section">
-          <span className="current-price">Rs {product.price}</span>
-          <span className="original-price">Rs {product.previousPrice}</span>
-        </div>
-        <hr />
-        {/* Variations */}
-        {product.variations.map((variation) => (
-          <div key={variation.type} className="variation-section">
-            <h3>Choose {variation.type}</h3>
-            <select
-              className="variation-dropdown"
-              value={selectedVariations[variation.type]}
-              onChange={(e) =>
-                handleVariationChange(variation.type, e.target.value)
-              }
-            >
-              {variation.options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.value} ({option.stock} in stock)
-                </option>
-              ))}
-            </select>
+    product && (
+      <div className="product-detail-container">
+        <ProductImageSection product={product} />
+        <div className="product-info-section">
+          <h1 className="product-title">{product.name}</h1>
+          <p className="product-description">{product.description}</p>
+          <div className="price-section">
+            <span className="current-price">Rs {product.price}</span>
+            <span className="original-price">Rs {product.previousPrice}</span>
           </div>
-        ))}
+          <hr />
 
-        {/* Quantity Selector */}
-        <div className="quantity-wrapper">
-          <div className="quantity-section">
+          {product.variations.map((variation) => (
+            <div key={variation.type} className="variation-section">
+              <h3>Choose {variation.type}</h3>
+              <select
+                className="variation-dropdown"
+                value={selectedVariations[variation.type]}
+                onChange={(e) =>
+                  handleVariationChange(variation.type, e.target.value)
+                }
+              >
+                {variation.options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.value} ({option.stock} in stock)
+                  </option>
+                ))}
+              </select>
+            </div>
+          ))}
+
+          <div className="quantity-wrapper">
+            <div className="quantity-section">
+              <button
+                className="quantity-button"
+                onClick={() => handleQuantityChange("decrement")}
+              >
+                -
+              </button>
+              <span className="quantity">{quantity}</span>
+              <button
+                className="quantity-button"
+                onClick={() => handleQuantityChange("increment")}
+              >
+                +
+              </button>
+            </div>
             <button
-              className="quantity-button"
-              onClick={() => handleQuantityChange("decrement")}
+              className="wishlist-button"
+              style={{ color: isInWishlist ? "red" : "black" }}
+              onClick={toggleWishlist}
             >
-              -
-            </button>
-            <span className="quantity">{quantity}</span>
-            <button
-              className="quantity-button"
-              onClick={() => handleQuantityChange("increment")}
-            >
-              +
+              {isInWishlist ? "♥ In Wishlist" : "♡ Add to Wishlist"}
             </button>
           </div>
-            {/* Wishlist Button */}
-        <button
-          className="wishlist-button"
-          style={{
-            color: isInWishlist ? "red" : "black",
-          }}
-          onClick={toggleWishlist}
-        >
-          {isInWishlist ? "♥ In Wishlist" : "♡ Add to Wishlist"}
-        </button>
-        </div>
 
-        {/* Action Buttons */}
-        <div className="action-buttons">
-          <button className="add-to-cart-button">Add to Cart</button>
-        </div>
-        <hr />
-        {/* Product Metadata */}
-        <div className="product-meta">
-          <p>
-            <strong>Category:</strong> {product.category}
-          </p>
-          <p>
-            <strong>SKU:</strong> {product.id}
-          </p>
+          <div className="action-buttons">
+            <button
+              className="add-to-cart-button"
+              onClick={handleAddToCart}
+              disabled={loading} // Disable button while loading
+            >
+              {loading ? "Loading..." : "Add to Cart"}
+            </button>
+          </div>
+          <hr />
+          <div className="product-meta">
+            <p>
+              <strong>Category:</strong> {product.category}
+            </p>
+            <p>
+              <strong>SKU:</strong> {product.id}
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    )
   );
 };
 

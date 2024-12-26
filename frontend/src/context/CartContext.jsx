@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { fetchCartData } from "../api/CartServices"; // Import the service function to fetch cart data
+import { fetchCartData,addToCartApi} from "../api/CartServices"; // Import the service function to fetch cart data
 import { useAuth } from './AuthContext'; // Import the useAuth hook to get auth status
+
 
 // Create the CartContext
 export const CartContext = createContext();
@@ -31,13 +32,33 @@ export const CartProvider = ({ children }) => {
     }
 };
 
+const addToCart = async (productId, quantity) => {
+  if (!isAuthenticated) {
+    return { success: false, message: "User not logged in." };
+  }
+
+  try {
+    // Call the actual service or utility function for adding an item to the cart
+    await addToCartApi(productId, quantity); 
+
+    // Refresh the cart context
+    await fetchCart();
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error adding item to cart:", error);
+    return { success: false, message: error.message };
+  }
+};
+
+
   // Fetch cart data when the user is authenticated
   useEffect(() => {
     fetchCart();
   }, [isAuthenticated]); // Run when authentication status changes
 
   return (
-    <CartContext.Provider value={{ cartItems, cartItemCount }}>
+    <CartContext.Provider value={{ cartItems, cartItemCount,addToCart }}>
       {children}
     </CartContext.Provider>
   );
