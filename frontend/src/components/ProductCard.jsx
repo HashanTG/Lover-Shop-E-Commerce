@@ -9,6 +9,7 @@ const ProductCard = ({ product }) => {
       <p>{product.description}</p>
       <p>Price: Rs. {product.price}</p>
       <button className="add-to-cart">Add to Cart</button>
+      <button className="Whishlist">Wishlist</button>
     </div>
   );
 };

@@ -38,7 +38,22 @@
   cursor: pointer;
   display: block;
 }
+.Whishlist{
+  position: relative;
+  bottom: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 12px;
+ 
+  color: #7469B6;
+  border-color: #7469B6;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
 
+
+
+}
 .add-to-cart:hover {
   background-color: #AD88C6;
 }
