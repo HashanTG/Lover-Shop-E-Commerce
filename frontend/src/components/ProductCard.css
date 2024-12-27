@@ -7,8 +7,32 @@
   text-align: center;
   position: relative;
   padding-bottom: 50px; /* Add padding to make space for the fixed button */
+  display: inline-block;
+ 
+}
+.tag {
+  position: absolute;
+  top: 10px; /* Position the "New" tag above the image */
+  left: 10px;
+  background-color: #FF5733; /* Red color for "New" tag */
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
 }
 
+.discount-tag {
+  position: absolute;
+  top: 40px; /* Position the "50% Discounted" tag below the image */
+  left: 10px;
+  background-color: #28a745; /* Green color for "50% Discounted" tag */
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+}
 .product-card img {
   width: 100%;
   height: auto;
