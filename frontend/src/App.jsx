@@ -15,6 +15,7 @@ import ProductDetail from './pages/ProductDetail/ProductDetail';
 import Cart from './pages/Cart/Cart';
 import ProductPage from './pages/ProductPage';
 import Contact from './pages/Home/contact-Section/contact';
+import Loading from './components/shared/Loading/Loading';
 
 
 
@@ -42,6 +43,7 @@ const App = () => {
             <Route path="/products" element={<ProductPage />} />
           
             <Route path="/contactus" element={<Contact/>} />
+            <Route path="/loading" element={<Loading/>} />
 
 
            

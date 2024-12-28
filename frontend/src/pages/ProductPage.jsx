@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
+
 import "./ProductPage.css";
 import ProductCard from "../components/ProductCard";
+import Loading from "../components/shared/Loading/Loading";
 
 const ProductPage = () => {
   // Single array for all products
@@ -18,6 +21,7 @@ const ProductPage = () => {
   // States for filtering
   const [priceFilter, setPriceFilter] = useState("All");
   const [categoryFilter, setCategoryFilter] = useState("All");
+  const [isLoading, setIsLoading] = useState(true);
 
   // Filtered products
   const filteredProducts = allProducts.filter(product => {
@@ -25,6 +29,19 @@ const ProductPage = () => {
     const matchesCategory = categoryFilter === "All" ? true : product.category === categoryFilter;
     return matchesPrice && matchesCategory;
   });
+
+  useEffect(() => {
+    // Simulate loading time
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 5000); // 2 seconds loading time, adjust as needed
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="product-page">
