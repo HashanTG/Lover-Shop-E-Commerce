@@ -57,6 +57,7 @@
     flex-wrap: wrap;
     gap: 40px;
     width: 100%;
+    justify-content: center;
 }
 
 .contact_form {
