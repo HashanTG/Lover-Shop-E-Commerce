@@ -17,7 +17,7 @@ const ProductPage = ({ category }) => {
 
     ],
     Jewelry: [
-      { id: 1, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "https://via.placeholder.com/150" },
+      { id: 1, name: "Pink ", price: 3500, description: "Soft and cuddly pink teddy.", image: "https://via.placeholder.com/150" },
       { id: 2, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "https://via.placeholder.com/150" },
       { id: 3, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "https://via.placeholder.com/150" },
       { id: 4, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "https://via.placeholder.com/150" },
@@ -61,11 +61,7 @@ const ProductPage = ({ category }) => {
 
       {/* Filters */}
       <div className="filters">
-        {/* <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
-          <option value="Teddy">Teddy</option>
-          <option value="Jewelry">Jewelry</option>
-          <option value="Flowers">Flowers</option>
-        </select> */}
+       
         <select value={priceFilter} onChange={(e) => setPriceFilter(e.target.value)}>
           <option value="All">All Prices</option>
           <option value="1000">Up to Rs. 1000</option>
