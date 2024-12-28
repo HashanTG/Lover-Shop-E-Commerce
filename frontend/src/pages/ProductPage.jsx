@@ -5,36 +5,30 @@ const ProductPage = ({ category }) => {
   // Static product data
   const allProducts = {
     Teddy: [
-      { id: 1, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "https://via.placeholder.com/150" },
-      { id: 2, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "https://via.placeholder.com/150" },
-      { id: 3, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "https://via.placeholder.com/150" },
-      { id: 4, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "https://via.placeholder.com/150" },
-      { id: 5, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "https://via.placeholder.com/150" },
-      { id: 6, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "https://via.placeholder.com/150" },
-      { id: 7, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "https://via.placeholder.com/150" },
-      { id: 8, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "https://via.placeholder.com/150" },
+      { id: 1, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "/images/image150.png" },
+      { id: 2, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "/images/image150.png" },
+      { id: 3, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "/images/image150.png" },
+      { id: 4, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "/images/image150.png" },
+      { id: 5, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "/images/image150.png" },
+      { id: 6, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "/images/image150.png" },
+      { id: 7, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "/images/image150.png" },
+      { id: 8, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "/images/image150.png" },
       
 
     ],
     Jewelry: [
-      { id: 1, name: "Pink ", price: 3500, description: "Soft and cuddly pink teddy.", image: "https://via.placeholder.com/150" },
-      { id: 2, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "https://via.placeholder.com/150" },
-      { id: 3, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "https://via.placeholder.com/150" },
-      { id: 4, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "https://via.placeholder.com/150" },
-      { id: 5, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "https://via.placeholder.com/150" },
-      { id: 6, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "https://via.placeholder.com/150" },
-      { id: 7, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "https://via.placeholder.com/150" },
-      { id: 8, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "https://via.placeholder.com/150" },
+      { id: 1, name: "Pink ", price: 3500, description: "Soft and cuddly pink teddy.", image: "/images/image150.png" },
+      { id: 2, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "/images/image150.png" },
+      { id: 3, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "/images/image150.png" },
+      
     ],
     Flowers: [
-      { id: 1, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "https://via.placeholder.com/150" },
-      { id: 2, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "https://via.placeholder.com/150" },
-      { id: 3, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "https://via.placeholder.com/150" },
-      { id: 4, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "https://via.placeholder.com/150" },
-      { id: 5, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "https://via.placeholder.com/150" },
-      { id: 6, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "https://via.placeholder.com/150" },
-      { id: 7, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "https://via.placeholder.com/150" },
-      { id: 8, name: "Brown Teddy", price: 5500, description: "Cute brown teddy bear.", image: "https://via.placeholder.com/150" },
+      { id: 1, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "/images/image150.png" },
+      { id: 2, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "/images/image150.png" },
+      { id: 3, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "/images/image150.png" },
+      { id: 4, name: "Brown Teddy", price: 4500, description: "Cute brown teddy bear.", image: "/images/image150.png" },
+      { id: 5, name: "Pink Teddy", price: 3500, description: "Soft and cuddly pink teddy.", image: "/images/image150.png" },
+      
     ],
   };
 

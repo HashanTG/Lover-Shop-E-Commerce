@@ -55,7 +55,7 @@
   left: 50%;
   transform: translateX(-50%);
   
-  width: 200px;
+ 
   height: 40px;
   background-color: #7469B6;
   color: #fff;
@@ -64,6 +64,7 @@
   cursor: pointer;
   display: block;
   margin-top: 5px;
+  width: 230px;
 }
 .Whishlist{
   position: relative;
@@ -72,7 +73,7 @@
  
   transform: translateX(-50%);
  
-  width: 200px;
+  width: 230px;
   height: 40px;
   color: #7469B6;
   border-color: #7469B6;
