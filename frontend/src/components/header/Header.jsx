@@ -70,20 +70,7 @@ const Header = () => {
               </ul>
             )}
           </li>
-          <li
-            className="dropdown"
-            onMouseEnter={() => setProductDropdown(true)}
-            onMouseLeave={() => setProductDropdown(false)}
-          >
-            <a href="#product">Product <span>&#9662;</span></a>
-            {productDropdown && (
-              <ul className="dropdown-menu">
-                <li><a href="/products/teddy">Teddy</a></li>
-                <li><a href="/products/jewelry">Jewelry</a></li>
-                <li><a href="/products/flowers">Flowers</a></li>
-              </ul>
-            )}
-          </li>
+          <li><Link to="/products">Product</Link></li>
           <li><Link to="/contactus">Contact US</Link></li>
         </ul>
       </nav>

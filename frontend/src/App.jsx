@@ -14,6 +14,8 @@ import AuthPage from './pages/AuthPage/AuthPage';
 import ProductDetail from './pages/ProductDetail/ProductDetail';
 import Cart from './pages/Cart/Cart';
 import ProductPage from './pages/ProductPage';
+import Contact from './pages/Home/contact-Section/contact';
+import Loading from './components/shared/Loading/Loading';
 
 
 
@@ -38,9 +40,10 @@ const App = () => {
             <Route path="/product/:productId" element={<ProductDetail />} />
 
             <Route path="/cart" element={<Cart />} />
-            <Route path="/products/teddy" element={<ProductPage category="Teddy" />} />
-            <Route path="/products/jewelry" element={<ProductPage category="Jewelry" />} />
-            <Route path="/products/flowers" element={<ProductPage category="Flowers" />} />
+            <Route path="/products" element={<ProductPage />} />
+          
+            <Route path="/contactus" element={<Contact/>} />
+            <Route path="/loading" element={<Loading/>} />
 
 
            

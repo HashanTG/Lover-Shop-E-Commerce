@@ -57,7 +57,38 @@
 /* Product Grid */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(5, 1fr); /* Always show 5 columns */
   gap: 20px;
   margin-top: 20px;
+}
+
+/* Add minimum width to ensure cards don't get too small */
+.product-grid > * {
+  min-width: 0; /* Allows items to shrink below their minimum content size */
+  width: 100%; /* Ensures all items take full width of their grid cell */
+}
+
+/* Media query for responsive design */
+@media (max-width: 1200px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
 }
