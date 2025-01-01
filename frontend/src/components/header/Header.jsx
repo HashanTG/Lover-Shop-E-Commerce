@@ -75,6 +75,7 @@ const Header = () => {
         </ul>
       </nav>
       <div className="icons">
+      <input type="text" placeholder="Search..." />
         <a href="#search" className="icon">
           <FontAwesomeIcon icon={faSearch} />
         </a>
