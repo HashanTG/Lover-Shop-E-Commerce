@@ -1,15 +1,16 @@
 package com.example.backend.Cart.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.example.backend.Cart.Model.CartModel;
 import com.example.backend.Cart.Repository.CartRepository;
 import com.example.backend.Product.Model.Product;
 import com.example.backend.Product.Service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CartService {
