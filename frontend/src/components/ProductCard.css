@@ -64,7 +64,7 @@
   cursor: pointer;
   display: block;
   margin-top: 5px;
-  width: 230px;
+  width: 200px;
 }
 .Whishlist{
   position: relative;
@@ -73,7 +73,7 @@
  
   transform: translateX(-50%);
  
-  width: 230px;
+  width: 200px;
   height: 40px;
   color: #7469B6;
   border-color: #7469B6;

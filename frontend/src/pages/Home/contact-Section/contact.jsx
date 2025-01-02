@@ -12,7 +12,7 @@ const Contact = () => {
             
             <h3>ADDRESS</h3>
             
-            <p>234 Hai Trieu, Ho Chi Minh City, Viet Nam</p>
+            <p>234 University of Kelaniya, Kelaniya</p>
             </div>
         <div className="contact_item">
             {/* contact_image */}

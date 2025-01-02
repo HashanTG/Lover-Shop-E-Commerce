@@ -49,9 +49,9 @@ const Header = () => {
 
   return (
     <header className="header">
-      <div className="nav-logo">
-        <span>ROSA LOVER</span>
-        <img src="https://via.placeholder.com/150" alt="Rosa Lover" />
+      <div className="nav-logo" onClick={handleLogout}>
+        <span className="pointer">ROSA <span className="color-lover">LOVER.</span></span>
+        {/* <img src="/Adora.png" alt="Rosa Lover"/> */}
       </div>
       <nav className="nav">
         <ul>
