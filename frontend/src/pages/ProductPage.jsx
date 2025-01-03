@@ -33,7 +33,8 @@ const ProductPage = () => {
   //   { id: 8, name: "Tulip Bouquet", price: 4500, description: "Colorful tulip bouquet.", image: "/images/image150.png", category: "Flowers" }
   // ];
   const [products, setProducts] = useState([]);
- 
+  const [searchQuery, setSearchQuery] = useState("");
+
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -52,6 +53,13 @@ const ProductPage = () => {
   
     fetchProducts();
   }, []);
+
+
+  const handleSearch = () => {
+    const query = document.querySelector(".search").value;
+    setSearchQuery(query);
+  };
+  
   
 
 
@@ -67,7 +75,8 @@ const ProductPage = () => {
   const filteredProducts = products.filter(product => {
     const matchesPrice = priceFilter === "All" ? true : product.price <= parseInt(priceFilter, 10);
     const matchesCategory = categoryFilter === "All" ? true : product.category === categoryFilter;
-    return matchesPrice && matchesCategory;
+    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesPrice && matchesCategory && matchesSearch;
   });
   
 
@@ -92,7 +101,25 @@ const ProductPage = () => {
         <div className="banner-content">
           <h1>Our Products</h1>
           <p>Explore our amazing collection of products at affordable prices!</p>
+          
         </div>
+        <div className="search-container">
+        <form onSubmit={(e) => {
+  e.preventDefault();
+  handleSearch();
+}} className="search-container">
+  <input
+    type="text"
+    className="search"
+    placeholder="Search for something..."
+    value={searchQuery}
+    onChange={(e) => setSearchQuery(e.target.value)}
+  />
+  {/* <button type="submit" className="search-button">
+    Search
+  </button> */}
+</form>
+    </div>
       </div>
 
       {/* Filters */}

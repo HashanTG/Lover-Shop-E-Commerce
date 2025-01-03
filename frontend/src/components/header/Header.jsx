@@ -61,14 +61,14 @@ const Header = () => {
             onMouseEnter={() => setShopDropdown(true)}
             onMouseLeave={() => setShopDropdown(false)}
           >
-            <a href="#shop">Shop <span>&#9662;</span></a>
+            {/* <a href="#shop">Shop <span>&#9662;</span></a>
             {shopDropdown && (
               <ul className="dropdown-menu">
                 <li><a href="#shop-category1">Category 1</a></li>
                 <li><a href="#shop-category2">Category 2</a></li>
                 <li><a href="#shop-category3">Category 3</a></li>
               </ul>
-            )}
+            )} */}
           </li>
           <li><Link to="/products">Product</Link></li>
           <li><Link to="/contactus">Contact US</Link></li>
