@@ -61,6 +61,8 @@ const ProductPage = () => {
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
 
+  
+
   // Filtered products
   const filteredProducts = products.filter(product => {
     const matchesPrice = priceFilter === "All" ? true : product.price <= parseInt(priceFilter, 10);
