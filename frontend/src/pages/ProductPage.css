@@ -54,6 +54,14 @@
   cursor: pointer;
 }
 
+.no-products {
+  font-size: 1.2em;
+  color: #888;
+  
+  margin-top: 20px;
+}
+
+
 /* Product Grid */
 .product-grid {
   display: grid;

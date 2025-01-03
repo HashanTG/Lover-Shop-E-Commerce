@@ -4,12 +4,16 @@ import "./ProductCard.css";
 const ProductCard = ({ product }) => {
   return (
     <div className="product-card">
-      <img src={product.image} alt={product.name} />
+      <img src={product.images?.[0] || "/images/image2.png"} alt={product.name} />
       <div className="tag">New</div>
-  <div className="discount-tag">50%</div>
+      {product.previousPrice > product.price && (
+        <div className="discount-tag">
+          {Math.round((1 - product.price / product.previousPrice) * 100)}% OFF
+        </div>
+      )}
       <h3>{product.name}</h3>
       <p>{product.description}</p>
-      <p>Price: Rs. {product.price}</p>
+      <p>Price: Rs. {product.price.toFixed(2)}</p>
       <button className="add-to-cart">Add to Cart</button>
       <button className="Whishlist">Wishlist</button>
     </div>
