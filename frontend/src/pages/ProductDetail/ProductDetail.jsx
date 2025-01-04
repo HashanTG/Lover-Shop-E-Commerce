@@ -16,7 +16,7 @@ const ProductDetail = () => {
   const [wishlist, setWishlist] = useState([]); // Wishlist state
   const [isLoading, setIsLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
-  const [loading, setLoading] = useState(false);
+  
   const { addToCart } = useContext(CartContext);
   const { isAuthenticated } = useAuth();
 
@@ -28,14 +28,12 @@ const ProductDetail = () => {
       alert("Please log in to add items to the cart.");
       return;
     }
-
-    setLoading(true); // Start loading
+  
+    setIsLoading(true); // Start loading
     try {
-      // Call the service to add the product to the cart
-      const result = await addToCart(productId, 1);
-
+      const result = await addToCart(productId, quantity); // Use the quantity state
+  
       if (result.success) {
-        // Refresh the cart context
         console.log("Item added to cart successfully");
       } else {
         alert(result.message);
@@ -44,9 +42,10 @@ const ProductDetail = () => {
       console.error("Error adding item to cart:", error);
       alert("An error occurred while adding the item to the cart.");
     } finally {
-      setLoading(false); // End loading
+      setIsLoading(false); // End loading
     }
   };
+  
   // Fetch product details by ID
   const fetchProductDetails = async (id) => {
     try {
@@ -192,13 +191,14 @@ const ProductDetail = () => {
           </div>
 
           <div className="action-buttons">
-            <button
-              className="add-to-cart-button"
-              onClick={handleAddToCart}
-              disabled={loading} // Disable button while loading
-            >
-              {loading ? "Loading..." : "Add to Cart"}
-            </button>
+          <button
+  className="add-to-cart-button"
+  onClick={handleAddToCart}
+  disabled={isLoading}
+>
+  {isLoading ? "Loading..." : "Add to Cart"}
+</button>
+
           </div>
           <hr />
           <div className="product-meta">

@@ -8,6 +8,7 @@
   position: relative;
   padding-bottom: 50px; /* Add padding to make space for the fixed button */
   display: inline-block;
+  text-decoration: none;
  
 }
 .tag {
