@@ -33,7 +33,6 @@ const ProductPage = () => {
   //   { id: 8, name: "Tulip Bouquet", price: 4500, description: "Colorful tulip bouquet.", image: "/images/image150.png", category: "Flowers" }
   // ];
   const [products, setProducts] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
 
 
   useEffect(() => {
@@ -55,11 +54,7 @@ const ProductPage = () => {
   }, []);
 
 
-  const handleSearch = () => {
-    const query = document.querySelector(".search").value;
-    setSearchQuery(query);
-  };
-  
+
   
 
 
@@ -68,16 +63,34 @@ const ProductPage = () => {
   const [priceFilter, setPriceFilter] = useState("All");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
+  const [inputValue, setInputValue] = useState("");
+const [searchQuery, setSearchQuery] = useState("");
+
 
   
 
   // Filtered products
   const filteredProducts = products.filter(product => {
-    const matchesPrice = priceFilter === "All" ? true : product.price <= parseInt(priceFilter, 10);
+    let matchesPrice;
+    switch(priceFilter) {
+      case "1000":
+        matchesPrice = product.price >= 1000;
+        break;
+      case "2000":
+        matchesPrice = product.price >= 2000;
+        break;
+      case "5000":
+        matchesPrice = product.price >= 5000;
+        break;
+      default:
+        matchesPrice = true; // "All" case
+    }
+  
     const matchesCategory = categoryFilter === "All" ? true : product.category === categoryFilter;
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = searchQuery === "" || product.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesPrice && matchesCategory && matchesSearch;
   });
+  
   
 
   // useEffect(() => {
@@ -105,20 +118,20 @@ const ProductPage = () => {
         </div>
         <div className="search-container">
         <form onSubmit={(e) => {
-  e.preventDefault();
-  handleSearch();
-}} className="search-container">
-  <input
-    type="text"
-    className="search"
-    placeholder="Search for something..."
-    value={searchQuery}
-    onChange={(e) => setSearchQuery(e.target.value)}
-  />
-  {/* <button type="submit" className="search-button">
-    Search
-  </button> */}
-</form>
+    e.preventDefault();
+    setSearchQuery(inputValue);
+  }} className="search-container">
+    <input
+      type="text"
+      className="search"
+      placeholder="Search for something..."
+      value={inputValue}
+      onChange={(e) => setInputValue(e.target.value)}
+    />
+    <button type="submit" className="search-button">
+      Search
+    </button>
+  </form>
     </div>
       </div>
 
@@ -131,11 +144,12 @@ const ProductPage = () => {
           <option value="Flowers">Flowers</option>
         </select>
         <select value={priceFilter} onChange={(e) => setPriceFilter(e.target.value)}>
-          <option value="All">All Prices</option>
-          <option value="1000">Up to Rs. 1000</option>
-          <option value="2000">Up to Rs. 2000</option>
-          <option value="5000">Up to Rs. 5000</option>
-        </select>
+  <option value="All">All Prices</option>
+  <option value="1000">Above Rs. 1000</option>
+  <option value="2000">Above Rs. 2000</option>
+  <option value="5000">Above Rs. 5000</option>
+</select>
+
       </div>
       
 

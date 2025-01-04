@@ -76,9 +76,9 @@ const Header = () => {
       </nav>
       <div className="icons">
       {/* <input type="text" placeholder="Search..." /> */}
-        <a href="#search" className="icon">
+        {/* <a href="#search" className="icon">
           <FontAwesomeIcon icon={faSearch} />
-        </a>
+        </a> */}
         <div
           className="icon user-icon"
           onClick={toggleProfileMenu}
