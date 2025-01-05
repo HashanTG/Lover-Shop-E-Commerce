@@ -5,6 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 import ProductImageSection from "./productImageSection/ProductImageSection";
 import "./ProductDetailComponent.css";
+import CustomAlert from "../../components/CustomAlert";
 
 // API endpoint to fetch product by ID
 const PRODUCT_API_ENDPOINT = "http://localhost:8080/api/products";
@@ -16,6 +17,7 @@ const ProductDetail = () => {
   const [wishlist, setWishlist] = useState([]); // Wishlist state
   const [isLoading, setIsLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
+  const [showAlert, setShowAlert] = useState(false);
   
   const { addToCart } = useContext(CartContext);
   const { isAuthenticated } = useAuth();
@@ -25,7 +27,7 @@ const ProductDetail = () => {
   // Add item to cart
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
-      alert("Please log in to add items to the cart.");
+      setShowAlert(true);
       return;
     }
   
@@ -210,6 +212,13 @@ const ProductDetail = () => {
             </p>
           </div>
         </div>
+        {showAlert && (
+  <CustomAlert 
+    message="Please log in to add items to the cart."
+    onClose={() => setShowAlert(false)}
+    duration={2000}
+  />
+)}
       </div>
     )
   );
