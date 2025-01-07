@@ -6,6 +6,7 @@ import Information from './Info-Section/info';
 import NewArrivals from './NewArivals-Section/NewArrivals';
 import './home.css'
 import { useAuth } from '../../context/AuthContext';
+import HomeBackground from '../../components/heroBackground/HeroBackground';
 
 
 
@@ -19,6 +20,7 @@ function Home() {
 
   return (
     <div className='home'>
+        <HomeBackground />
         <Hero />
         <NewArrivals />
         <ShopCollection />

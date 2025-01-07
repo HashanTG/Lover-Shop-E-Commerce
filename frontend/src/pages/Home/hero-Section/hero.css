@@ -10,6 +10,8 @@
     background: #fff; /* Fallback color */
     margin-top: 60px;
     gap: 50px;
+    position: absolute;
+    top: 0;
   }
   
   /* Blurred background image */

@@ -131,10 +131,10 @@ const AuthPage = () => {
 
   return (
     <div className="auth-container">
-      <div className="auth-left">
+      {/* <div className="auth-left">
         <h1 className="logo">ROSA LOVER</h1>
         <div className="illustration"></div>
-      </div>
+      </div> */}
       <div className="auth-right">
         {isSignUp ? (
           <form className="auth-form" onSubmit={handleSignUp}>
