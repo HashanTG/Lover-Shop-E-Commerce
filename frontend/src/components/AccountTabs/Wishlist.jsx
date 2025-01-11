@@ -8,14 +8,14 @@ const Wishlist = () => {
       id: '10972345', 
       name: 'Black Linen Scarf', 
       category: 'Scarves', 
-      price: '$21.95', 
+      price: 'Rs 21.95', 
       image: '/images/image2.png' 
     },
     { 
       id: '10837492', 
       name: 'Classic Cateye Sunglasses', 
       category: 'Sunglasses', 
-      price: '$14.99', 
+      price: 'Rs 14.99', 
       image: '/images/image3.png' 
     }
   ];

@@ -6,7 +6,7 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
   position: relative;
-  padding-bottom: 50px; /* Add padding to make space for the fixed button */
+  padding-bottom: 100px; /* Add padding to make space for the fixed button */
   display: inline-block;
   text-decoration: none;
  
@@ -22,6 +22,8 @@
   font-size: 14px;
   font-weight: bold;
 }
+
+
 
 .discount-tag {
   position: absolute;
@@ -50,42 +52,34 @@
   margin: 5px 0;
 }
 
+.Whishlist {
+  position: absolute;
+  bottom: 55px; /* Position above the Add to Cart button */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 40px;
+  color: #7469B6;
+  border: 1px solid #7469B6;
+  background-color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .add-to-cart {
   position: absolute;
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  
- 
+  width: 200px;
   height: 40px;
   background-color: #7469B6;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  display: block;
-  margin-top: 5px;
-  width: 200px;
-}
-.Whishlist{
-  position: relative;
-  bottom: 1px;
-  left: 50%;
- 
-  transform: translateX(-50%);
- 
-  width: 200px;
-  height: 40px;
-  color: #7469B6;
-  border-color: #7469B6;
-  border-radius: 7px;
-  cursor: pointer;
-  display: block;
-  margin-bottom: 5px;
- 
-
-
-
+  display: block; /* Ensure the button is always displayed */
+  z-index: 1; /* Make sure the button appears above other elements */
 }
 .add-to-cart:hover {
   background-color: #AD88C6;
