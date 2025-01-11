@@ -94,7 +94,7 @@ const Header = () => {
                   </button>
                   <hr />
                   <ul>
-                    <li><a href="#my-orders">My Orders</a></li>
+                    <li><Link to="/account">Account</Link></li>
                     <li><a href="#wishlist">Wish List</a></li>
                     <li><a href="#settings">Settings</a></li>
                     <li><a href="#help-center">Help Center</a></li>
