@@ -1,5 +1,6 @@
 // components/Orders.jsx
 import React from 'react';
+import './Orders.css';
 
 const Orders = () => {
   const orders = [
@@ -10,6 +11,7 @@ const Orders = () => {
 
   return (
     <div className="orders">
+      <h2>Your Orders</h2>
       <table>
         <thead>
           <tr>
@@ -22,11 +24,11 @@ const Orders = () => {
         <tbody>
           {orders.map(order => (
             <tr key={order.id}>
-              <td>{order.id}</td>
-              <td>{order.date}</td>
-              <td>{order.status}</td>
-              <td>{order.price}</td>
-            </tr>
+            <td data-label="Number ID">{order.id}</td>
+            <td data-label="Date">{order.date}</td>
+            <td data-label="Status">{order.status}</td>
+            <td data-label="Price">{order.price}</td>
+          </tr>
           ))}
         </tbody>
       </table>

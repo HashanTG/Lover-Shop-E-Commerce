@@ -1,5 +1,6 @@
 // components/Addresses.jsx
 import React from 'react';
+import './Addresses.css';
 
 const Addresses = () => {
   return (

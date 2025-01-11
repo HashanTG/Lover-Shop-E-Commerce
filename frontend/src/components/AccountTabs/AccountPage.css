@@ -1,5 +1,5 @@
 .account-container {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 20px;
   display: flex;
@@ -10,7 +10,7 @@
 }
 
 .name {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: bold;
   color: #333;
   text-align: center;
@@ -34,15 +34,16 @@
 .tabs button {
   padding: 10px 20px;
   border: none;
-  background: #f0f0f0;
+  background: #f0f0f0;  
   cursor: pointer;
   text-align: left;
   font-size: 16px;
+  border-radius: 5px;
   transition: background-color 0.3s, color 0.3s;
 }
 
 .tabs button.active {
-  background: #6c5ce7;
+  background: #7469B6;
   color: white;
 }
 
@@ -83,41 +84,5 @@
   font-size: 16px;
 }
 
-/* Styling for address cards */
-.address-cards {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
 
-.address-card {
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #f9f9f9;
-}
 
-/* Styling for wishlist items */
-.wishlist-items {
-  display: grid;
-  grid-gap: 20px;
-}
-
-.wishlist-item {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #f9f9f9;
-}
-
-.add-to-cart {
-  background: #6c5ce7;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-}

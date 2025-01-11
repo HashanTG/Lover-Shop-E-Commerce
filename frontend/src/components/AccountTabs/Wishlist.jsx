@@ -1,11 +1,23 @@
 // components/Wishlist.jsx
 import React from 'react';
+import './Whishlist.css';
 
 const Wishlist = () => {
   const wishlistItems = [
-    { id: 1, name: 'Printed Mug', price: 'Rs 500.00', image: 'mug.jpg' },
-    { id: 2, name: 'Teddy', price: 'Rs 950.00', image: 'teddy.jpg' },
-    { id: 3, name: 'Necklace', price: 'Rs 600.00', image: 'necklace.jpg' }
+    { 
+      id: '10972345', 
+      name: 'Black Linen Scarf', 
+      category: 'Scarves', 
+      price: '$21.95', 
+      image: '/images/image2.png' 
+    },
+    { 
+      id: '10837492', 
+      name: 'Classic Cateye Sunglasses', 
+      category: 'Sunglasses', 
+      price: '$14.99', 
+      image: '/images/image3.png' 
+    }
   ];
 
   return (
@@ -14,13 +26,18 @@ const Wishlist = () => {
       <div className="wishlist-items">
         {wishlistItems.map(item => (
           <div key={item.id} className="wishlist-item">
-            <button className="remove-button">×</button>
-            <img src={item.image} alt={item.name} />
+            <div className="item-image">
+              <img src={item.image} alt={item.name} />
+            </div>
             <div className="item-details">
               <h3>{item.name}</h3>
-              <p>{item.price}</p>
+              <p className="item-id">Item ID: {item.id}</p>
+              <p className="category">{item.category}</p>
+              <div className="price-actions">
+                <span className="price">{item.price}</span>
+                <button className="add-to-bag">Add to Bag</button>
+              </div>
             </div>
-            <button className="add-to-cart">Add to cart</button>
           </div>
         ))}
       </div>
