@@ -15,9 +15,9 @@ public class Product {
     private String id;
     private String name;
     private String category;
-    private double price;
-    private double previousPrice;
-    private int stock;
+    private Double price;
+    private Double previousPrice;
+    private Integer stock;
     private String description;
     private List<String> images;
     private Date createdAt;  
@@ -32,7 +32,7 @@ public class Product {
         @Data
         public static class Option {
             private String value;
-            private int stock;
+            private Integer stock;
         }
     }
 }
