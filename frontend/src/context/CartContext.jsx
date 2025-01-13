@@ -57,8 +57,23 @@ const addToCart = async (productId, quantity) => {
     fetchCart();
   }, [isAuthenticated]); // Run when authentication status changes
 
+  const removeFromCart = async (productId) => {
+    if (!isAuthenticated) {
+      return { success: false, message: "User not logged in." };
+    }
+
+    try {
+      await removeFromCartApi(productId);
+      await fetchCart(); // Refresh the cart after removal
+      return { success: true };
+    } catch (error) {
+      console.error("Error removing item from cart:", error);
+      return { success: false, message: error.message };
+    }
+  };
+
   return (
-    <CartContext.Provider value={{ cartItems, cartItemCount,addToCart }}>
+    <CartContext.Provider value={{ cartItems, cartItemCount,addToCart, removeFromCart, fetchCart  }}>
       {children}
     </CartContext.Provider>
   );
