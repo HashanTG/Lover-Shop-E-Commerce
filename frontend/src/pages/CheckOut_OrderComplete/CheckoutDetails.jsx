@@ -1,3 +1,4 @@
+// CheckoutDetails.jsx
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../../context/CartContext';
@@ -20,6 +21,7 @@ const CheckoutDetails = () => {
     cardNumber: '',
     expiryDate: '',
     cvv: '',
+    paypalEmail: '',
     useAsBilling: false,
     paymentMethod: 'credit'
   });
@@ -42,7 +44,7 @@ const CheckoutDetails = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/api/orders/create', {
+      const response = await fetch('/api/orders/create', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -66,96 +68,129 @@ const CheckoutDetails = () => {
 
   return (
     <div className="checkout-container">
-      <div className="checkout-progress">
-        <div className="step completed">Shopping cart</div>
-        <div className="step active">Checkout details</div>
-        <div className="step">Order complete</div>
-      </div>
-
       <div className="checkout-layout">
         <form onSubmit={handleSubmit} className="checkout-form">
           <section className="contact-information">
             <h3>Contact Information</h3>
             <div className="form-row">
+              <div className="input-group">
+                <label htmlFor="firstName">First Name</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="input-group">
+                <label htmlFor="lastName">Last Name</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+            </div>
+            <div className="input-group">
+              <label htmlFor="phoneNumber">Phone Number</label>
               <input
-                type="text"
-                name="firstName"
-                placeholder="First name"
-                value={formData.firstName}
-                onChange={handleInputChange}
-                required
-              />
-              <input
-                type="text"
-                name="lastName"
-                placeholder="Last name"
-                value={formData.lastName}
+                type="tel"
+                id="phoneNumber"
+                name="phoneNumber"
+                value={formData.phoneNumber}
                 onChange={handleInputChange}
                 required
               />
             </div>
-            <input
-              type="email"
-              name="email"
-              placeholder="Email address"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
-            />
-            <input
-              type="tel"
-              name="phoneNumber"
-              placeholder="Phone number"
-              value={formData.phoneNumber}
-              onChange={handleInputChange}
-              required
-            />
+            <div className="input-group">
+              <label htmlFor="email">Email Address</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
           </section>
 
           <section className="shipping-address">
             <h3>Shipping Address</h3>
-            <input
-              type="text"
-              name="streetAddress"
-              placeholder="Street Address"
-              value={formData.streetAddress}
-              onChange={handleInputChange}
-              required
-            />
-            <select
-              name="country"
-              value={formData.country}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="">Select Country</option>
-              <option value="IN">India</option>
-            </select>
-            <div className="form-row">
+            <div className="input-group">
+              <label htmlFor="streetAddress">Street Address</label>
               <input
                 type="text"
-                name="city"
-                placeholder="Town/City"
-                value={formData.city}
+                id="streetAddress"
+                name="streetAddress"
+                value={formData.streetAddress}
                 onChange={handleInputChange}
                 required
               />
-              <input
-                type="text"
-                name="state"
-                placeholder="State"
-                value={formData.state}
+            </div>
+            <div className="input-group">
+              <label htmlFor="country">Country</label>
+              <select
+                id="country"
+                name="country"
+                value={formData.country}
                 onChange={handleInputChange}
                 required
-              />
-              <input
-                type="text"
-                name="zipCode"
-                placeholder="ZIP code"
-                value={formData.zipCode}
-                onChange={handleInputChange}
-                required
-              />
+              >
+                <option value="">Select Country</option>
+                <option value="IN">India</option>
+                <option value="CN">China</option>
+                <option value="JP">Japan</option>
+                <option value="KR">South Korea</option>
+                <option value="VN">Vietnam</option>
+                <option value="TH">Thailand</option>
+                <option value="PH">Philippines</option>
+                <option value="MY">Malaysia</option>
+                <option value="ID">Indonesia</option>
+                <option value="PK">Pakistan</option>
+                <option value="BD">Bangladesh</option>
+                <option value="LK">Sri Lanka</option>
+              </select>
+            </div>
+            <div className="form-row three-columns">
+              <div className="input-group">
+                <label htmlFor="city">City</label>
+                <input
+                  type="text"
+                  id="city"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="input-group">
+                <label htmlFor="state">State</label>
+                <input
+                  type="text"
+                  id="state"
+                  name="state"
+                  value={formData.state}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="input-group">
+                <label htmlFor="zipCode">ZIP Code</label>
+                <input
+                  type="text"
+                  id="zipCode"
+                  name="zipCode"
+                  value={formData.zipCode}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
             </div>
           </section>
 
@@ -170,7 +205,7 @@ const CheckoutDetails = () => {
                   checked={formData.paymentMethod === 'credit'}
                   onChange={handleInputChange}
                 />
-                Pay by Card Credit
+                <span className="radio-label">Credit Card</span>
               </label>
               <label className="payment-option">
                 <input
@@ -180,34 +215,70 @@ const CheckoutDetails = () => {
                   checked={formData.paymentMethod === 'paypal'}
                   onChange={handleInputChange}
                 />
-                PayPal
+                <span className="radio-label">PayPal</span>
+              </label>
+              <label className="payment-option">
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="cod"
+                  checked={formData.paymentMethod === 'cod'}
+                  onChange={handleInputChange}
+                />
+                <span className="radio-label">Cash on Delivery</span>
               </label>
             </div>
 
             {formData.paymentMethod === 'credit' && (
               <div className="card-details">
-                <input
-                  type="text"
-                  name="cardNumber"
-                  placeholder="Card Number"
-                  value={formData.cardNumber}
-                  onChange={handleInputChange}
-                  required
-                />
-                <div className="form-row">
+                <div className="input-group">
+                  <label htmlFor="cardNumber">Card Number</label>
                   <input
                     type="text"
-                    name="expiryDate"
-                    placeholder="MM/YY"
-                    value={formData.expiryDate}
+                    id="cardNumber"
+                    name="cardNumber"
+                    value={formData.cardNumber}
                     onChange={handleInputChange}
                     required
                   />
+                </div>
+                <div className="form-row">
+                  <div className="input-group">
+                    <label htmlFor="expiryDate">Expiry Date</label>
+                    <input
+                      type="text"
+                      id="expiryDate"
+                      name="expiryDate"
+                      placeholder="MM/YY"
+                      value={formData.expiryDate}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="input-group">
+                    <label htmlFor="cvv">CVV</label>
+                    <input
+                      type="text"
+                      id="cvv"
+                      name="cvv"
+                      value={formData.cvv}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {formData.paymentMethod === 'paypal' && (
+              <div className="paypal-form">
+                <div className="input-group">
+                  <label htmlFor="paypalEmail">PayPal Email</label>
                   <input
-                    type="text"
-                    name="cvv"
-                    placeholder="CVV"
-                    value={formData.cvv}
+                    type="email"
+                    id="paypalEmail"
+                    name="paypalEmail"
+                    value={formData.paypalEmail}
                     onChange={handleInputChange}
                     required
                   />
@@ -230,7 +301,7 @@ const CheckoutDetails = () => {
                 <div className="item-details">
                   <h4>{item.name}</h4>
                   <p>Quantity: {item.quantity}</p>
-                  <p>Rs. {(item.price * item.quantity).toFixed(2)}</p>
+                  <p className="item-price">Rs. {(item.price * item.quantity).toFixed(2)}</p>
                 </div>
               </div>
             ))}
