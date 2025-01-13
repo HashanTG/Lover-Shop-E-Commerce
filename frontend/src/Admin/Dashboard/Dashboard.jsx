@@ -1,8 +1,9 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import {React,useState,useEffect} from "react";
+import axios from "axios";
 import "./Dashboard.css";
 
 const Row = ({ order }) => {
+  console.log(order.id);
   return (
     <div className="table-row">
       <div>{order.id}</div>
@@ -10,43 +11,39 @@ const Row = ({ order }) => {
       <div>{order.customer}</div>
       <div>{order.total}</div>
       <div>{order.payment}</div>
-      <div className={`status ${order.status.toLowerCase()}`}>{order.status}</div>
+      <div className={`status ${order.status.toLowerCase()}`}>
+        {order.status}
+      </div>
     </div>
   );
 };
 
 const Dashboard = () => {
-  const orders = [
-    {
-      id: "#302012",
-      product: "Handmade Pouch",
-      customer: "John Bushmill",
-      total: "Rs 121.00",
-      payment: "Mastercard",
-      status: "Processing",
-    },
-    {
-      id: "#302011",
-      product: "Smartwatch E2",
-      customer: "Ilham Budi A",
-      total: "Rs 590.00",
-      payment: "Visa",
-      status: "Processing",
-    },
-    {
-      id: "#302002",
-      product: "Smartwatch E1",
-      customer: "Mohammad Karim",
-      total: "Rs 125.00",
-      payment: "Transfer",
-      status: "Shipped",
-    },
-    // Add more rows as needed
-  ];
+
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/orders", {
+          withCredentials: true,
+        });
+        console.log(response.data);  // Log the API response to check structure
+        if (response.data && Array.isArray(response.data)) {
+          setOrders(response.data);  // Ensure it's an array
+        }
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+  
+    fetchOrders();
+  }, []);
+
+  
 
   return (
     <div className="dashboard-container">
-
       {/* Main Content */}
       <main className="main-content">
         {/* Summary Row */}
@@ -82,9 +79,11 @@ const Dashboard = () => {
               <div>Payment</div>
               <div>Status</div>
             </div>
-            {orders.map((order, index) => (
-              <Row key={index} order={order} />
-            ))}
+            {orders && orders.length > 0 ? (
+              orders.map((order, index) => <Row key={index} order={order} />)
+            ) : (
+              <div>No orders found</div>
+            )}
           </div>
         </div>
       </main>

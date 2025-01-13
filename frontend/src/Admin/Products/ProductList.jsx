@@ -99,16 +99,16 @@ const ProductList = () => {
     },
   ];
 
-  const [product, setProduct] = useState(true);
+  const [edit, setEdit] = useState(true);
 
   return (
     <div className="product-list-container">
       {/* Main Content */}
-      {product ?(
+      {edit ?(
         <main className="main-content">
           <div className="product-add-header">
             <h1>Product</h1>
-            <button className="add-product-button" onClick={() =>setProduct(false)}>+ Add Product</button>
+            <button className="add-product-button" onClick={() =>setEdit(false)}>+ Add Product</button>
           </div>
           <div className="search-bar">
             <input type="text" placeholder="Search product..." />

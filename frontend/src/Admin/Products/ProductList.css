@@ -3,7 +3,7 @@
   /* Product List Layout */
   .product-list-container {
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
   }
   
   

@@ -1,40 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./OrderCard.css";
 
-const orders = [
-  {
-    id: 1,
-    productName: "Women Zip-Front Relaxed Fit Jacket x 3 M",
-    description: "High-quality jacket, perfect for cold weather.",
-    items: 1,
-    price: 1532,
-    method: "COD",
-    payment: "Pending",
-    date: "1/7/2025",
-    status: "Order Placed",
-  },
-  {
-    id: 2,
-    productName: "Men Slim-Fit Jeans x 2 L",
-    description: "Comfortable and stylish slim-fit jeans.",
-    items: 2,
-    price: 2100,
-    method: "Online Payment",
-    payment: "Completed",
-    date: "1/8/2025",
-    status: "Processing",
-  },
-];
-
 const OrderCard = () => {
-  const [orderStatus, setOrderStatus] = useState(
-    orders.map((order) => ({
-      id: order.id,
-      status: order.status,
-      confirm: false,
-    }))
-  );
+  const [orders, setOrders] = useState([]);
+  const [orderStatus, setOrderStatus] = useState([]);
 
+  // Fetch orders
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/orders", {
+          withCredentials: true,
+        });
+        console.log(response.data); // Log the API response to check structure
+        if (response.data && Array.isArray(response.data)) {
+          setOrders(response.data); // Ensure it's an array
+          // Initialize `orderStatus` based on fetched orders
+          setOrderStatus(
+            response.data.map((order) => ({
+              id: order.id,
+              status: order.status,
+              confirm: false,
+            }))
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  // Handle status change
   const handleStatusChange = (id, newStatus) => {
     setOrderStatus((prev) =>
       prev.map((order) =>
@@ -43,9 +42,18 @@ const OrderCard = () => {
     );
   };
 
+  // Handle confirmation or cancellation of status change
   const handleConfirm = (id, confirm) => {
+    if (confirm) {
+      console.log(`Order ${id} status confirmed`);
+    } else {
+      console.log(`Order ${id} status change cancelled`);
+    }
+    // Reset confirm state after action
     setOrderStatus((prev) =>
-      prev.map((order) => (order.id === id ? { ...order, confirm } : order))
+      prev.map((order) =>
+        order.id === id ? { ...order, confirm: false } : order
+      )
     );
   };
 
@@ -54,59 +62,63 @@ const OrderCard = () => {
       <div className="orders">
         <h3>Orders</h3>
         <div className="order-container">
-          {orders.map((order) => {
-            const currentStatus = orderStatus.find((o) => o.id === order.id);
-            return (
-              <div key={order.id} className="order-card">
-                <div className="order-image">
-                  <img
-                    src="https://via.placeholder.com/100"
-                    alt="Product"
-                    className="product-image"
-                  />
+          {orders.length > 0 ? (
+            orders.map((order) => {
+              const currentStatus = orderStatus.find((o) => o.id === order.id);
+              return (
+                <div key={order.id} className="order-card">
+                  <div className="order-image">
+                    <img
+                      src="https://via.placeholder.com/100"
+                      alt="Product"
+                      className="product-image"
+                    />
+                  </div>
+                  <div className="order-details">
+                    <h3>{order.productName || "Unknown Product"}</h3>
+                    <p>{order.description || "No description available"}</p>
+                    <p>Items: {order.items.length}</p>
+                    <p>Method: {order.method || "N/A"}</p>
+                    <p>Payment: {order.paymentStatus || "Pending"}</p>
+                    <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
+                  </div>
+                  <div className="order-actions">
+                    <p>₹{order.total.toFixed(2)}</p>
+                    <select
+                      value={currentStatus?.status || order.status}
+                      onChange={(e) =>
+                        handleStatusChange(order.id, e.target.value)
+                      }
+                      className="order-dropdown"
+                    >
+                      <option value="Order Placed">Order Placed</option>
+                      <option value="Processing">Processing</option>
+                      <option value="Shipped">Shipped</option>
+                      <option value="Delivered">Delivered</option>
+                    </select>
+                    {currentStatus?.confirm && (
+                      <div className="status-actions">
+                        <button
+                          onClick={() => handleConfirm(order.id, true)}
+                          className="confirm-btn"
+                        >
+                          ✅ Confirm
+                        </button>
+                        <button
+                          onClick={() => handleConfirm(order.id, false)}
+                          className="cancel-btn"
+                        >
+                          ❌ Cancel
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="order-details">
-                  <h3>{order.productName}</h3>
-                  <p>{order.description}</p>
-                  <p>Items: {order.items}</p>
-                  <p>Method: {order.method}</p>
-                  <p>Payment: {order.payment}</p>
-                  <p>Date: {order.date}</p>
-                </div>
-                <div className="order-actions">
-                  <p>₹{order.price}</p>
-                  <select
-                    value={currentStatus?.status || order.status}
-                    onChange={(e) =>
-                      handleStatusChange(order.id, e.target.value)
-                    }
-                    className="order-dropdown"
-                  >
-                    <option>Order Placed</option>
-                    <option>Processing</option>
-                    <option>Shipped</option>
-                    <option>Delivered</option>
-                  </select>
-                  {currentStatus?.confirm && (
-                    <div className="status-actions">
-                      <button
-                        onClick={() => handleConfirm(order.id, false)}
-                        className="confirm-btn"
-                      >
-                        ✅
-                      </button>
-                      <button
-                        onClick={() => handleConfirm(order.id, false)}
-                        className="cancel-btn"
-                      >
-                        ❌
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+              );
+            })
+          ) : (
+            <p>No orders found</p>
+          )}
         </div>
       </div>
     </div>
