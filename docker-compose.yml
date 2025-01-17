@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+#Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/frontend.Dockerfile
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    
+    command: ["npm", "run", "dev"]
+
+#Backend service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../docker/backend.Dockerfile 
+    volumes:
+      - ./backend/src:/app/src  # Mount source code directory for live reload
+      - ./backend/target:/app/target  # Optionally mount target directory to avoid full rebuild
+      - ./backend/pom.xml:/app/pom.xml  # Bind pom.xml for dependency changes
+
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env  # Load environment variables from the .env file
+    environment:
+    - SPRING_DATA_MONGODB_URI=${SPRING_DATA_MONGODB_URI}
+    - SPRING_DATA_MONGODB_DATABASE=${SPRING_DATA_MONGODB_DATABASE}
+    - JWT_SECRET=${JWT_SECRET}
+    - OAUTH2_CLIENT_ID=${OAUTH2_CLIENT_ID}
+    - OAUTH2_CLIENT_SECRET=${OAUTH2_CLIENT_SECRET}
+   
+volumes:
+  mongo_data:

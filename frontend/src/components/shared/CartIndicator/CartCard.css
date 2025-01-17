@@ -1,0 +1,34 @@
+/* Container for the cart indicator */
+.cart-indicator {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    background-color:var(--primary-color); /* Background color */
+   
+  
+    cursor: pointer; /* Indicates clickable behavior */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Adds hover effects */
+  }
+  
+  /* Hover effect for cart-indicator */
+  .cart-indicator:hover {
+    transform: scale(1.05); /* Slight zoom effect */
+
+  }
+  
+  /* Cart icon styles */
+  .cart-icon {
+    margin-right: 2px; /* Space between the icon and the count */
+  }
+  
+  /* Cart item count styles */
+  .cart-count {
+    font-size: 10px;
+    font-weight: bold; /* Makes the count bold */
+    color: #d87c04; /* Text color */
+    padding: 3px 6px;
+    background-color: black;
+    border-radius: 50%;
+  }
+  

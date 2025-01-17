@@ -1,0 +1,94 @@
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensure it appears above other elements */
+  }
+  
+  /* Modal Content Container */
+  .modal-content {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px; /* Max width of the modal */
+    padding: 20px;
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out; /* Optional animation */
+  }
+  
+  /* Modal Title */
+  .modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  /* Modal Message */
+  .modal-content p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  
+  /* Modal Buttons Container */
+  .modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Space between buttons */
+  }
+  
+  /* Modal Buttons */
+  .modal-button {
+    background-color: #007bff; /* Primary button color */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .modal-button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+  }
+  
+  /* Additional Button Variants */
+  .modal-button.cancel-button {
+    background-color: #dc3545; /* Red for cancel */
+  }
+  
+  .modal-button.cancel-button:hover {
+    background-color: #a71d2a; /* Darker red */
+  }
+  
+  .modal-button.confirm-button {
+    background-color: #28a745; /* Green for confirm */
+  }
+  
+  .modal-button.confirm-button:hover {
+    background-color: #218838; /* Darker green */
+  }
+  
+  /* Animation (Optional) */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
