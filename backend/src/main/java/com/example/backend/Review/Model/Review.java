@@ -1,9 +1,12 @@
+
 package com.example.backend.Review.Model;
+
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
+
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
@@ -23,3 +26,4 @@ public class Review {
     private String comment; // User's review
     private Date createdAt; // Timestamp of the review
 }
+
