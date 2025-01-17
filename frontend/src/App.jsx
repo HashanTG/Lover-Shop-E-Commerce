@@ -19,6 +19,9 @@ import Loading from './components/shared/Loading/Loading';
 import AccountPage from './components/AccountTabs/AccountPage';
 import Pannel from './Admin/Pannel/Pannel';
 
+// import CheckoutDetails from './pages/CheckOut_OrderComplete/CheckoutDetails';
+// import OrderComplete from './pages/CheckOut_OrderComplete/OrderComplete';
+
 
 
 
@@ -47,8 +50,16 @@ const App = () => {
             <Route path="/contactus" element={<Contact/>} />
             <Route path="/loading" element={<Loading/>} />
             <Route path="/account" element={<AccountPage/>} />
+
+            {/* <Route path="/checkout" element={<CheckoutDetails />} />
+  <Route path="/order-complete" element={<OrderComplete />} /> */}
+
+
+           
+
             <Route path="/admin" element={<Pannel />} />
       
+
           </Routes>
         </Layout>
       </CartProvider>

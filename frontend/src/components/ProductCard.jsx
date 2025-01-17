@@ -15,9 +15,9 @@ const ProductCard = ({ product }) => {
       <h3>{product.name}</h3>
       <p>{product.description}</p>
       <p>Price: Rs. {product.price.toFixed(2)}</p>
-      <button className="add-to-cart">Add to Cart</button>
       <button className="Whishlist">Wishlist</button>
-      </Link>
+      <button className="add-to-cart">Add to Cart</button>
+    </Link>
   );
 };
 

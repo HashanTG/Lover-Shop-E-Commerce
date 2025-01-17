@@ -31,3 +31,16 @@ export const addToCartApi = async (productId, quantity) => {
   }
 };
 
+export const removeFromCartApi = async (productId) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:8080/api/cart/remove",
+      { productId },
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error removing item from cart:", error);
+    throw new Error(error.response?.data?.message || "Failed to remove item from cart");
+  }
+};

@@ -6,9 +6,11 @@ const Cart = () => {
   // Local state for cart and shipping
   const [cart, setCart] = useState({ items: [] });
   const [shipping, setShipping] = useState(0);
+  const { cartItems, removeFromCart, fetchCart } = useContext(CartContext);
+
 
   // Consume CartContext to get the cartItems
-  const { cartItems } = useContext(CartContext);
+
 
   // Effect to update local state when cartItems from CartContext change
   useEffect(() => {
@@ -17,7 +19,7 @@ const Cart = () => {
 
   // Calculate subtotal
   const calculateSubtotal = () => {
-    return cart.items.reduce((total, item) => {
+    return cartItems.reduce((total, item) => {
       return total + item.quantity * (item.productDetails.price || 0);
     }, 0);
   };
@@ -33,11 +35,16 @@ const Cart = () => {
     });
   };
 
-  const handleRemoveItem = (productId) => {
-    setCart((prevCart) => ({
-      ...prevCart,
-      items: prevCart.items.filter((item) => item.productId !== productId),
-    }));
+  const handleRemoveItem = async (productId) => {
+    try {
+      const result = await removeFromCart(productId);
+      if (!result.success) {
+        alert(result.message);
+      }
+    } catch (error) {
+      console.error("Failed to remove item from cart", error);
+      alert("An error occurred while removing the item from the cart.");
+    }
   };
 
   const handleShippingChange = (cost) => {
