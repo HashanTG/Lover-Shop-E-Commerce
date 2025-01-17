@@ -17,13 +17,41 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backend.Product.Model.Product;
 import com.example.backend.Product.Service.ProductService;
 
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
+
+import com.example.backend.Product.Config.S3Config;
+
+import org.springframework.beans.factory.annotation.Value;
+
+import java.net.URL;
+import java.time.Duration;
+
+
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/products")
 public class ProductController {
 
+    @Value("${aws.s3.bucket-name}")
+    private String bucketName;
+
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private S3Client s3Client;
+
 
     // Get all products by Page by Page
     @GetMapping
@@ -80,5 +108,24 @@ public class ProductController {
             @RequestParam String variationValue,
             @RequestParam int quantity) {
         productService.reduceProductStock(id, variationType, variationValue, quantity);
+    }
+
+
+    //AWS URL generation
+
+    @PostMapping("/generate-presigned-url")
+    public URL generatePresignedUrl(@RequestParam String fileName) {
+        S3Presigner presigner = S3Presigner.create();
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key("products/" + fileName)
+                .build();
+
+        PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(10)) // URL valid for 10 minutes
+                .putObjectRequest(putObjectRequest)
+                .build();
+
+        return presigner.presignPutObject(presignRequest).url();
     }
 }

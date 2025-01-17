@@ -17,6 +17,7 @@ import ProductPage from './pages/ProductPage';
 import Contact from './pages/Home/contact-Section/contact';
 import Loading from './components/shared/Loading/Loading';
 import AccountPage from './components/AccountTabs/AccountPage';
+import Pannel from './Admin/Pannel/Pannel';
 
 
 
@@ -46,9 +47,8 @@ const App = () => {
             <Route path="/contactus" element={<Contact/>} />
             <Route path="/loading" element={<Loading/>} />
             <Route path="/account" element={<AccountPage/>} />
-
-
-           
+            <Route path="/admin" element={<Pannel />} />
+      
           </Routes>
         </Layout>
       </CartProvider>
