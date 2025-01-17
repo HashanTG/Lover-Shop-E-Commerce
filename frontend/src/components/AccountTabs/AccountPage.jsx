@@ -1,4 +1,3 @@
-// AccountPage.jsx
 import React, { useState } from 'react';
 import UserDetails from './UserDetails';
 import Addresses from './Addresses';
@@ -26,34 +25,38 @@ const AccountPage = () => {
 
   return (
     <div className="account-container">
-      <h1>My Account</h1>
-      <div className="tabs">
-        <button 
-          className={activeTab === 'details' ? 'active' : ''} 
-          onClick={() => setActiveTab('details')}
-        >
-          Account
-        </button>
-        <button 
-          className={activeTab === 'addresses' ? 'active' : ''} 
-          onClick={() => setActiveTab('addresses')}
-        >
-          Addresses
-        </button>
-        <button 
-          className={activeTab === 'orders' ? 'active' : ''} 
-          onClick={() => setActiveTab('orders')}
-        >
-          Orders
-        </button>
-        <button 
-          className={activeTab === 'wishlist' ? 'active' : ''} 
-          onClick={() => setActiveTab('wishlist')}
-        >
-          Wishlist
-        </button>
+      <h1 className='name'>My Account</h1>
+      <div className="account-content">
+        <div className="tabs">
+          <button 
+            className={activeTab === 'details' ? 'active' : ''} 
+            onClick={() => setActiveTab('details')}
+          >
+            Account
+          </button>
+          <button 
+            className={activeTab === 'addresses' ? 'active' : ''} 
+            onClick={() => setActiveTab('addresses')}
+          >
+            Addresses
+          </button>
+          <button 
+            className={activeTab === 'orders' ? 'active' : ''} 
+            onClick={() => setActiveTab('orders')}
+          >
+            Orders
+          </button>
+          <button 
+            className={activeTab === 'wishlist' ? 'active' : ''} 
+            onClick={() => setActiveTab('wishlist')}
+          >
+            Wishlist
+          </button>
+        </div>
+        <div className="content">
+          {renderContent()}
+        </div>
       </div>
-      {renderContent()}
     </div>
   );
 };
