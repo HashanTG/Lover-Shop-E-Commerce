@@ -24,6 +24,13 @@ public class OrderController {
         return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
 
+    // Endpoint to get all orders
+    @GetMapping
+    public ResponseEntity<List<Order>> getAllOrders() {
+        List<Order> orders = orderService.getAllOrders();
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+
     // Endpoint to get orders for a user
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Order>> getOrdersByUserId(@PathVariable String userId) {

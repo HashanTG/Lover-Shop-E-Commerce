@@ -19,6 +19,10 @@ public class OrderService {
         order.setCreatedAt(System.currentTimeMillis() + ""); // You can use your preferred date format
         return orderRepository.save(order);
     }
+    //Get All orders
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
 
     // Get all orders for a user
     public List<Order> getOrdersByUserId(String userId) {
