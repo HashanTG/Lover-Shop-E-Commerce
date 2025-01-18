@@ -51,7 +51,16 @@
   font-size: 1rem;
   border: 1px solid #ddd;
   border-radius: 5px;
+  width: 30%;
   cursor: pointer;
+}
+
+.price-range{
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
 
 .no-products {
@@ -85,7 +94,7 @@
   box-shadow: 0 0 5px rgba(255, 89, 197, 0.5);
 }
 
-.search-button {
+.btn {
   height: 40px;
   padding: 0 20px;
   margin-left: 10px;
@@ -98,7 +107,7 @@
   transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.search-button:hover {
+.btn:hover {
   background-color: #b66989;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

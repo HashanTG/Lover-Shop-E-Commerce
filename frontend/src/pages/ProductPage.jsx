@@ -1,56 +1,49 @@
-import React, { useState, useEffect } from "react";
-import { getProducts, getCategories,searchProducts} from "../api/productService";
+import React, { useState, useEffect, useReducer } from "react";
+import Button from "../components/shared/Button/Button";
+import { useSearchParams } from "react-router-dom";
+import {
+  getProducts,
+  getCategories,
+  searchProducts,
+} from "../api/productService";
 import "./ProductPage.css";
 import ProductCard from "../components/ProductCard";
 import Loading from "../components/shared/Loading/Loading";
 
-/**
- * @typedef {Object} Product
- * @property {string} id - Corresponds to _id
- * @property {string} name
- * @property {string} category
- * @property {number} price
- * @property {number} previousPrice
- * @property {number} stock
- * @property {string} description
- * @property {string[]} images - Array of image URLs
- * @property {string} createdAt - ISO date string
- * @property {Object[]} variations - Array of variation objects
- */
+// Reducer function for managing categoryFilter
+const filterReducer = (state, action) => {
+  switch (action.type) {
+    case "SET_CATEGORY":
+      return { ...state, categoryFilter: action.payload };
+    case "RESET_CATEGORY":
+      return { ...state, categoryFilter: "All" };
+    default:
+      return state;
+  }
+};
 
 const ProductPage = () => {
-  const [products, setProducts] = useState([]);//All products
-  const [categories, setCategories] = useState([]);//All categories
-  const [isLoading, setIsLoading] = useState(true);//Loading state
+  const [products, setProducts] = useState([]); // All products
+  const [categories, setCategories] = useState([]); // All categories
+  const [isLoading, setIsLoading] = useState(true); // Loading state
 
-  //Filter states
+  // Filter states managed by useReducer
+  const [filterState, dispatchFilter] = useReducer(filterReducer, {
+    categoryFilter: "All",
+  });
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("All");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
 
- 
-//Fetch Products and Categories
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Fetch products and categories
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setIsLoading(true); // Show loader while fetching
-        const data = await getProducts();
-        console.log("Fetched products:", data.content);
-
-        setProducts(data.content);
-      } catch (error) {
-        console.error("Failed to fetch products.", error);
-      } finally {
-        setIsLoading(false); // Hide loader after fetching
-      }
-    };
-
     const fetchCategories = async () => {
       try {
         setIsLoading(true); // Show loader while fetching
         const data = await getCategories();
-
         setCategories(data);
       } catch (error) {
         console.error("Failed to fetch categories.", error);
@@ -59,64 +52,113 @@ const ProductPage = () => {
       }
     };
 
-    fetchProducts();
+    const initializeFiltersWithQuery = async () => {
+      const categoryFromQuery = searchParams.get("category");
+
+      if (categoryFromQuery) {
+        dispatchFilter({ type: "SET_CATEGORY", payload: categoryFromQuery });
+        searchWithCategory(categoryFromQuery); // Perform search with query category
+      } else {
+        fetchAllProducts(); // Fetch all products if no category in query
+      }
+    };
+
     fetchCategories();
-  }, []);
+    initializeFiltersWithQuery();
+  }, []); // Run on component mount
 
+  // Fetch all products
+  const fetchAllProducts = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getProducts();
+      setProducts(data.content);
+    } catch (error) {
+      console.error("Failed to fetch products.", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-// Search Products
-const search = async () => {
-  try {
-    setIsLoading(true);
-    console.log(minPrice !== "")
-    console.log(minPrice)
-
-    // Convert filters into optional query parameters
+  // Search products using filterState
+  const searchWithFilters = async () => {
+    const selectedCategory =
+      filterState.categoryFilter !== "All"
+        ? filterState.categoryFilter
+        : undefined;
     const minPriceVal = minPrice !== "" ? parseFloat(minPrice) : undefined;
     const maxPriceVal = maxPrice !== "" ? parseFloat(maxPrice) : undefined;
-    const category = categoryFilter !== "All" ? categoryFilter : undefined;
 
-    const data = await searchProducts({
-      searchQuery: searchQuery || undefined,
-      category,
+    await searchProductsAndUpdateState({
+      searchQuery,
+      category: selectedCategory,
       minPriceVal,
-      maxPriceVal // If you want to add a maximum price filter later
+      maxPriceVal,
     });
+  };
 
-    console.log("Searched products:", data.content);
+  // Search products using a specific category
+  const searchWithCategory = async (category) => {
+    await searchProductsAndUpdateState({
+      searchQuery: undefined,
+      category,
+      minPriceVal: undefined,
+      maxPriceVal: undefined,
+    });
+  };
 
-    // Update the products state with the response
-    setProducts(data.content);
-  } catch (error) {
-    console.error("Failed to search products.", error);
-  } finally {
-    setIsLoading(false); // Ensure loading state is reset
-  }
-};
+  // Generic function to handle product search
+  const searchProductsAndUpdateState = async ({
+    searchQuery,
+    category,
+    minPriceVal,
+    maxPriceVal,
+  }) => {
+    try {
+      setIsLoading(true);
 
+      const data = await searchProducts({
+        searchQuery,
+        category,
+        minPrice: minPriceVal,
+        maxPrice: maxPriceVal,
+      });
 
+      console.log("Searched products:", data.content);
+      setProducts(data.content);
 
+      // Update query parameters
+      const searchParamsObj = {};
+      if (category) searchParamsObj.category = category;
+      if (minPriceVal) searchParamsObj.minPrice = minPriceVal;
+      if (maxPriceVal) searchParamsObj.maxPrice = maxPriceVal;
 
+      setSearchParams(searchParamsObj);
+    } catch (error) {
+      console.error("Failed to search products.", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-return (
-  <>
-    {isLoading && <Loading />}
-    {!isLoading && (
-      <div className="product-page">
-        {/* Header Banner */}
-        <div className="banner">
-          <img
-            src="/productpagefooter.png"
-            alt="Banner"
-            className="banner-image"
-          />
-          <div className="banner-content">
-            <h1>Our Products</h1>
-            <p>
-              Explore our amazing collection of products at affordable prices!
-            </p>
-          </div>
-          <div className="search-container">
+  return (
+    <>
+      {isLoading && <Loading />}
+      {!isLoading && (
+        <div className="product-page">
+          {/* Header Banner */}
+          <div className="banner">
+            <img
+              src="/productpagefooter.png"
+              alt="Banner"
+              className="banner-image"
+            />
+            <div className="banner-content">
+              <h1>Our Products</h1>
+              <p>
+                Explore our amazing collection of products at affordable prices!
+              </p>
+            </div>
             <div className="search-container">
               <input
                 type="text"
@@ -125,57 +167,61 @@ return (
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <button className="search-button" onClick={() => search()}>
-                Search
-              </button>
+
+              <Button label="Search" onClick={() =>searchWithFilters()} class="search-button" />
             </div>
           </div>
-        </div>
 
-        {/* Filters */}
-        <div className="filters">
-          <select
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-          >
-            <option value="All" selected="true">
-              All Categories
-            </option>
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
+          {/* Filters */}
+          <div className="filters">
+            <select
+              value={filterState.categoryFilter}
+              onChange={(e) =>
+                dispatchFilter({
+                  type: "SET_CATEGORY",
+                  payload: e.target.value,
+                })
+              }
+            >
+              <option value="All">All Categories</option>
+              {categories.map((categoryItem) => (
+                <option key={categoryItem} value={categoryItem}>
+                  {categoryItem}
+                </option>
+              ))}
+            </select>
 
-          <div className="price-range">
-            <input
-              type="number"
-              placeholder="Min Price"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-            />
-            <input
-              type="number"
-              placeholder="Max Price"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-            />
+            <div className="price-range">
+              <input
+                type="number"
+                placeholder="Min Price"
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+              />
+              <input
+                type="number"
+                placeholder="Max Price"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+              />
+            </div>
+            <Button label="Apply Filter" onClick={() =>searchWithFilters()} class="search-button" />
           </div>
-          <button onClick={() => search()}>Apply Filter</button>
-        </div>
 
-        {/* Products Grid */}
-        <div className="product-grid">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+          {/* Products Grid */}
+          {products.length === 0 ? (
+            <div>No products found</div>
+          ) : (
+            <div className="product-grid">
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
         </div>
-      </div>
-    )}
-  </>
-);
-
+      )}
+    </>
+  );
 };
 
 export default ProductPage;

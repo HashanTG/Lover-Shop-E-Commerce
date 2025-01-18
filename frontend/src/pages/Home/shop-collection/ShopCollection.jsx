@@ -26,7 +26,7 @@ const ShopCollection = () => {
           />
           <div className="collection-text">
             <h3>Customized Mug</h3>
-            <Link to="/products/teddy">Collection →</Link>
+            <Link to="/products?category=Mug">Collection →</Link>
           </div>
         </div>
 
@@ -36,15 +36,15 @@ const ShopCollection = () => {
           
           <div className="small-container">
             <div className="collection-text">
-              <h3>Teddy</h3>
-              <Link to="/products/teddy">Collection →</Link>
+              <h3>T-Shirt</h3>
+              <Link to="/products?category=Tshirt">Collection →</Link>
             </div>
             
           </div>
           <div className="small-container">
             <div className="collection-text">
               <h3>Teddy</h3>
-              <Link to="/products/teddy">Collection →</Link>
+              <Link to="/products?category=Teddy">Collection →</Link>
             </div>
             
           </div>
