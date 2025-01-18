@@ -9,8 +9,6 @@ const AuthPage = () => {
   const [isSignUp, setIsSignUp] = useState(true);
   const [isLoading, setIsLoading] = useState(false); // State for loading
   const [formData, setFormData] = useState({
-    name: "",
-    username: "",
     email: "",
     password: "",
   });
@@ -54,8 +52,6 @@ const AuthPage = () => {
     setModal({ isOpen: false, title: "", message: "", type: "" });
     try {
       const response = await registerUser({
-        name: formData.name,
-        username: formData.username,
         email: formData.email,
         password: formData.password,
       });
@@ -131,10 +127,7 @@ const AuthPage = () => {
 
   return (
     <div className="auth-container">
-      {/* <div className="auth-left">
-        <h1 className="logo">ROSA LOVER</h1>
-        <div className="illustration"></div>
-      </div> */}
+
       <div className="auth-right">
         {isSignUp ? (
           <form className="auth-form" onSubmit={handleSignUp}>
@@ -149,28 +142,7 @@ const AuthPage = () => {
                 Sign in
               </button>
             </p>
-            <div className="form-group">
-              <label>Your name</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Enter your name"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Username</label>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleInputChange}
-                placeholder="Enter your username"
-                required
-              />
-            </div>
+
             <div className="form-group">
               <label>Email address</label>
               <input

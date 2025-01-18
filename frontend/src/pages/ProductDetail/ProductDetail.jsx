@@ -6,6 +6,8 @@ import axios from "axios";
 import ProductImageSection from "./productImageSection/ProductImageSection";
 import "./ProductDetailComponent.css";
 import CustomAlert from "../../components/CustomAlert";
+import Review from "./Reviews/Review";
+import { getRreviews } from "../../api/reviewService";
 
 // API endpoint to fetch product by ID
 const PRODUCT_API_ENDPOINT = "http://localhost:8080/api/products";
@@ -18,7 +20,8 @@ const ProductDetail = () => {
   const [isLoading, setIsLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
   const [showAlert, setShowAlert] = useState(false);
-  
+  const [reviews, setReviews] = useState([]); //Reviews
+
   const { addToCart } = useContext(CartContext);
   const { isAuthenticated } = useAuth();
 
@@ -30,11 +33,11 @@ const ProductDetail = () => {
       setShowAlert(true);
       return;
     }
-  
+
     setIsLoading(true); // Start loading
     try {
       const result = await addToCart(productId, quantity); // Use the quantity state
-  
+
       if (result.success) {
         console.log("Item added to cart successfully");
       } else {
@@ -47,7 +50,7 @@ const ProductDetail = () => {
       setIsLoading(false); // End loading
     }
   };
-  
+
   // Fetch product details by ID
   const fetchProductDetails = async (id) => {
     try {
@@ -61,8 +64,21 @@ const ProductDetail = () => {
     }
   };
 
+  const fetchReviews = async (productId) => {
+    try {
+      const reviews = await getRreviews(productId);
+      console.log(reviews);
+      setReviews(reviews);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
+
   useEffect(() => {
-    if (productId) fetchProductDetails(productId);
+    if (productId) {
+      fetchProductDetails(productId);
+      fetchReviews(productId);
+    }
   }, [productId]);
 
   // Initialize variations and stock based on product data
@@ -136,91 +152,99 @@ const ProductDetail = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    product && (
-      <div className="product-detail-container">
-        <ProductImageSection product={product} />
-        <div className="product-info-section">
-          <h1 className="product-title">{product.name}</h1>
-          <p className="product-description">{product.description}</p>
-          <div className="price-section">
-            <span className="current-price">Rs {product.price}</span>
-            <span className="original-price">Rs {product.previousPrice}</span>
-          </div>
-          <hr />
-
-          {product.variations.map((variation) => (
-            <div key={variation.type} className="variation-section">
-              <h3>Choose {variation.type}</h3>
-              <select
-                className="variation-dropdown"
-                value={selectedVariations[variation.type]}
-                onChange={(e) =>
-                  handleVariationChange(variation.type, e.target.value)
-                }
-              >
-                {variation.options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.value} ({option.stock} in stock)
-                  </option>
-                ))}
-              </select>
+    <>
+      {product && (
+        <div className="product-detail-container">
+          <ProductImageSection product={product} />
+          <div className="product-info-section">
+            <h1 className="product-title">{product.name}</h1>
+            <p className="product-description">{product.description}</p>
+            <div className="price-section">
+              <span className="current-price">Rs {product.price}</span>
+              <span className="original-price">Rs {product.previousPrice}</span>
             </div>
-          ))}
+            <hr />
 
-          <div className="quantity-wrapper">
-            <div className="quantity-section">
+            {product.variations.map((variation) => (
+              <div key={variation.type} className="variation-section">
+                <h3>Choose {variation.type}</h3>
+                <select
+                  className="variation-dropdown"
+                  value={selectedVariations[variation.type]}
+                  onChange={(e) =>
+                    handleVariationChange(variation.type, e.target.value)
+                  }
+                >
+                  {variation.options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.value} ({option.stock} in stock)
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ))}
+
+            <div className="quantity-wrapper">
+              <div className="quantity-section">
+                <button
+                  className="quantity-button"
+                  onClick={() => handleQuantityChange("decrement")}
+                >
+                  -
+                </button>
+                <span className="quantity">{quantity}</span>
+                <button
+                  className="quantity-button"
+                  onClick={() => handleQuantityChange("increment")}
+                >
+                  +
+                </button>
+              </div>
               <button
-                className="quantity-button"
-                onClick={() => handleQuantityChange("decrement")}
+                className="wishlist-button"
+                style={{ color: isInWishlist ? "red" : "black" }}
+                onClick={toggleWishlist}
               >
-                -
-              </button>
-              <span className="quantity">{quantity}</span>
-              <button
-                className="quantity-button"
-                onClick={() => handleQuantityChange("increment")}
-              >
-                +
+                {isInWishlist ? "♥ In Wishlist" : "♡ Add to Wishlist"}
               </button>
             </div>
-            <button
-              className="wishlist-button"
-              style={{ color: isInWishlist ? "red" : "black" }}
-              onClick={toggleWishlist}
-            >
-              {isInWishlist ? "♥ In Wishlist" : "♡ Add to Wishlist"}
-            </button>
+
+            <div className="action-buttons">
+              <button
+                className="add-to-cart-button"
+                onClick={handleAddToCart}
+                disabled={isLoading}
+              >
+                {isLoading ? "Loading..." : "Add to Cart"}
+              </button>
+            </div>
+            <hr />
+            <div className="product-meta">
+              <p>
+                <strong>Category:</strong> {product.category}
+              </p>
+              <p>
+                <strong>SKU:</strong> {product.id}
+              </p>
+            </div>
           </div>
 
-          <div className="action-buttons">
-          <button
-  className="add-to-cart-button"
-  onClick={handleAddToCart}
-  disabled={isLoading}
->
-  {isLoading ? "Loading..." : "Add to Cart"}
-</button>
-
-          </div>
-          <hr />
-          <div className="product-meta">
-            <p>
-              <strong>Category:</strong> {product.category}
-            </p>
-            <p>
-              <strong>SKU:</strong> {product.id}
-            </p>
-          </div>
+          {showAlert && (
+            <CustomAlert
+              message="Please log in to add items to the cart."
+              onClose={() => setShowAlert(false)}
+              duration={2000}
+            />
+          )}
         </div>
-        {showAlert && (
-  <CustomAlert 
-    message="Please log in to add items to the cart."
-    onClose={() => setShowAlert(false)}
-    duration={2000}
-  />
-)}
+      )}
+
+      <div className="review-list">
+        {reviews.map((review) => (
+          <Review key={review.id} review={review} />
+        ))}
       </div>
-    )
+    </>
   );
 };
 

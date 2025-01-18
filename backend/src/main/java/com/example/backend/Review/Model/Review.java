@@ -22,8 +22,11 @@ public class Review {
     private String id;
     private String productId; // Links the review to a specific product
     private String userId; // Links the review to a specific user
-    private int rating; // Rating out of 5
+    private Integer rating; // Rating out of 5
     private String comment; // User's review
     private Date createdAt; // Timestamp of the review
+    private String adminReply; // Admin's reply to the review
+    private Date replyCreatedAt; // Timestamp of the admin's reply
+
 }
 

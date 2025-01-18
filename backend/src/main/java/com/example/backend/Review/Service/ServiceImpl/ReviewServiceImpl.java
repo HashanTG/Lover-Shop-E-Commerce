@@ -43,4 +43,22 @@ public class ReviewServiceImpl implements ReviewService {
     public void deleteReview(String id) {
         reviewRepository.deleteById(id);
     }
+
+    @Override
+    public Double getOverallRating(String productId) {
+        List<Review> reviews = reviewRepository.findByProductId(productId);
+        return reviews.stream()
+                .mapToInt(Review::getRating)
+                .average()
+                .orElse(0.0);
+    }
+
+    @Override
+    public Review replyToReview(String reviewId, String reply) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RuntimeException("Review not found"));
+        review.setAdminReply(reply);
+        return reviewRepository.save(review);
+    }
 }
+
