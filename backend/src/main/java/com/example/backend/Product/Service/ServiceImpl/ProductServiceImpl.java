@@ -109,4 +109,15 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getProductsByIds(List<String> productIds) {
         return productRepository.findByIdIn(productIds);
     }
+
+    @Override
+    public List<Product> getNewArrivals() {
+        return productRepository.getNewArrivals();
+    }
+
+    @Override
+    public List<String> getDistinctCategories() {
+        return productRepository.findDistinctCategories();
+    }
+
 }

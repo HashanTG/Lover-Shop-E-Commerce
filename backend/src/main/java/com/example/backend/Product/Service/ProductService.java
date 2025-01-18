@@ -25,6 +25,11 @@ public interface ProductService {
     List<Product> getProductsByIds(List<String> productIds);
     // Filter products by name, category, price
     Page<Product> filterProducts(String name, String category, Double minPrice, Double maxPrice, int page, int size);
+    // Get new arrivals
+    public List<Product> getNewArrivals();
+
+    // Get distinct categories
+    public List<String> getDistinctCategories();
 
 
 }

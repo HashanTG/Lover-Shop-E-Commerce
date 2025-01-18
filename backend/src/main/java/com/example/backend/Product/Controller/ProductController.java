@@ -17,13 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backend.Product.Model.Product;
 import com.example.backend.Product.Service.ProductService;
 
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -36,7 +34,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.net.URL;
 import java.time.Duration;
-
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -52,11 +50,11 @@ public class ProductController {
     @Autowired
     private S3Client s3Client;
 
-
     // Get all products by Page by Page
     @GetMapping
-    public Page<Product> getAllProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
-    return productService.getProductsPage(page, size);
+    public Page<Product> getAllProducts(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return productService.getProductsPage(page, size);
     }
 
     // Get product by ID
@@ -86,7 +84,7 @@ public class ProductController {
         productService.deleteProduct(id);
     }
 
-    //Filter of recieving Products
+    // Filter of recieving Products
     @GetMapping("/filter")
     public Page<Product> filterProducts(
             @RequestParam(required = false) String name,
@@ -97,7 +95,21 @@ public class ProductController {
             @RequestParam(defaultValue = "20") int size) {
         return productService.filterProducts(name, category, minPrice, maxPrice, page, size);
     }
-    
+
+    // Get new arrivals
+    @GetMapping("/new-arrivals")
+    public List<Product> getNewArrivals() {
+        return productService.getNewArrivals();
+    }
+
+
+
+    @GetMapping("/categories")
+    public List<String> getDistinctCategories() {
+        return productService.getDistinctCategories();
+    }
+
+
 
     // Reduce stock for a specific variation (optional feature)
     @PreAuthorize("hasRole('ADMIN')")
@@ -110,8 +122,7 @@ public class ProductController {
         productService.reduceProductStock(id, variationType, variationValue, quantity);
     }
 
-
-    //AWS URL generation
+    // AWS URL generation
 
     @PostMapping("/generate-presigned-url")
     public URL generatePresignedUrl(@RequestParam String fileName) {

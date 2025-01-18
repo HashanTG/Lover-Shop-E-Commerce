@@ -2,9 +2,17 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./ShopCollection.css";
 import mug from "../../../assets/Home/Shop-Collection/mug.png"
+import { useNavigate } from "react-router-dom";
 
 
 const ShopCollection = () => {
+  const navigate = useNavigate();
+
+  const navigatetoCategory = (category) => {
+
+
+  }
+
   return (
     <div className="shop-collection">
       <h2>Shop Collection</h2>
