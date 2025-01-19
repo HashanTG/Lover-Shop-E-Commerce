@@ -25,6 +25,7 @@ public class WishlistService {
     // Retrieve wishlist with product details for the user
     public List<Product> getWishlistWithProductDetails(String userId) {
         WishlistModel wishlist = getWishlistByUserId(userId);
+      
     
         if (wishlist == null || wishlist.getProductIds() == null || wishlist.getProductIds().isEmpty()) {
             return Collections.emptyList(); // Handle case where wishlist is empty or null
@@ -32,6 +33,7 @@ public class WishlistService {
     
         // Fetch product details in batch from MongoDB
         List<String> productIds = wishlist.getProductIds();
+        System.out.println(productIds);
         List<Product> products = productService.getProductsByIds(productIds);
     
         if (products == null || products.isEmpty()) {

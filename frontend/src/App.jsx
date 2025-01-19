@@ -22,6 +22,7 @@ import Pannel from './Admin/Pannel/Pannel';
 
 import CheckoutDetails from './pages/CheckOut_OrderComplete/CheckoutDetails';
 import OrderComplete from './pages/CheckOut_OrderComplete/OrderComplete';
+import { WishlistProvider } from './context/WishlistContext';
 
 
 
@@ -33,6 +34,7 @@ const App = () => {
 
   return (
     <Router>
+      <WishlistProvider>
       <UserDetailProvider>
       <AuthProvider>
       <ModalProvider>
@@ -68,6 +70,7 @@ const App = () => {
       </ModalProvider>
       </AuthProvider>
       </UserDetailProvider>
+      </WishlistProvider>
     </Router>
   );
 };

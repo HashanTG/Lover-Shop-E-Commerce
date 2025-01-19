@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import { checkAuthStatus, logoutUser } from "../api/authService";
 
 import { useUserDetail } from "./UserDetailContext";
+import { useWishlist } from "./WishlistContext";
 
 // Create the AuthContext
 const AuthContext = createContext();
@@ -9,7 +10,8 @@ const AuthContext = createContext();
 // AuthProvider component to wrap your app
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { setUserDetail,fetchUserDetail } = useUserDetail();
+  const { fetchUserDetail } = useUserDetail();
+  const { fetchWishlistItems } = useWishlist();
 
   // Check if the user is authenticated on mount
   useEffect(() => {
@@ -55,8 +57,8 @@ export const AuthProvider = ({ children }) => {
   const fetchAndPopulateUserDetails = async () => {
     try {
       const userDetails = await fetchUserDetail(); // Call backend API to fetch user details
+      const wishlist = await fetchWishlistItems(); // Call backend API to fetch wishlist
       if (userDetails) {
-        setUserDetail(userDetails); // Update user detail context
         console.log("User details fetched and populated");
         console.log(userDetails);
       } else {

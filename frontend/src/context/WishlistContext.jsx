@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext } from "react";
+import { getWishList } from "../api/wishListService";
 
 // Create the WishlistContext
 const WishlistContext = createContext();
@@ -6,6 +7,16 @@ const WishlistContext = createContext();
 // WishlistProvider component to wrap your app
 export const WishlistProvider = ({ children }) => {
     const [wishlistItems, setWishlistItems] = useState([]);
+
+    // Fetch wishlist items from backend on mount
+    const fetchWishlistItems = async () => {
+        try {
+            const items = await getWishList();
+            setWishlistItems(items);
+        } catch (error) {
+            console.error("Error fetching wishlist items:", error);
+        }
+    }
 
     // Add item to wishlist
     const addToWishlist = (item) => {
@@ -23,7 +34,7 @@ export const WishlistProvider = ({ children }) => {
     };
 
     return (
-        <WishlistContext.Provider value={{ wishlistItems, addToWishlist, removeFromWishlist, clearWishlist }}>
+        <WishlistContext.Provider value={{ wishlistItems, addToWishlist, removeFromWishlist, clearWishlist,fetchWishlistItems }}>
             {children}
         </WishlistContext.Provider>
     );

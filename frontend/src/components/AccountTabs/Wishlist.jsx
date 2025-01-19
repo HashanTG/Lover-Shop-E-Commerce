@@ -1,25 +1,11 @@
 // components/Wishlist.jsx
 import React from 'react';
 import './Whishlist.css';
+import { useWishlist } from '../../context/WishlistContext';
 
 const Wishlist = () => {
-  const wishlistItems = [
-    { 
-      id: '10972345', 
-      name: 'Black Linen Scarf', 
-      category: 'Scarves', 
-      price: 'Rs 21.95', 
-      image: '/images/image2.png' 
-    },
-    { 
-      id: '10837492', 
-      name: 'Classic Cateye Sunglasses', 
-      category: 'Sunglasses', 
-      price: 'Rs 14.99', 
-      image: '/images/image3.png' 
-    }
-  ];
 
+  const { wishlistItems } = useWishlist();
   return (
     <div className="wishlist">
       <h2>Your Wishlist</h2>
@@ -27,7 +13,7 @@ const Wishlist = () => {
         {wishlistItems.map(item => (
           <div key={item.id} className="wishlist-item">
             <div className="item-image">
-              <img src={item.image} alt={item.name} />
+              <img src={item.images[0]} alt={item.name} />
             </div>
             <div className="item-details">
               <h3>{item.name}</h3>
