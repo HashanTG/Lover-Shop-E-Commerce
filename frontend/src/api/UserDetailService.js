@@ -12,3 +12,14 @@ export const getUserDetailFromAPI = async () => {
         return null; // Return null if the request fails
     }
 }
+
+export const updateUserDetailToAPI = async (userDetail) => {
+    try {
+        const response = await axios.put(`${BASE_URL}/details`, userDetail, { withCredentials: true });
+        console.log(response.data);
+        return response.data; // Return updated user detail data
+    } catch (error) {
+        console.error("Error updating user details:", error);
+        return null; // Return null if the request fails
+    }
+}

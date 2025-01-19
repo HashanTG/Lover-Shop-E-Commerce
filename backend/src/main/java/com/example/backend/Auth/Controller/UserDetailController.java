@@ -30,6 +30,7 @@ public class UserDetailController {
     // Endpoint to update user details
     @PutMapping()
     public UserDetail updateUserDetails(@RequestBody UserDetail partialUserDetail) {
+        System.out.println(partialUserDetail);
         String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically from SecurityContext
         return userDetailService.updateUserDetail(userId, partialUserDetail);
     }

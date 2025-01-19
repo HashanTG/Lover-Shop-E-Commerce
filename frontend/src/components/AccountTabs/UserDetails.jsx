@@ -3,14 +3,12 @@ import { useUserDetail } from "../../context/UserDetailContext";
 import "./UserDetails.css";
 
 const UserDetails = () => {
-  // Dummy user data (replace with actual user data or state management)
   const { userDetail } = useUserDetail();
-  const user = {
-    firstName: "John",
-    lastName: "Doe",
-    email: "johndoe@example.com",
-    phoneNumber: "+1234567890",
-  };
+
+  if (!userDetail) {
+    // Display a loading state or fallback UI
+    return <p>Loading user details...</p>;
+  }
 
   return (
     <div className="user-details">
@@ -18,19 +16,20 @@ const UserDetails = () => {
       <form>
         <div className="form-group">
           <label>First Name</label>
-          <input type="text" value={userDetail.firstName} readOnly />
+          <input type="text" value={userDetail.firstName || ""} readOnly />
         </div>
         <div className="form-group">
           <label>Last Name</label>
-          <input type="text" value={userDetail.lastName} readOnly />
+          <input type="text" value={userDetail.lastName || ""} readOnly />
         </div>
-        <div className="form-group">
+        {/* Uncomment and ensure the context has an `email` property */}
+        {/* <div className="form-group">
           <label>Email</label>
-          <input type="email" value={user.email} readOnly />
-        </div>
+          <input type="email" value={userDetail.email || ""} readOnly />
+        </div> */}
         <div className="form-group">
           <label>Phone Number</label>
-          <input type="text" value={userDetail.phoneNumber} readOnly />
+          <input type="text" value={userDetail.phoneNumber || ""} readOnly />
         </div>
       </form>
     </div>

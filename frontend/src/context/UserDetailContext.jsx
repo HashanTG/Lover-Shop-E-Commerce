@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext } from "react";
-import { getUserDetailFromAPI } from "../api/UserDetailService";
+import { getUserDetailFromAPI,updateUserDetailToAPI} from "../api/UserDetailService";
 
 // Create the UserDetailContext
 const UserDetailContext = createContext();
@@ -17,13 +17,13 @@ export const UserDetailProvider = ({ children }) => {
   };
 
   // Function to update user details
-//   const updateUserDetail = async (updatedDetail) => {
-//     const updated = await updateUserDetailOnAPI(updatedDetail);
-//     setUserDetail(updated);
-//   };
+  const updateUserDetail = async (updatedDetail) => {
+    const updated = await updateUserDetailToAPI(updatedDetail);
+    setUserDetail(updated);
+  };
 
   return (
-    <UserDetailContext.Provider value={{ userDetail,setUserDetail,fetchUserDetail }}>
+    <UserDetailContext.Provider value={{ userDetail,setUserDetail,fetchUserDetail,updateUserDetail}}>
       {children}
     </UserDetailContext.Provider>
   );
