@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { CartProvider } from './context/CartContext'
 import { AuthProvider } from './context/AuthContext';
 import { ModalProvider } from './context/ModelContext';
+import { UserDetailProvider } from './context/UserDetailContext';
 //CSS Import
 import './App.css';
 import Layout from './Layout';
@@ -32,6 +33,7 @@ const App = () => {
 
   return (
     <Router>
+      <UserDetailProvider>
       <AuthProvider>
       <ModalProvider>
       <CartProvider>
@@ -65,6 +67,7 @@ const App = () => {
       </CartProvider>
       </ModalProvider>
       </AuthProvider>
+      </UserDetailProvider>
     </Router>
   );
 };

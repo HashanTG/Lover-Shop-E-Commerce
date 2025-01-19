@@ -1,7 +1,8 @@
 package com.example.backend.Auth.service;
 
+import com.example.backend.Auth.model.User;
 import com.example.backend.Auth.model.UserDetail;
-import com.example.backend.Auth.repository.UserDetailRepository;
+import com.example.backend.Auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,26 +11,31 @@ import java.util.Optional;
 @Service
 public class UserDetailService {
 
-    private final UserDetailRepository userDetailRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserDetailService(UserDetailRepository userDetailRepository) {
-        this.userDetailRepository = userDetailRepository;
+    public UserDetailService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    // Retrieve user details by ID
-    public UserDetail getUserDetailsById(String id) {
-        Optional<UserDetail> userDetail = userDetailRepository.findById(id);
-        return userDetail.orElse(null);
+    // Retrieve user details by user ID
+    public UserDetail getUserDetail(String userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        return userOptional.map(User::getUserDetail).orElse(null);
     }
 
     // Update user details
-    public UserDetail updateUserDetails(String id, UserDetail updatedUserDetail) {
-        Optional<UserDetail> existingUserDetailOpt = userDetailRepository.findById(id);
-        if (existingUserDetailOpt.isPresent()) {
-            UserDetail existingUserDetail = existingUserDetailOpt.get();
-            
-            // Update only the fields that are provided
+    public UserDetail updateUserDetail(String userId, UserDetail updatedUserDetail) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            UserDetail existingUserDetail = user.getUserDetail();
+
+            if (existingUserDetail == null) {
+                existingUserDetail = new UserDetail();
+            }
+
+            // Update only non-null fields
             if (updatedUserDetail.getFirstName() != null) {
                 existingUserDetail.setFirstName(updatedUserDetail.getFirstName());
             }
@@ -42,10 +48,13 @@ public class UserDetailService {
             if (updatedUserDetail.getCardDetails() != null) {
                 existingUserDetail.setCardDetails(updatedUserDetail.getCardDetails());
             }
-    
-            return userDetailRepository.save(existingUserDetail);
+
+            // Save the updated user
+            user.setUserDetail(existingUserDetail);
+            userRepository.save(user);
+
+            return existingUserDetail;
         }
-        return null;  // Return null if user is not found
+        return null; // Return null if user is not found
     }
-    
 }

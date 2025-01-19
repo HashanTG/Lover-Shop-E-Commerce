@@ -5,7 +5,10 @@ import com.example.backend.Auth.service.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.backend.Auth.UtilSecurity.SecurityUtil;
+
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/users/details")
 public class UserDetailController {
 
@@ -17,15 +20,18 @@ public class UserDetailController {
     }
 
     // Endpoint to retrieve user details by ID
-    @GetMapping("/{id}")
-    public UserDetail getUserDetails(@PathVariable String id) {
-        return userDetailService.getUserDetailsById(id);
+    @GetMapping()
+    public UserDetail getUserDetails() {
+        String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically from SecurityContext
+        System.out.println(userId);
+        return userDetailService.getUserDetail(userId);
     }
 
     // Endpoint to update user details
-    @PutMapping("/{id}")
-    public UserDetail updateUserDetails(@PathVariable String id, @RequestBody UserDetail partialUserDetail) {
-        return userDetailService.updateUserDetails(id, partialUserDetail);
+    @PutMapping()
+    public UserDetail updateUserDetails(@RequestBody UserDetail partialUserDetail) {
+        String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically from SecurityContext
+        return userDetailService.updateUserDetail(userId, partialUserDetail);
     }
     
 }

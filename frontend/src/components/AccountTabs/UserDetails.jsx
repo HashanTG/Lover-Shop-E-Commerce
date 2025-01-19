@@ -1,14 +1,15 @@
-import React from 'react';
-import './UserDetails.css';
-
+import React from "react";
+import { useUserDetail } from "../../context/UserDetailContext";
+import "./UserDetails.css";
 
 const UserDetails = () => {
   // Dummy user data (replace with actual user data or state management)
+  const { userDetail } = useUserDetail();
   const user = {
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'johndoe@example.com',
-    phoneNumber: '+1234567890',
+    firstName: "John",
+    lastName: "Doe",
+    email: "johndoe@example.com",
+    phoneNumber: "+1234567890",
   };
 
   return (
@@ -17,11 +18,11 @@ const UserDetails = () => {
       <form>
         <div className="form-group">
           <label>First Name</label>
-          <input type="text" value={user.firstName} readOnly />
+          <input type="text" value={userDetail.firstName} readOnly />
         </div>
         <div className="form-group">
           <label>Last Name</label>
-          <input type="text" value={user.lastName} readOnly />
+          <input type="text" value={userDetail.lastName} readOnly />
         </div>
         <div className="form-group">
           <label>Email</label>
@@ -29,7 +30,7 @@ const UserDetails = () => {
         </div>
         <div className="form-group">
           <label>Phone Number</label>
-          <input type="text" value={user.phoneNumber} readOnly />
+          <input type="text" value={userDetail.phoneNumber} readOnly />
         </div>
       </form>
     </div>
