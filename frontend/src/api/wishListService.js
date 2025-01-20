@@ -12,3 +12,24 @@ export const getWishList = async () => {
         throw error;
     }
 }
+
+export const removeFromWishlistAPI = async (itemId) => {
+    try {
+        const response = await axios.delete(`${API_URL}/remove?productId=${itemId}`, { withCredentials: true });
+        return response.data;
+    } catch (error) {
+        console.error('Error removing item from wishlist:', error);
+        throw error;
+    }
+
+} 
+
+export const addToWishlistAPI = async (productId) => {
+    try {
+        const response = await axios.post(`${API_URL}/add?productId=${productId}`, {}, { withCredentials: true });
+        return response.data;
+    } catch (error) {
+        console.error('Error adding item to wishlist:', error);
+        throw error;
+    }
+}

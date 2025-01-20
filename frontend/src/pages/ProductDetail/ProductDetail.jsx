@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { CartContext } from "../../context/CartContext";
+import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 import ProductImageSection from "./productImageSection/ProductImageSection";
@@ -22,10 +22,18 @@ const ProductDetail = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [reviews, setReviews] = useState([]); //Reviews
 
-  const { addToCart } = useContext(CartContext);
+  const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
 
-  const userId = "user123"; // Hardcoded user ID for now
+  const [selectedVariations, setSelectedVariations] = useState({});
+  const [selectedStock, setSelectedStock] = useState({});
+
+  useEffect(() => {
+    if (product) {
+      setSelectedVariations(initializeVariations(product));
+      setSelectedStock(initializeStock(product));
+    }
+  }, [product]);
 
   // Add item to cart
   const handleAddToCart = async () => {
@@ -98,15 +106,7 @@ const ProductDetail = () => {
     }, {});
   };
 
-  const [selectedVariations, setSelectedVariations] = useState({});
-  const [selectedStock, setSelectedStock] = useState({});
 
-  useEffect(() => {
-    if (product) {
-      setSelectedVariations(initializeVariations(product));
-      setSelectedStock(initializeStock(product));
-    }
-  }, [product]);
 
   // Check if the product is in the wishlist
   const isInWishlist = wishlist.some(

@@ -1,9 +1,11 @@
 import React from 'react';
+import OrderProgress from '../../components/OrderProgress/OrderProgress';
 import './OrderComplete.css';
 
 const OrderComplete = () => {
   return (
     <div className="order-complete-wrapper">
+      <OrderProgress step={3} />
       <div className="order-card">
         <div className="order-header">
           <h2>Thank you! 🎉</h2>

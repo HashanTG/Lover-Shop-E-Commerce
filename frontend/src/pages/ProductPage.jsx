@@ -10,6 +10,7 @@ import "./ProductPage.css";
 import ProductCard from "../components/ProductCard";
 import Loading from "../components/shared/Loading/Loading";
 
+
 // Reducer function for managing categoryFilter
 const filterReducer = (state, action) => {
   switch (action.type) {
@@ -26,6 +27,8 @@ const ProductPage = () => {
   const [products, setProducts] = useState([]); // All products
   const [categories, setCategories] = useState([]); // All categories
   const [isLoading, setIsLoading] = useState(true); // Loading state
+
+
 
   // Filter states managed by useReducer
   const [filterState, dispatchFilter] = useReducer(filterReducer, {

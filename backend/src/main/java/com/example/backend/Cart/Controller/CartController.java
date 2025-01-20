@@ -51,13 +51,10 @@ public class CartController {
 
     // Remove item from cart for the authenticated user
     @PreAuthorize("hasRole('USER')")
-    @DeleteMapping("/item/remove")
-    public ResponseEntity<CartModel> removeItemFromCart(@RequestBody RemoveItemRequest removeItemRequest) {
+    @DeleteMapping("/remove")
+    public ResponseEntity<CartModel> removeItemFromCart(@RequestParam String productId) {
         String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically
-        CartModel updatedCart = cartService.removeItemFromCart(
-                userId,
-                removeItemRequest.getProductId()
-        );
+        CartModel updatedCart = cartService.removeItemFromCart(userId,productId);
         return ResponseEntity.ok(updatedCart);
     }
 

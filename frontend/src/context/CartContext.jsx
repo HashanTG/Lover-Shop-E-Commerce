@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { fetchCartData,addToCartApi} from "../api/CartServices"; // Import the service function to fetch cart data
+import { fetchCartData,addToCartApi,removeFromCartApi} from "../api/CartServices"; // Import the service function to fetch cart data
 import { useAuth } from './AuthContext'; // Import the useAuth hook to get auth status
 
 
@@ -78,3 +78,5 @@ const addToCart = async (productId, quantity) => {
     </CartContext.Provider>
   );
 };
+
+export const useCart = () => useContext(CartContext);

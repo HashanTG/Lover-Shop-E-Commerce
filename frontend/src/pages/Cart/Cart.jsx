@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { CartContext } from '../../context/CartContext';
+import OrderProgress from '../../components/OrderProgress/OrderProgress';
 import "./cart.css"; // Ensure this CSS file reflects the grid-based styling
 
 const Cart = () => {
@@ -14,6 +15,7 @@ const Cart = () => {
 
   // Effect to update local state when cartItems from CartContext change
   useEffect(() => {
+    console.log("Cart items updated:", cartItems);
     setCart({ items: cartItems });
   }, [cartItems]);
 
@@ -57,11 +59,7 @@ const Cart = () => {
   return (
     <div className="cart-container">
       {/* Progress Bar */}
-      <div className="cart-progress">
-        <div className="step active">1 Shopping cart</div>
-        <div className="step">2 Checkout details</div>
-        <div className="step">3 Order complete</div>
-      </div>
+      <OrderProgress step={1} />
 
       <div className="grid-wrapper">
         {/* Cart Section */}
@@ -84,7 +82,7 @@ const Cart = () => {
                 <div className="cart-item-details">
                   <h4>{item.productDetails.name}</h4>
                   <p>Category: {item.productDetails.category}</p>
-                  <p>Color: {item.productDetails.variations[0].options[0].value}</p>
+                  <p>Color: {item.productDetails.variations[0]?.options[0].value}</p>
                   <button
                     className="remove-btn"
                     onClick={() => handleRemoveItem(item.productId)}

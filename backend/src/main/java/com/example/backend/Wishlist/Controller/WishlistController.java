@@ -7,7 +7,7 @@ import com.example.backend.Auth.UtilSecurity.SecurityUtil;
 import com.example.backend.Product.Model.Product;
 import com.example.backend.Wishlist.Model.WishlistModel;
 import com.example.backend.Wishlist.Service.WishlistService;
-import com.example.backend.Wishlist.DTO.ProductRequestDTO;
+
 
 
 import java.util.List;
@@ -35,9 +35,9 @@ public class WishlistController {
 
     // Add product to wishlist
     @PostMapping("/add")
-    public WishlistModel addProductToWishlist(@RequestBody ProductRequestDTO productId) {
+    public WishlistModel addProductToWishlist(@RequestParam String productId) {
         String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically from SecurityContext
-        return wishlistService.addItemToWishlist(userId, productId.getProductId());
+        return wishlistService.addItemToWishlist(userId, productId);
     }
 
     // Remove product from wishlist

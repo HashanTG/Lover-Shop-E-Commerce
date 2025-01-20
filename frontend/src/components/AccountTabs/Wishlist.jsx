@@ -5,7 +5,7 @@ import { useWishlist } from '../../context/WishlistContext';
 
 const Wishlist = () => {
 
-  const { wishlistItems } = useWishlist();
+  const { wishlistItems ,removeFromWishlist} = useWishlist();
   return (
     <div className="wishlist">
       <h2>Your Wishlist</h2>
@@ -21,7 +21,8 @@ const Wishlist = () => {
               <p className="category">{item.category}</p>
               <div className="price-actions">
                 <span className="price">{item.price}</span>
-                <button className="add-to-bag">Add to Bag</button>
+                <button className="add-to-bag" onClick={() =>removeFromWishlist(item.id)}>Remove</button>
+                <button className="add-to-bag">Add to Cart</button>
               </div>
             </div>
           </div>

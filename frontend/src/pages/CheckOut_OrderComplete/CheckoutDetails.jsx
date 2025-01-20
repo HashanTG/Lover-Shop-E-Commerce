@@ -1,6 +1,7 @@
 // CheckoutDetails.jsx
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import OrderProgress from '../../components/OrderProgress/OrderProgress';
 import { CartContext } from '../../context/CartContext';
 import './CheckoutDetails.css';
 
@@ -68,6 +69,7 @@ const CheckoutDetails = () => {
 
   return (
     <div className="checkout-container">
+      <OrderProgress step={2} />
       <div className="checkout-layout">
         <form onSubmit={handleSubmit} className="checkout-form">
           <section className="contact-information">

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext } from "react";
-import { getWishList } from "../api/wishListService";
+import { getWishList,removeFromWishlistAPI,addToWishlistAPI } from "../api/wishListService";
 
 // Create the WishlistContext
 const WishlistContext = createContext();
@@ -19,13 +19,15 @@ export const WishlistProvider = ({ children }) => {
     }
 
     // Add item to wishlist
-    const addToWishlist = (item) => {
-        setWishlistItems((prevItems) => [...prevItems, item]);
+    const addToWishlist = (productId) => {
+        addToWishlistAPI(productId);
     };
 
     // Remove item from wishlist
     const removeFromWishlist = (itemId) => {
-        setWishlistItems((prevItems) => prevItems.filter(item => item.id !== itemId));
+        const updatedItems = wishlistItems.filter((item) => item.id !== itemId);
+        setWishlistItems(updatedItems);
+        removeFromWishlistAPI(itemId);
     };
 
     // Clear wishlist
