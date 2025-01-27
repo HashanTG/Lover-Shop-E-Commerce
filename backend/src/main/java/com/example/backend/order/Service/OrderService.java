@@ -1,36 +1,75 @@
 package com.example.backend.order.Service;
 
+import com.example.backend.order.ENUMS.OrderStatus;
+import com.example.backend.order.ENUMS.PaymentStatus;
 import com.example.backend.order.Model.Order;
 import com.example.backend.order.Repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
 public class OrderService {
+    private final OrderRepository orderRepository;
 
-    @Autowired
-    private OrderRepository orderRepository;
+    public OrderService(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
 
-    // Create a new order
-    public Order createOrder(Order order) {
-        order.setCreatedAt(System.currentTimeMillis() + ""); // You can use your preferred date format
+    public Page<Order> getAllOrders(Pageable pageable) {
+        return orderRepository.findAll(pageable);
+    }
+
+    public Page<Order> getOrdersByUserId(String userId, Pageable pageable) {
+        return orderRepository.findByUserId(userId, pageable);
+    }
+
+    public Page<Order> getOrdersByDateRange(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+        return orderRepository.findByCreatedAtBetween(startDate, endDate, pageable);
+    }
+
+    public Page<Order> getOrdersByStatus(String status, Pageable pageable) {
+        return orderRepository.findByStatus(status, pageable);
+    }
+
+    public Page<Order> getOrdersByPaymentStatus(String paymentStatus, Pageable pageable) {
+        return orderRepository.findByPaymentStatus(paymentStatus, pageable);
+    }
+
+        public Order createOrder(Order order) {
+        order.setCreatedAt(LocalDateTime.now());
+        order.setLastUpdatedAt(LocalDateTime.now());
+        order.setStatus(OrderStatus.PENDING); // Default status
+        order.setPaymentStatus(PaymentStatus.PENDING); // Default payment status
         return orderRepository.save(order);
     }
-    //Get All orders
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+
+    public Optional<Order> getOrderById(String id) {
+        return orderRepository.findById(id);
     }
 
-    // Get all orders for a user
-    public List<Order> getOrdersByUserId(String userId) {
-        return orderRepository.findAll(); // Customize with a query to filter by userId
+    public Order updateOrderStatus(String id, OrderStatus status, String adminId) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        order.setStatus(status);
+        order.setLastUpdatedAt(LocalDateTime.now());
+        order.setUpdatedBy(adminId);
+        return orderRepository.save(order);
     }
 
-    // Get order details by order ID
-    public Optional<Order> getOrderById(String orderId) {
-        return orderRepository.findById(orderId);
+    public Order confirmDelivery(String id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        if (order.getStatus() == OrderStatus.DELIVERED) {
+            order.setConfirmedByUser(true);
+            order.setLastUpdatedAt(LocalDateTime.now());
+            return orderRepository.save(order);
+        } else {
+            throw new RuntimeException("Delivery cannot be confirmed for orders not marked as DELIVERED");
+        }
     }
 }

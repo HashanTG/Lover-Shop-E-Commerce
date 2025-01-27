@@ -1,16 +1,27 @@
 // CheckoutDetails.jsx
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import OrderProgress from '../../components/OrderProgress/OrderProgress';
 import { CartContext } from '../../context/CartContext';
+import { useUserDetail } from '../../context/UserDetailContext';
 import './CheckoutDetails.css';
 
 const CheckoutDetails = () => {
   const navigate = useNavigate();
   const { cartItems } = useContext(CartContext);
+  const [fee, setFee] = useState(() => {
+    const savedFee = localStorage.getItem("feeDetails");
+    return savedFee ? JSON.parse(savedFee) : null; // Parse JSON or set to null if not found
+  });
+
+  const {userDetail} = useUserDetail();
+  
+  useEffect(()=>{
+    
+  },[userDetail])
   
   const [formData, setFormData] = useState({
-    firstName: '',
+    firstName: '' ,
     lastName: '',
     phoneNumber: '',
     email: '',
@@ -27,12 +38,6 @@ const CheckoutDetails = () => {
     paymentMethod: 'credit'
   });
 
-  const calculateTotal = () => {
-    const subtotal = cartItems.reduce((total, item) => 
-      total + (item.price * item.quantity), 0);
-    const shipping = 245.00;
-    return (subtotal + shipping).toFixed(2);
-  };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -209,16 +214,7 @@ const CheckoutDetails = () => {
                 />
                 <span className="radio-label">Credit Card</span>
               </label>
-              <label className="payment-option">
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="paypal"
-                  checked={formData.paymentMethod === 'paypal'}
-                  onChange={handleInputChange}
-                />
-                <span className="radio-label">PayPal</span>
-              </label>
+              
               <label className="payment-option">
                 <input
                   type="radio"
@@ -271,22 +267,6 @@ const CheckoutDetails = () => {
                 </div>
               </div>
             )}
-
-            {formData.paymentMethod === 'paypal' && (
-              <div className="paypal-form">
-                <div className="input-group">
-                  <label htmlFor="paypalEmail">PayPal Email</label>
-                  <input
-                    type="email"
-                    id="paypalEmail"
-                    name="paypalEmail"
-                    value={formData.paypalEmail}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-              </div>
-            )}
           </section>
 
           <button type="submit" className="place-order-btn">
@@ -298,12 +278,12 @@ const CheckoutDetails = () => {
           <h3>Order Summary</h3>
           <div className="summary-items">
             {cartItems.map(item => (
-              <div key={item.id} className="summary-item">
-                <img src={item.image} alt={item.name} />
+              <div key={item.productId} className="summary-item">
+                <img src={item.productDetails.images[0]} alt={item.productDetails.name} />
                 <div className="item-details">
-                  <h4>{item.name}</h4>
+                  <h4>{item.productDetails.name}</h4>
                   <p>Quantity: {item.quantity}</p>
-                  <p className="item-price">Rs. {(item.price * item.quantity).toFixed(2)}</p>
+                  <p className="item-price">Rs. {(item.productDetails.price * item.quantity).toFixed(2)}</p>
                 </div>
               </div>
             ))}
@@ -311,15 +291,15 @@ const CheckoutDetails = () => {
           <div className="summary-total">
             <div className="subtotal">
               <span>Subtotal</span>
-              <span>Rs. {calculateTotal()}</span>
+              <span>Rs. {fee?.subtotal }</span>
             </div>
             <div className="shipping">
               <span>Shipping</span>
-              <span>Rs. 245.00</span>
+              <span>{fee?.shipping}</span>
             </div>
             <div className="total">
               <span>Total</span>
-              <span>Rs. {calculateTotal()}</span>
+              <span>Rs. {fee?.total}</span>
             </div>
           </div>
         </div>

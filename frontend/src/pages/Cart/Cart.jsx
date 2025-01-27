@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { CartContext } from '../../context/CartContext';
-import OrderProgress from '../../components/OrderProgress/OrderProgress';
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { CartContext } from "../../context/CartContext";
+import OrderProgress from "../../components/OrderProgress/OrderProgress";
 import "./cart.css"; // Ensure this CSS file reflects the grid-based styling
 
 const Cart = () => {
@@ -9,9 +10,12 @@ const Cart = () => {
   const [shipping, setShipping] = useState(0);
   const { cartItems, removeFromCart, fetchCart } = useContext(CartContext);
 
+  const [subtotal, setSubtotal] = useState(0);
+  const [total, setTotal] = useState(0);
+
+  const navigate = useNavigate();
 
   // Consume CartContext to get the cartItems
-
 
   // Effect to update local state when cartItems from CartContext change
   useEffect(() => {
@@ -25,6 +29,14 @@ const Cart = () => {
       return total + item.quantity * (item.productDetails.price || 0);
     }, 0);
   };
+
+  useEffect(() => {
+    const newSubtotal = calculateSubtotal(cart); // Recalculate subtotal
+    setSubtotal(newSubtotal);
+
+    // Recalculate total (e.g., subtotal + shipping/taxes)
+    setTotal(newSubtotal + shipping);
+  }, [cart, calculateSubtotal]); // Dependencies
 
   const handleQuantityChange = (productId, delta) => {
     setCart((prevCart) => {
@@ -53,8 +65,21 @@ const Cart = () => {
     setShipping(cost);
   };
 
-  const subtotal = calculateSubtotal();
-  const total = subtotal + shipping;
+  //Proceed to Payment Step
+
+  const proceedToPay = () => {
+    const fee = {
+      shipping: shipping,
+      subtotal: subtotal,
+      total: total,
+    };
+
+    // Save the fee details in localStorage
+    localStorage.setItem("feeDetails", JSON.stringify(fee));
+
+    // Navigate to the checkout page
+    navigate("/checkout");
+  };
 
   return (
     <div className="cart-container">
@@ -82,7 +107,9 @@ const Cart = () => {
                 <div className="cart-item-details">
                   <h4>{item.productDetails.name}</h4>
                   <p>Category: {item.productDetails.category}</p>
-                  <p>Color: {item.productDetails.variations[0]?.options[0].value}</p>
+                  <p>
+                    Color: {item.productDetails.variations[0]?.options[0].value}
+                  </p>
                   <button
                     className="remove-btn"
                     onClick={() => handleRemoveItem(item.productId)}
@@ -176,7 +203,9 @@ const Cart = () => {
               <span>Rs. {total.toFixed(2)}</span>
             </div>
           </div>
-          <button className="checkout-btn">Checkout</button>
+          <button className="checkout-btn" onClick={() => proceedToPay()}>
+            Checkout
+          </button>
         </div>
       </div>
     </div>

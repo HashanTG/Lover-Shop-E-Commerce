@@ -8,6 +8,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
+import com.example.backend.order.ENUMS.OrderStatus;
+import com.example.backend.order.ENUMS.PaymentStatus;
+import java.time.LocalDateTime;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -18,9 +22,12 @@ public class Order {
     private String userId;
     private List<OrderItem> items;
     private double total;
-    private String status; // e.g., Pending, Confirmed, Shipped, Delivered
-    private String paymentStatus; // e.g., Paid, Pending
-    private String createdAt;
+    private OrderStatus status; // Enum
+    private PaymentStatus paymentStatus; // Enum
+    private LocalDateTime createdAt;
+    private LocalDateTime lastUpdatedAt;
+    private boolean confirmedByUser; // User confirms delivery
+    private String updatedBy; // Admin who made the last status change
 }
 
 @Data
@@ -29,3 +36,4 @@ class OrderItem {
     private int quantity;
     private double price;
 }
+

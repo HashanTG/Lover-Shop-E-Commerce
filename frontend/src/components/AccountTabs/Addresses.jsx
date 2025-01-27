@@ -25,23 +25,27 @@ const Addresses = () => {
     }));
   };
 
-  //Handle Save Click for Edited Address
-
   const handleSaveClick = (index) => {
-    const updatedAddresses = [...userDetail.addresses];
+    // Safely handle null or undefined addresses by initializing as an empty array
+    const currentAddresses = userDetail.addresses || [];
+    
+    // Create a copy and update the specific address
+    const updatedAddresses = [...currentAddresses];
     updatedAddresses[index] = editedAddress;
   
     console.log(updatedAddresses);
-    const updatedAddressJson = {"addresses":updatedAddresses}
-
+    
+    const updatedAddressJson = { addresses: updatedAddresses };
+  
     updateUserDetail(updatedAddressJson)
       .then(() => {
-        setEditingIndex(null);
+        setEditingIndex(null); // Exit editing mode
       })
       .catch((error) => {
         console.error("Failed to update address:", error);
       });
   };
+  
 
   //Handle Cancel Click for Edited Address
   const handleCancelClick = () => {
@@ -64,20 +68,28 @@ const Addresses = () => {
 
   //Add new Address
   const handleNewSaveClick = () => {
-    const updatedAddresses = [...userDetail.addresses, newAddress];
+    // Safely handle null or undefined addresses by initializing as an empty array
+    const currentAddresses = userDetail.addresses || [];
   
-   console.log(updatedAddresses);
-    const updatedAddressJson = {"addresses":updatedAddresses}//Create Json object for updated address to be passed to request
-
+    // Add the new address to the list
+    const updatedAddresses = [...currentAddresses, newAddress];
+  
+    console.log(updatedAddresses);
+  
+    // Create JSON object for the updated addresses
+    const updatedAddressJson = { addresses: updatedAddresses };
+  
+    // Update the user details
     updateUserDetail(updatedAddressJson)
       .then(() => {
-        setIsAdding(false);
-        setNewAddress({});
+        setIsAdding(false); // Exit the "add address" mode
+        setNewAddress({}); // Reset the new address input
       })
       .catch((error) => {
         console.error("Failed to add new address:", error);
       });
   };
+  
 
 //Cancel New Address Adding
   const handleNewCancelClick = () => {

@@ -24,20 +24,28 @@ const CardDetails = () => {
 
   // Save the new card
   const handleNewSaveClick = () => {
-    const updatedCardDetails = [...userDetail.cardDetails, newCard];
+    // Safely handle null or undefined card details by initializing as an empty array
+    const currentCardDetails = userDetail.cardDetails || [];
+  
+    // Add the new card to the list
+    const updatedCardDetails = [...currentCardDetails, newCard];
+  
     console.log(updatedCardDetails);
-
-    const updatedCardJson = { cardDetails: updatedCardDetails }; // Create JSON object for updated cards
-
+  
+    // Create JSON object for the updated card details
+    const updatedCardJson = { cardDetails: updatedCardDetails };
+  
+    // Update the user details
     updateUserDetail(updatedCardJson)
       .then(() => {
-        setIsAdding(false);
-        setNewCard({});
+        setIsAdding(false); // Exit the "add card" mode
+        setNewCard({}); // Reset the new card input
       })
       .catch((error) => {
-        console.error('Failed to add new card:', error);
+        console.error("Failed to add new card:", error);
       });
   };
+  
 
   // Cancel adding a new card
   const handleNewCancelClick = () => {
