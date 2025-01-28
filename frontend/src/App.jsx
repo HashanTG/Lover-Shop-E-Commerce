@@ -5,6 +5,7 @@ import { CartProvider } from './context/CartContext'
 import { AuthProvider } from './context/AuthContext';
 import { ModalProvider } from './context/ModelContext';
 import { UserDetailProvider } from './context/UserDetailContext';
+import { AlertProvider } from './context/GlobalAlertContext';
 //CSS Import
 import './App.css';
 import Layout from './Layout';
@@ -29,6 +30,7 @@ import { WishlistProvider } from './context/WishlistContext';
 
 
 
+
 const App = () => {
 
 
@@ -39,6 +41,7 @@ const App = () => {
       <AuthProvider>
       <ModalProvider>
       <CartProvider>
+      <AlertProvider>
         {/* Wrap the entire app in Layout */}
         <Layout>
           <Routes>
@@ -66,6 +69,7 @@ const App = () => {
 
           </Routes>
         </Layout>
+        </AlertProvider>
       </CartProvider>
       </ModalProvider>
       </AuthProvider>

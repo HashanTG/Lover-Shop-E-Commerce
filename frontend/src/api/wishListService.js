@@ -6,20 +6,20 @@ const API_URL = 'http://localhost:8080/api/wishlist'; // Replace with your backe
 export const getWishList = async () => {
     try {
         const response = await axios.get(`${API_URL}/detail`, { withCredentials: true });
-        return response.data;
+        return { success: true, data: response.data};
     } catch (error) {
         console.error('Error fetching wishlist:', error);
-        throw error;
+        return { success: false, message: error.message || "Something went wrong" };
     }
 }
 
 export const removeFromWishlistAPI = async (itemId) => {
     try {
         const response = await axios.delete(`${API_URL}/remove?productId=${itemId}`, { withCredentials: true });
-        return response.data;
+        return { success: true, data: response.data};
     } catch (error) {
-        console.error('Error removing item from wishlist:', error);
-        throw error;
+        return { success: false, message: error.message || "Something went wrong" };
+   
     }
 
 } 
@@ -27,9 +27,11 @@ export const removeFromWishlistAPI = async (itemId) => {
 export const addToWishlistAPI = async (productId) => {
     try {
         const response = await axios.post(`${API_URL}/add?productId=${productId}`, {}, { withCredentials: true });
-        return response.data;
+        return { success: true, data: response.data};
+
     } catch (error) {
         console.error('Error adding item to wishlist:', error);
-        throw error;
+        return { success: false, message: error.message || "Something went wrong" };
+
     }
 }

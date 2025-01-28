@@ -23,7 +23,7 @@ const CartIndicatorCard = () => {
 
   const handleModalClose = () => {
     setShowModal(false); // Close the modal
-    navigate('/auth'); // Redirect to login
+    navigate('/login'); // Redirect to login
   };
 
   return (

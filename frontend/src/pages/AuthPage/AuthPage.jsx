@@ -5,6 +5,8 @@ import "./AuthPage.css";
 import { useAuth } from "../../context/AuthContext"; // Import useAuth
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
+import Spinner from "../../components/Spinner/Spinner";
+
 const AuthPage = () => {
   const [isSignUp, setIsSignUp] = useState(true);
   const [isLoading, setIsLoading] = useState(false); // State for loading
@@ -174,7 +176,7 @@ const AuthPage = () => {
             </div>
             <button type="submit" className="auth-button" disabled={isLoading}>
               {isLoading ? (
-                <span className="spinner">Loading...</span>
+                <Spinner size="14px" /> 
               ) : (
                 "Sign In"
               )}
@@ -227,7 +229,7 @@ const AuthPage = () => {
             </div>
             <button type="submit" className="auth-button" disabled={isLoading}>
               {isLoading ? (
-                <span className="spinner">Loading...</span>
+                <Spinner size="14px" /> 
               ) : (
                 "Sign In"
               )}
