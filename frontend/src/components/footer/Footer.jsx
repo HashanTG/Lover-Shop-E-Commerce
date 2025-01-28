@@ -87,7 +87,7 @@ const Footer = () => {
                 <a href="/return_refund">Return & Refund</a>
               </li>
               <li>
-                <a href="#">Support</a>
+                <a href="/support_Page">Support</a>
               </li>
               <li>
                 <a href="/faqS">FAQs</a>

@@ -27,6 +27,7 @@ import { WishlistProvider } from './context/WishlistContext';
 import ShippingPolicy from './assets/Footer_Pages/Shipping_policy/shippingPolicy';
 import ReturnAndRefund from './assets/Footer_Pages/ReturnRefund/ReturnRefund';
 import FAQs from './assets/Footer_Pages/FAQs/FAQs';
+import SupportPage from './assets/Footer_Pages/Support/support';
 
 
 
@@ -69,6 +70,7 @@ const App = () => {
             <Route path="/shiping_Policy" element={<ShippingPolicy/>} />
             <Route path="/return_refund" element={<ReturnAndRefund/>}/>
             <Route path="/faqS" element={<FAQs/>}/>
+            <Route path="/support_Page" element={<SupportPage/>}/>
 
 
            

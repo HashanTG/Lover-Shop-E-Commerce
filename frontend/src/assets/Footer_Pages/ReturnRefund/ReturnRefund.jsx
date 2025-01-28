@@ -25,7 +25,7 @@ const ReturnAndRefund = () => {
         <h3>Return Process</h3>
         <p>
           To initiate a return, please contact our customer service team at{" "}
-          <strong>rosaloverSupport@gmail.com</strong>. We will guide you through
+          <strong><a href="/contactus">rosalover107@gmail.com</a></strong>. We will guide you through
           the return process.
         </p>
 
@@ -48,7 +48,7 @@ const ReturnAndRefund = () => {
         <div className="contact">
           <p>
             For any questions regarding our Return and Refund Policy, please
-            contact us at <strong>rosaloverSupport@gmail.com</strong> or call us at{" "}
+            contact us at <strong><a href="/contactus">rosalover107@gmail.com</a></strong> or call us at{" "}
             <strong>+94 78 256 3766</strong>.
           </p>
         </div>

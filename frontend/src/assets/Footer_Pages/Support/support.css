@@ -1,0 +1,94 @@
+.support_page {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to right, #f7f9fc, #e6ebf2);
+    padding: 40px 20px;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  .support_container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+  }
+  
+  .support_container h1 {
+    font-size: 2.4rem;
+    color: #0056b3;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .support_container h2 {
+    font-size: 1.8rem;
+    color: #004494;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    border-left: 4px solid #0056b3;
+    padding-left: 10px;
+  }
+  
+  .support_container p,
+  .support_container ul li {
+    font-size: 1rem;
+    margin: 10px 0;
+    color: #444;
+  }
+  
+  .support_container ul {
+    margin: 15px 0;
+    padding-left: 20px;
+  }
+  
+  .support_container ul li {
+    margin-bottom: 8px;
+  }
+  
+  .support_container strong {
+    color: #0056b3;
+  }
+  
+  .support_container a {
+    color: #0056b3;
+    text-decoration: none;
+  }
+  
+  .support_container a:hover {
+    text-decoration: underline;
+  }
+  
+  .support_container form {
+    margin-top: 20px;
+  }
+  
+  .support_container form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .support_container form input,
+  .support_container form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .support_container form button {
+    background-color: #0056b3;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .support_container form button:hover {
+    background-color: #004494;
+  }
+  

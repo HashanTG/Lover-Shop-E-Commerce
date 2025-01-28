@@ -38,7 +38,7 @@ const FAQs = () => {
         <div className="contact">
           <p>
             For additional questions, please contact us at{" "}
-            <strong>rosalover107@gmail.com</strong> or call us at  {" "} <br /> 
+            <strong><a href="/contactus">rosalover107@gmail.com</a></strong> or call us at  {" "} <br /> 
             <strong>+94 78 256 3766</strong>.
           </p>
         </div>
