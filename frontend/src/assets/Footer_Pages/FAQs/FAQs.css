@@ -76,6 +76,10 @@
     padding: 15px;
     border-radius: 10px;
   }
+
+  .faqs_container .contact p{
+    text-align: center;
+  }
   
   .faqs_container .contact strong {
     color: #0056b3;
