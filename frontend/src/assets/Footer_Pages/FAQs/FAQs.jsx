@@ -34,7 +34,7 @@ const FAQs = () => {
 
        
         <br/>
-        <h3><a href="/contactus">Contact Us</a></h3>
+        <h3>Contact Us</h3>
         <div className="contact">
           <p>
             For additional questions, please contact us at{" "}
