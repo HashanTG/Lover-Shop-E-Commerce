@@ -12,7 +12,6 @@ export const fetchCartData = async () => {
       withCredentials: true, // Include cookies in the request
     });
     const data = response.data;
-    console.log("Cart data:", data);
     return data;
   } catch (error) {
     console.error("Failed to fetch cart data", error);

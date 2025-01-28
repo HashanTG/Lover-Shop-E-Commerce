@@ -18,7 +18,7 @@ import Cart from './pages/Cart/Cart';
 import ProductPage from './pages/Products/ProductPage';
 import Contact from './pages/Home/contact-Section/contact';
 import Loading from './components/shared/Loading/Loading';
-import AccountPage from './components/AccountTabs/AccountPage';
+import AccountPage from './pages/Account/AccountPage';
 import Pannel from './Admin/Pannel/Pannel';
 
 import CheckoutDetails from './pages/CheckOut_OrderComplete/CheckoutDetails';

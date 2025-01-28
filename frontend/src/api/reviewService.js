@@ -1,6 +1,7 @@
 import axios from "axios";
+import { config } from "../config";
 
-const API_URL = 'http://localhost:8080/api/reviews';
+const API_URL = `${config.apiUrl}/api/reviews`;
 
 export const getRreviews = async (productId) => {
   try {

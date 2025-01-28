@@ -37,6 +37,7 @@ export const AuthProvider = ({ children }) => {
   // Function to log in (for use when the user is authenticated)
   const login = () => {
     setIsAuthenticated(true);
+    fetchAndPopulateUserDetails();
     localStorage.setItem("isAuthenticated", "true"); // Persist in localStorage
   };
 
