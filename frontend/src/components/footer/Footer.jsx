@@ -81,7 +81,7 @@ const Footer = () => {
             <h3>Info</h3>
             <ul>
               <li>
-                <a href="#">Shipping Policy</a>
+                <a href="/shiping_Policy">Shipping Policy</a>
               </li>
               <li>
                 <a href="#">Return & Refund</a>

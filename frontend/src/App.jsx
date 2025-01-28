@@ -24,6 +24,7 @@ import Pannel from './Admin/Pannel/Pannel';
 import CheckoutDetails from './pages/CheckOut_OrderComplete/CheckoutDetails';
 import OrderComplete from './pages/CheckOut_OrderComplete/OrderComplete';
 import { WishlistProvider } from './context/WishlistContext';
+import ShippingPolicy from './assets/Footer_Pages/Shipping_policy/shippingPolicy';
 
 
 
@@ -59,7 +60,8 @@ const App = () => {
             <Route path="/account" element={<AccountPage/>} />
 
             <Route path="/checkout" element={<CheckoutDetails />} />
-  <Route path="/order-complete" element={<OrderComplete />} />
+            <Route path="/order-complete" element={<OrderComplete />} />
+            <Route path="/shiping_Policy" element={<ShippingPolicy/>} />
 
 
            

@@ -1,0 +1,129 @@
+/* Overall Page Styling */
+.shipping_policy {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+    padding: 60px 20px;
+  }
+  
+  .shipping_policy_container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    color: #343a40;
+    line-height: 1.8;
+  }
+  
+  /* Header Styling */
+  .shipping_policy h1 {
+    text-align: center;
+    font-size: 2.8rem;
+    color: #d63384;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #d63384;
+    display: inline-block;
+    padding-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  
+  .shipping_policy p {
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    color: #495057;
+  }
+  
+  /* Section Styling */
+  .policy_section {
+    margin-top: 35px;
+  }
+  
+  .policy_section h2 {
+    font-size: 2rem;
+    color: #6f42c1;
+    margin-bottom: 15px;
+    border-left: 5px solid #6f42c1;
+    padding-left: 10px;
+  }
+  
+  .policy_subsection h3 {
+    font-size: 1.5rem;
+    color: #0d6efd;
+    margin-bottom: 12px;
+    text-decoration: underline;
+  }
+  
+  .policy_section ul {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+  }
+  
+  .policy_section ul li {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    color: #212529;
+    display: flex;
+    align-items: center;
+  }
+  
+  .policy_section ul li span {
+    font-weight: 600;
+    color: #0d6efd;
+  }
+  
+  .policy_section ul li::before {
+    content: "•";
+    color: #6f42c1;
+    font-size: 1.2rem;
+    margin-right: 10px;
+  }
+  
+  /* Contact Us Section */
+  .policy_section h3 {
+    margin-top: 20px;
+    color: #198754;
+  }
+  
+  .policy_section p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+  }
+  
+  /* Buttons or Links */
+  a {
+    color: #d63384;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Styling Strong Tags */
+  .shipping_policy strong {
+    color: #6c757d;
+    font-weight: bold;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .shipping_policy h1 {
+      font-size: 2.2rem;
+    }
+  
+    .shipping_policy p {
+      font-size: 1rem;
+    }
+  
+    .policy_section h2 {
+      font-size: 1.6rem;
+    }
+  
+    .policy_subsection h3 {
+      font-size: 1.3rem;
+    }
+  }
+  
