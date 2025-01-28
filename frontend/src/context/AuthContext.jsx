@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { checkAuthStatus, logoutUser } from "../api/authService";
+import { checkAuthStatus, logoutUser } from "../api/authService"; //Service for Api Requests
 
-import { useUserDetail } from "./UserDetailContext";
+import { useUserDetail } from "./UserDetailContext"; 
 import { useWishlist } from "./WishlistContext";
 
 // Create the AuthContext
@@ -15,11 +15,6 @@ export const AuthProvider = ({ children }) => {
 
   // Check if the user is authenticated on mount
   useEffect(() => {
-    const storedAuthStatus = localStorage.getItem("isAuthenticated");
-    if (storedAuthStatus === "true") {
-      setIsAuthenticated(true);
-      fetchAndPopulateUserDetails();
-    } else {
       // Check authentication status from backend
       const checkAuth = async () => {
         const authStatus = await checkAuthStatus();
@@ -37,7 +32,6 @@ export const AuthProvider = ({ children }) => {
       };
 
       checkAuth();
-    }
   }, []);
 
   // Function to log in (for use when the user is authenticated)
@@ -56,18 +50,24 @@ export const AuthProvider = ({ children }) => {
   // Function to fetch and populate user details
   const fetchAndPopulateUserDetails = async () => {
     try {
-      const userDetails = await fetchUserDetail(); // Call backend API to fetch user details
-      const wishlist = await fetchWishlistItems(); // Call backend API to fetch wishlist
-      if (userDetails) {
-        console.log("User details fetched and populated");
-        console.log(userDetails);
+      const [userDetails, wishlist] = await Promise.allSettled([fetchUserDetail(), fetchWishlistItems()]);
+  
+      if (userDetails.status === "fulfilled") {
+        console.log("User details fetched");
       } else {
         console.warn("Failed to fetch user details");
       }
+  
+      if (wishlist.status === "fulfilled") {
+        console.log("Wishlist fetched");
+      } else {
+        console.warn("Failed to fetch wishlist");
+      }
     } catch (error) {
-      console.error("Error fetching user details:", error);
+      console.error("Unexpected error during API calls", error);
     }
   };
+  
 
   // Provide auth status and actions to children
   return (

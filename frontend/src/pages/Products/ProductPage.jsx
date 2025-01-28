@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useReducer } from "react";
-import Button from "../components/shared/Button/Button";
+import Button from "../../components/shared/Button/Button";
 import { useSearchParams } from "react-router-dom";
 import {
   getProducts,
   getCategories,
   searchProducts,
-} from "../api/productService";
+} from "../../api/productService";
 import "./ProductPage.css";
-import ProductCard from "../components/ProductCard";
-import Loading from "../components/shared/Loading/Loading";
+import ProductCard from "../../components/ProductCard";
+import Loading from "../../components/shared/Loading/Loading";
 
 
 // Reducer function for managing categoryFilter
@@ -92,6 +92,7 @@ const ProductPage = () => {
     const minPriceVal = minPrice !== "" ? parseFloat(minPrice) : undefined;
     const maxPriceVal = maxPrice !== "" ? parseFloat(maxPrice) : undefined;
 
+
     await searchProductsAndUpdateState({
       searchQuery,
       category: selectedCategory,
@@ -126,8 +127,6 @@ const ProductPage = () => {
         minPrice: minPriceVal,
         maxPrice: maxPriceVal,
       });
-
-      console.log("Searched products:", data.content);
       setProducts(data.content);
 
       // Update query parameters

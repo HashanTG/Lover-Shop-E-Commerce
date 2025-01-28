@@ -25,7 +25,9 @@ const Hero = () => {
           <Button label="Shopping Now" onClick={() => navigate("/products")} class="hero-btn" />
         </div>
       </div>
-      <div className="hero-bg"></div>
+      <div className="hero-bg">
+        
+      </div>
     </div>
   );
 };

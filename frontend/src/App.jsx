@@ -14,7 +14,7 @@ import Home from './pages/Home/Home'; // Home page
 import AuthPage from './pages/AuthPage/AuthPage';
 import ProductDetail from './pages/ProductDetail/ProductDetail';
 import Cart from './pages/Cart/Cart';
-import ProductPage from './pages/ProductPage';
+import ProductPage from './pages/Products/ProductPage';
 import Contact from './pages/Home/contact-Section/contact';
 import Loading from './components/shared/Loading/Loading';
 import AccountPage from './components/AccountTabs/AccountPage';

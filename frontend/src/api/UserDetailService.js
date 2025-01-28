@@ -1,11 +1,13 @@
 import axios from 'axios';
+import { config } from '../config';
 
-const BASE_URL = "http://localhost:8080/api/users";
+const URL = `${config.apiUrl}/api/users`;
 
+//Get User Info
 export const getUserDetailFromAPI = async () => {
     try {
-        const response = await axios.get(`${BASE_URL}/details`, { withCredentials: true });
-        console.log(response.data);
+        const response = await axios.get(`${URL}/details`, { withCredentials: true });
+
         return response.data; // Return user detail data
     } catch (error) {
         console.error("Error fetching user details:", error);
@@ -13,10 +15,11 @@ export const getUserDetailFromAPI = async () => {
     }
 }
 
+//Update User Info
 export const updateUserDetailToAPI = async (userDetail) => {
     try {
-        const response = await axios.put(`${BASE_URL}/details`, userDetail, { withCredentials: true });
-        console.log(response.data);
+        const response = await axios.put(`${URL}/details`, userDetail, { withCredentials: true });
+
         return response.data; // Return updated user detail data
     } catch (error) {
         console.error("Error updating user details:", error);

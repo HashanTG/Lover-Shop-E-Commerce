@@ -8,8 +8,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
-  const [shopDropdown, setShopDropdown] = useState(false);
-  const [productDropdown, setProductDropdown] = useState(false);
+
   const [profileMenuVisible, setProfileMenuVisible] = useState(false);
 
   const navigate = useNavigate();
@@ -51,25 +50,11 @@ const Header = () => {
     <header className="header">
       <div className="nav-logo" onClick={handleLogout}>
         <span className="pointer">ROSA <span className="color-lover">LOVER.</span></span>
-        {/* <img src="/Adora.png" alt="Rosa Lover"/> */}
+
       </div>
       <nav className="nav">
         <ul>
           <li><Link to="/">Home</Link></li>
-          <li
-            className="dropdown"
-            onMouseEnter={() => setShopDropdown(true)}
-            onMouseLeave={() => setShopDropdown(false)}
-          >
-            {/* <a href="#shop">Shop <span>&#9662;</span></a>
-            {shopDropdown && (
-              <ul className="dropdown-menu">
-                <li><a href="#shop-category1">Category 1</a></li>
-                <li><a href="#shop-category2">Category 2</a></li>
-                <li><a href="#shop-category3">Category 3</a></li>
-              </ul>
-            )} */}
-          </li>
           <li><Link to="/products">Product</Link></li>
           <li><Link to="/contactus">Contact US</Link></li>
         </ul>
@@ -95,8 +80,6 @@ const Header = () => {
                   <hr />
                   <ul>
                     <li><Link to="/account">Account</Link></li>
-                    <li><a href="#wishlist">Wish List</a></li>
-                    <li><a href="#settings">Settings</a></li>
                     <li><a href="#help-center">Help Center</a></li>
                   </ul>
                 </>
@@ -104,9 +87,6 @@ const Header = () => {
                 <>
                   <button className="profile-menu-btn" onClick={hadleLogin}>
                     Log In
-                  </button>
-                  <button className="profile-menu-btn">
-                    <Link to="/register">Register</Link>
                   </button>
                 </>
               )}
