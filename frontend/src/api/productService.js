@@ -68,3 +68,15 @@ export const searchProducts = async ({
     throw error;
   }
 };
+
+//Get Product Detail By ID
+
+export const GetProductDetailById = async (id) => {
+  try {
+    const response = await axios.get(`${API_URL}/${id}`);
+    return response;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    throw error;
+  }
+};

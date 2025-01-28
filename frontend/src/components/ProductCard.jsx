@@ -4,19 +4,19 @@ import "./ProductCard.css";
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
 import { useAlert } from "../context/GlobalAlertContext";
-import CustomAlert from "./CustomAlert";
 import Spinner from "./Spinner/Spinner";
 
 const ProductCard = ({ product }) => {
   const { addToWishlist } = useWishlist();
   const { addToCart } = useCart();
   const {showAlert} = useAlert();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingWhislist, setIsLoadingWhislist] = useState(false);
+  const [isLoadingCart, setIsLoadingCart] = useState(false);
 
   const handleWishlistClick = async () => {
-    setIsLoading(true)
+    setIsLoadingWhislist(true)
     const response = await addToWishlist(product.id);
-    setIsLoading(false)
+    setIsLoadingWhislist(false)
     if (response.success) {
       showAlert("Irem Added To wishlist")
       console.log("Item added to wishlist:", response.data);
@@ -25,8 +25,16 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const handleAddtoCartClick = () => {
-    addToCart(product.id, 1);
+  const handleAddtoCartClick = async () => {
+    setIsLoadingCart(true)
+    const response  =await addToCart(product.id, 1);
+    setIsLoadingCart(false);
+    if (response.success) {
+      showAlert("Item Added To Cart")
+      console.log("Item added to Cart:");
+    } else {
+      showAlert("Failed to add item to Cart.");
+    }
   };
 
   return (
@@ -47,10 +55,11 @@ const ProductCard = ({ product }) => {
         <p>Price: Rs. {product.price.toFixed(2)}</p>
       </Link>
       <button className="Whishlist" onClick={handleWishlistClick}>
-        {isLoading ? <Spinner size="14px" /> : "Whishlist"}
+        {isLoadingWhislist ? <Spinner size="14px" /> : "Whishlist"}
       </button>
       <button className="add-to-cart" onClick={handleAddtoCartClick}>
-        Add to Cart
+
+        {isLoadingCart ? <Spinner size="14px" /> : "Add To Cart"}
       </button>
     </div>
   );
