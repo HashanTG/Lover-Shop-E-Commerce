@@ -25,6 +25,8 @@ import CheckoutDetails from './pages/CheckOut_OrderComplete/CheckoutDetails';
 import OrderComplete from './pages/CheckOut_OrderComplete/OrderComplete';
 import { WishlistProvider } from './context/WishlistContext';
 import ShippingPolicy from './assets/Footer_Pages/Shipping_policy/shippingPolicy';
+import ReturnAndRefund from './assets/Footer_Pages/ReturnRefund/ReturnRefund';
+import Home from './pages/Home/Home';
 
 
 
@@ -52,6 +54,8 @@ const App = () => {
 
             <Route path="/product/:productId" element={<ProductDetail />} />
 
+            <Route path="/homePage" element={<Home/>}/>
+
             <Route path="/cart" element={<Cart />} />
             <Route path="/products" element={<ProductPage />} />
           
@@ -61,7 +65,10 @@ const App = () => {
 
             <Route path="/checkout" element={<CheckoutDetails />} />
             <Route path="/order-complete" element={<OrderComplete />} />
+
+            //Info Pages
             <Route path="/shiping_Policy" element={<ShippingPolicy/>} />
+            <Route path="/return_refund" element={<ReturnAndRefund/>}/>
 
 
            
