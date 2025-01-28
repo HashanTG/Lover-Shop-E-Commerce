@@ -73,7 +73,7 @@ const Footer = () => {
                 <a href="#">Articles</a>
               </li>
               <li>
-                <a href="#">Contact Us</a>
+                <a href="contactus">Contact Us</a>
               </li>
             </ul>
           </div>
@@ -90,7 +90,7 @@ const Footer = () => {
                 <a href="#">Support</a>
               </li>
               <li>
-                <a href="#">FAQs</a>
+                <a href="/faqS">FAQs</a>
               </li>
             </ul>
           </div>

@@ -26,6 +26,7 @@ import OrderComplete from './pages/CheckOut_OrderComplete/OrderComplete';
 import { WishlistProvider } from './context/WishlistContext';
 import ShippingPolicy from './assets/Footer_Pages/Shipping_policy/shippingPolicy';
 import ReturnAndRefund from './assets/Footer_Pages/ReturnRefund/ReturnRefund';
+import FAQs from './assets/Footer_Pages/FAQs/FAQs';
 
 
 
@@ -67,6 +68,7 @@ const App = () => {
             /*Info Pages */
             <Route path="/shiping_Policy" element={<ShippingPolicy/>} />
             <Route path="/return_refund" element={<ReturnAndRefund/>}/>
+            <Route path="/faqS" element={<FAQs/>}/>
 
 
            

@@ -53,7 +53,7 @@ const ShippingPolicy = () => {
         <div className="contact">
           <p>
             If you have any questions regarding our shipping policy, please
-            contact us at <strong>rosalovers@gmail.com</strong> or call us at{" "}
+            contact us at <strong>rosalover107@gmail.com</strong> or call us at{" "}
             <strong>+94 78 256 3766</strong>.
           </p>
         </div>
