@@ -29,6 +29,7 @@ import ReturnAndRefund from './assets/Footer_Pages/ReturnRefund/ReturnRefund';
 import FAQs from './assets/Footer_Pages/FAQs/FAQs';
 import SupportPage from './assets/Footer_Pages/Support/support';
 import PrivacyPolicy from './assets/Footer_Pages/PrivacyPolicy/privacyPolicy';
+import TermsCondition from './assets/Footer_Pages/TermsConditions/termsCondition'
 
 
 
@@ -74,6 +75,7 @@ const App = () => {
             <Route path="/support_Page" element={<SupportPage/>}/>
 
             <Route path = "/privacy_Policy" element={<PrivacyPolicy/>}/>
+            <Route path = "Terms_condition" element={<TermsCondition/>}/>
 
 
            
