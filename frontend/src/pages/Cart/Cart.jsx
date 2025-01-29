@@ -1,34 +1,43 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../../context/CartContext";
+import { useAlert } from "../../context/GlobalAlertContext";
 import OrderProgress from "../../components/OrderProgress/OrderProgress";
 import "./cart.css"; // Ensure this CSS file reflects the grid-based styling
 
 const Cart = () => {
   // Local state for cart and shipping
   const [cart, setCart] = useState({ items: [] });
+  // const [debounceCart,setDebounceCart] = useState({ items: [] });
   const [shipping, setShipping] = useState(0);
-  const { cartItems, removeFromCart, fetchCart } = useContext(CartContext);
-
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
-
+  //Context states
+  const { cartItems, removeFromCart, fetchCart } = useContext(CartContext);
+  const { showAlert } = useAlert();
+  //Navigate Object
   const navigate = useNavigate();
 
-  // Consume CartContext to get the cartItems
 
   // Effect to update local state when cartItems from CartContext change
   useEffect(() => {
-    console.log("Cart items updated:", cartItems);
     setCart({ items: cartItems });
+    // setDebounceCart({ items: cartItems });
   }, [cartItems]);
 
+  
+  //Calculate Part
   // Calculate subtotal
   const calculateSubtotal = () => {
-    return cartItems.reduce((total, item) => {
+    return cart?.items.reduce((total, item) => {
       return total + item.quantity * (item.productDetails.price || 0);
     }, 0);
   };
+
+  const handleShippingChange = (cost) => {
+    setShipping(cost);
+  };
+
 
   useEffect(() => {
     const newSubtotal = calculateSubtotal(cart); // Recalculate subtotal
@@ -38,6 +47,59 @@ const Cart = () => {
     setTotal(newSubtotal + shipping);
   }, [cart, calculateSubtotal]); // Dependencies
 
+
+  // const trackChanged = () =>{
+  //   const changedItems = cart.items.filter((item, index) => {
+  //     return item.quantity !== debounceCart.items[index]?.quantity;
+  //   });
+
+  //   if (changedItems.length > 0) {
+  //     console.log("Changed items:", changedItems);
+  //   }
+  //   return changedItems;
+  // }
+
+  // const debounceApiCall =async () =>{
+  //   try {
+  //     const result = await addToCart(productId, quantity); // Use the quantity state
+
+  //     if (result.success) {
+  //       showAlert("Item added to cart successfully");
+  //     } else {
+  //       showAlert("Failed to Add to Cart");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error adding item to cart:", error);
+  //     showAlert("An error occurred while adding the item to the cart.");
+  //   } 
+  // }
+
+  // const checkForRemove = () =>{
+  //   if(changedItems){
+      
+  //   }
+  // // }
+
+  // //Deboucing and Add Items After Increment or decrement - Handling Quantity Change
+  // useEffect(() => {
+  //   if (cart.items.length !== debounceCart.items.length) {
+  //     console.log("Item has been removed");
+  //   } else {
+  //     trackChanged();
+      
+  //   }
+  
+  //   // const timer = setTimeout(() => {
+  //   //   if (JSON.stringify(debouncedCart) !== JSON.stringify(cart)) {
+  //   //     setDebounceCart(cart); // Update debounced state
+  //   //     updateCartInDatabase(cart);
+  //   //   }
+  //   // }, 500);
+  
+  //   // return () => clearTimeout(timer); // Cleanup previous timer
+  // }, [cart]); // Runs when cart changes
+  
+//Handling the Quantity Change
   const handleQuantityChange = (productId, delta) => {
     setCart((prevCart) => {
       const updatedItems = prevCart.items.map((item) =>
@@ -49,20 +111,19 @@ const Cart = () => {
     });
   };
 
+
+
+  //Removing a Item from a Cart
   const handleRemoveItem = async (productId) => {
     try {
-      const result = await removeFromCart(productId);
-      if (!result.success) {
-        alert(result.message);
+      const result = await removeFromCart(productId); //Use Context function to remove
+      if (result.success) {
+        showAlert("Item Removed Successfully");
       }
     } catch (error) {
       console.error("Failed to remove item from cart", error);
-      alert("An error occurred while removing the item from the cart.");
+      showAlert("An error occurred while removing the item from the cart.");
     }
-  };
-
-  const handleShippingChange = (cost) => {
-    setShipping(cost);
   };
 
   //Proceed to Payment Step
@@ -73,10 +134,8 @@ const Cart = () => {
       subtotal: subtotal,
       total: total,
     };
-
     // Save the fee details in localStorage
     localStorage.setItem("feeDetails", JSON.stringify(fee));
-
     // Navigate to the checkout page
     navigate("/checkout");
   };

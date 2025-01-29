@@ -1,279 +1,172 @@
-// CheckoutDetails.jsx
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './CheckoutDetails.css';
+//Component
 import OrderProgress from '../../components/OrderProgress/OrderProgress';
+//Context
 import { CartContext } from '../../context/CartContext';
 import { useUserDetail } from '../../context/UserDetailContext';
-import './CheckoutDetails.css';
+//Api Service
+import { placeOrder } from '../../api/orderService';
+
+
 
 const CheckoutDetails = () => {
   const navigate = useNavigate();
   const { cartItems } = useContext(CartContext);
+  const { userDetail } = useUserDetail();
+  
   const [fee, setFee] = useState(() => {
     const savedFee = localStorage.getItem("feeDetails");
-    return savedFee ? JSON.parse(savedFee) : null; // Parse JSON or set to null if not found
+    return savedFee ? JSON.parse(savedFee) : null;
   });
 
-  const {userDetail} = useUserDetail();
-  
-  useEffect(()=>{
-    
-  },[userDetail])
-  
+  // Extract primary address & card
+  const primaryAddress = userDetail?.addresses?.find(addr => addr.primary) || userDetail?.addresses?.[0];
+  const primaryCard = userDetail?.cardDetails?.find(card => card.primary) || userDetail?.cardDetails?.[0];
+
+  const [selectedAddress, setSelectedAddress] = useState(primaryAddress);
+  const [selectedCard, setSelectedCard] = useState(primaryCard);
+
+  // Form state
   const [formData, setFormData] = useState({
-    firstName: '' ,
-    lastName: '',
-    phoneNumber: '',
+    firstName: userDetail?.firstName || '',
+    lastName: userDetail?.lastName || '',
+    phoneNumber: userDetail?.phoneNo || '',
     email: '',
-    streetAddress: '',
-    country: '',
-    state: '',
-    city: '',
-    zipCode: '',
-    cardNumber: '',
-    expiryDate: '',
-    cvv: '',
-    paypalEmail: '',
-    useAsBilling: false,
-    paymentMethod: 'credit'
+    streetAddress: primaryAddress?.address || '',
+    country: primaryAddress?.country || '',
+    state: primaryAddress?.state || '',
+    city: primaryAddress?.city || '',
+    zipCode: primaryAddress?.zipCode || '',
+    cardNumber: primaryCard?.cardNumber || '',
+    expiryDate: primaryCard?.expirationDate || '',
+    cvv: primaryCard?.cvv || '',
+    paymentMethod: 'credit',
   });
 
+  useEffect(() => {
+    if (selectedAddress) {
+      setFormData(prev => ({
+        ...prev,
+        streetAddress: selectedAddress.address,
+        city: selectedAddress.city,
+        state: selectedAddress.state,
+        zipCode: selectedAddress.zipCode,
+        country: selectedAddress.country,
+        phoneNumber: selectedAddress.phone,
+      }));
+    }
+  }, [selectedAddress]);
+
+  useEffect(() => {
+    if (selectedCard) {
+      setFormData(prev => ({
+        ...prev,
+        cardNumber: selectedCard.cardNumber,
+        expiryDate: selectedCard.expirationDate,
+        cvv: selectedCard.cvv,
+      }));
+    }
+  }, [selectedCard]);
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/orders/create', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          shippingDetails: formData,
-          orderItems: cartItems,
-          totalAmount: calculateTotal()
-        })
-      });
-
-      if (response.ok) {
-        const orderData = await response.json();
-        navigate('/order-complete', { state: { orderData } });
-      }
+      const orderData = await placeOrder(cartItems, fee?.total);
+      navigate('/order-complete', { state: { orderData } });
     } catch (error) {
-      console.error('Error creating order:', error);
+      console.error('Order placement failed:', error);
     }
   };
+  
 
   return (
     <div className="checkout-container">
       <OrderProgress step={2} />
       <div className="checkout-layout">
         <form onSubmit={handleSubmit} className="checkout-form">
+          {/* Contact Information */}
           <section className="contact-information">
             <h3>Contact Information</h3>
             <div className="form-row">
               <div className="input-group">
                 <label htmlFor="firstName">First Name</label>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  required
-                />
+                <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange} required />
               </div>
               <div className="input-group">
                 <label htmlFor="lastName">Last Name</label>
-                <input
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  required
-                />
+                <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleInputChange} required />
               </div>
             </div>
             <div className="input-group">
               <label htmlFor="phoneNumber">Phone Number</label>
-              <input
-                type="tel"
-                id="phoneNumber"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="input-group">
-              <label htmlFor="email">Email Address</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-              />
+              <input type="tel" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleInputChange} required />
             </div>
           </section>
 
+          {/* Shipping Address Selection */}
           <section className="shipping-address">
             <h3>Shipping Address</h3>
-            <div className="input-group">
-              <label htmlFor="streetAddress">Street Address</label>
-              <input
-                type="text"
-                id="streetAddress"
-                name="streetAddress"
-                value={formData.streetAddress}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="input-group">
-              <label htmlFor="country">Country</label>
-              <select
-                id="country"
-                name="country"
-                value={formData.country}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Select Country</option>
-                <option value="IN">India</option>
-                <option value="CN">China</option>
-                <option value="JP">Japan</option>
-                <option value="KR">South Korea</option>
-                <option value="VN">Vietnam</option>
-                <option value="TH">Thailand</option>
-                <option value="PH">Philippines</option>
-                <option value="MY">Malaysia</option>
-                <option value="ID">Indonesia</option>
-                <option value="PK">Pakistan</option>
-                <option value="BD">Bangladesh</option>
-                <option value="LK">Sri Lanka</option>
-              </select>
-            </div>
-            <div className="form-row three-columns">
-              <div className="input-group">
-                <label htmlFor="city">City</label>
-                <input
-                  type="text"
-                  id="city"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="input-group">
-                <label htmlFor="state">State</label>
-                <input
-                  type="text"
-                  id="state"
-                  name="state"
-                  value={formData.state}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="input-group">
-                <label htmlFor="zipCode">ZIP Code</label>
-                <input
-                  type="text"
-                  id="zipCode"
-                  name="zipCode"
-                  value={formData.zipCode}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-            </div>
+            <select onChange={(e) => setSelectedAddress(userDetail?.addresses?.find(addr => addr.address === e.target.value))}>
+              {userDetail?.addresses?.map((addr, index) => (
+                <option key={index} value={addr.address}>{addr.address}, {addr.city}, {addr.state}</option>
+              ))}
+            </select>
           </section>
 
+          {/* Payment Method */}
           <section className="payment-method">
             <h3>Payment Method</h3>
             <div className="payment-options">
               <label className="payment-option">
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="credit"
-                  checked={formData.paymentMethod === 'credit'}
-                  onChange={handleInputChange}
-                />
+                <input type="radio" name="paymentMethod" value="credit" checked={formData.paymentMethod === 'credit'} onChange={handleInputChange} />
                 <span className="radio-label">Credit Card</span>
               </label>
-              
               <label className="payment-option">
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="cod"
-                  checked={formData.paymentMethod === 'cod'}
-                  onChange={handleInputChange}
-                />
+                <input type="radio" name="paymentMethod" value="cod" checked={formData.paymentMethod === 'cod'} onChange={handleInputChange} />
                 <span className="radio-label">Cash on Delivery</span>
               </label>
             </div>
 
             {formData.paymentMethod === 'credit' && (
-              <div className="card-details">
-                <div className="input-group">
-                  <label htmlFor="cardNumber">Card Number</label>
-                  <input
-                    type="text"
-                    id="cardNumber"
-                    name="cardNumber"
-                    value={formData.cardNumber}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className="form-row">
+              <>
+                <h4>Select Card</h4>
+                <select onChange={(e) => setSelectedCard(userDetail?.cardDetails?.find(card => card.cardNumber === e.target.value))}>
+                  {userDetail?.cardDetails?.map((card, index) => (
+                    <option key={index} value={card.cardNumber}>**** **** **** {card.cardNumber.slice(-4)}</option>
+                  ))}
+                </select>
+
+                <div className="card-details">
                   <div className="input-group">
-                    <label htmlFor="expiryDate">Expiry Date</label>
-                    <input
-                      type="text"
-                      id="expiryDate"
-                      name="expiryDate"
-                      placeholder="MM/YY"
-                      value={formData.expiryDate}
-                      onChange={handleInputChange}
-                      required
-                    />
+                    <label htmlFor="cardNumber">Card Number</label>
+                    <input type="text" id="cardNumber" name="cardNumber" value={formData.cardNumber} onChange={handleInputChange} required />
                   </div>
-                  <div className="input-group">
-                    <label htmlFor="cvv">CVV</label>
-                    <input
-                      type="text"
-                      id="cvv"
-                      name="cvv"
-                      value={formData.cvv}
-                      onChange={handleInputChange}
-                      required
-                    />
+                  <div className="form-row">
+                    <div className="input-group">
+                      <label htmlFor="expiryDate">Expiry Date</label>
+                      <input type="text" id="expiryDate" name="expiryDate" value={formData.expiryDate} onChange={handleInputChange} required />
+                    </div>
+                    <div className="input-group">
+                      <label htmlFor="cvv">CVV</label>
+                      <input type="text" id="cvv" name="cvv" value={formData.cvv} onChange={handleInputChange} required />
+                    </div>
                   </div>
                 </div>
-              </div>
+              </>
             )}
           </section>
 
-          <button type="submit" className="place-order-btn">
-            Place Order
-          </button>
+          <button type="submit" className="place-order-btn">Place Order</button>
         </form>
 
+        {/* Order Summary */}
         <div className="order-summary">
           <h3>Order Summary</h3>
           <div className="summary-items">

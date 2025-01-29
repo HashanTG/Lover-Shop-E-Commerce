@@ -3,6 +3,7 @@ package com.example.backend.order.Controller;
 import com.example.backend.order.ENUMS.OrderStatus;
 import com.example.backend.order.Model.Order;
 import com.example.backend.order.Service.OrderService;
+import com.example.backend.Auth.UtilSecurity.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/orders")
 public class OrderController {
     private final OrderService orderService;
@@ -63,12 +65,15 @@ public class OrderController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
         return ResponseEntity.ok(orderService.getOrdersByUserId(userId, pageable));
     }
-
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+        String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically from SecurityContext
+        // Attach the userId to the order before saving
+        order.setUserId(userId);
         Order createdOrder = orderService.createOrder(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
     }
+    
 
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable String id) {
