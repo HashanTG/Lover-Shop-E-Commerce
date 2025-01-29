@@ -171,7 +171,7 @@ const AuthPage = () => {
               <input type="checkbox" id="terms" required />
               <label htmlFor="terms">
                 I agree with <a href="/privacy_policy">Privacy Policy</a> and{" "}
-                <a href="/terms">Terms of Use</a>
+                <a href="/Terms_condition">Terms & Conditions</a>
               </label>
             </div>
             <button type="submit" className="auth-button" disabled={isLoading}>
