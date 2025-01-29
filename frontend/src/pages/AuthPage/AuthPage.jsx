@@ -170,7 +170,8 @@ const AuthPage = () => {
             <div className="form-group terms">
               <input type="checkbox" id="terms" required />
               <label htmlFor="terms">
-                I agree with <a href="/privacy">Privacy Policy</a> and{" "} <a href="/terms">Terms of Use</a>
+                I agree with <a href="/privacy_policy">Privacy Policy</a> and{" "}
+                <a href="/terms">Terms of Use</a>
               </label>
             </div>
             <button type="submit" className="auth-button" disabled={isLoading}>

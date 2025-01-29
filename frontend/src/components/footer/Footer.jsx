@@ -106,7 +106,7 @@ const Footer = () => {
       <div className="footer_bottom">
         <p>
           Copyright © 2023 rosalovers. All rights reserved |
-          <a href="#"> Privacy Policy</a> |<a href="#"> Terms & Conditions</a>
+          <a href="privacy_policy"> Privacy Policy</a> |<a href="#"> Terms & Conditions</a>
         </p>
         <div className="payment_methods">
           <img src={visa} alt="Visa" />

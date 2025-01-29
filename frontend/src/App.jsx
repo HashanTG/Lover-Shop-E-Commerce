@@ -28,6 +28,7 @@ import ShippingPolicy from './assets/Footer_Pages/Shipping_policy/shippingPolicy
 import ReturnAndRefund from './assets/Footer_Pages/ReturnRefund/ReturnRefund';
 import FAQs from './assets/Footer_Pages/FAQs/FAQs';
 import SupportPage from './assets/Footer_Pages/Support/support';
+import PrivacyPolicy from './assets/Footer_Pages/PrivacyPolicy/privacyPolicy';
 
 
 
@@ -71,6 +72,8 @@ const App = () => {
             <Route path="/return_refund" element={<ReturnAndRefund/>}/>
             <Route path="/faqS" element={<FAQs/>}/>
             <Route path="/support_Page" element={<SupportPage/>}/>
+
+            <Route path = "/privacy_Policy" element={<PrivacyPolicy/>}/>
 
 
            
