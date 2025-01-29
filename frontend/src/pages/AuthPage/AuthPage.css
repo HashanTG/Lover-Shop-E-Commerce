@@ -1,8 +1,9 @@
 .auth-container {
     display: flex;
-    margin-top: 150px;
     padding: 50px;
     min-height: 700px;
+    background: rgb(225,175,209);
+  background: linear-gradient(0deg, rgb(237, 164, 213) 0%, rgba(147,207,205,1) 53%, rgba(225,175,209,1) 100%);
     
   }
   

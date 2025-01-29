@@ -64,14 +64,12 @@ const Footer = () => {
                 <a href="/">Home</a>
               </li>
               <li>
-                <a href="#">Shop</a>
+                <a href="/products">Shop</a>
               </li>
               <li>
-                <a href="#">Product</a>
+                <a href="/products">Product</a>
               </li>
-              <li>
-                <a href="#">Articles</a>
-              </li>
+              
               <li>
                 <a href="contactus">Contact Us</a>
               </li>
