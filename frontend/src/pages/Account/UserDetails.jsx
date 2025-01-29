@@ -1,14 +1,30 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useUserDetail } from "../../context/UserDetailContext";
 import { useAlert } from "../../context/GlobalAlertContext";
 import "./UserDetails.css";
 
 const UserDetails = () => {
+
+    const {showAlert} = useAlert();//For showing alerts
+
   const { userDetail, updateUserDetail } = useUserDetail();
   const [isEditing, setIsEditing] = useState(false);
-  const [editableUser, setEditableUser] = useState({ ...userDetail });
+  const [editableUser, setEditableUser] = useState({
+    firstName: "",
+    lastName: "",
+    phoneNo: "",
+  });
 
-  const {showAlert} = useAlert();//For showing alerts
+  // Initialize `editableUser` with `userDetail` properties
+  useEffect(() => {
+    if (userDetail) {
+      setEditableUser({
+        firstName: userDetail.firstName || "",
+        lastName: userDetail.lastName || "",
+        phoneNo: userDetail.phoneNo || "", 
+      });
+    }
+  }, [userDetail]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -17,7 +33,8 @@ const UserDetails = () => {
 
   const handleSave = async () => {
     try {
-      const updatedCardJson = { cardDetails: editableUser };
+      const updatedCardJson = {  ...editableUser };
+      console.log(updatedCardJson)
       await updateUserDetail(updatedCardJson); // Call the update function from context
       showAlert("User Updated Successfully")
       setIsEditing(false);
@@ -66,7 +83,7 @@ const UserDetails = () => {
           <label>Phone Number</label>
           <input
             type="text"
-            name="phoneNumber"
+            name="phoneNo"
             value={editableUser.phoneNumber || "Not Set"}
             readOnly={!isEditing}
             onChange={handleInputChange}

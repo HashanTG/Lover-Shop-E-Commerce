@@ -1,22 +1,30 @@
-import React, { useState } from 'react';
-import './Addresses.css';
-import { useUserDetail } from '../../context/UserDetailContext';
+import React, { useState } from "react";
+import "./Addresses.css";
+import { useUserDetail } from "../../context/UserDetailContext";
 
 const Addresses = () => {
   const { userDetail, updateUserDetail } = useUserDetail();
-  
-  const [editingIndex, setEditingIndex] = useState(null); //State for kepp Editing address
-  const [editedAddress, setEditedAddress] = useState({});//State for Keep Edited address detail
-  const [isAdding, setIsAdding] = useState(false); // To track if we're adding a new address
-  const [newAddress, setNewAddress] = useState({}); // State for new address inputs
 
-//Handle Editing a address when Click on Edit Button
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [editedAddress, setEditedAddress] = useState({});
+  const [isAdding, setIsAdding] = useState(false);
+  const [newAddress, setNewAddress] = useState({
+    address: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    country: "",
+    phone: "",
+    primary: false,
+  });
+
+  // Handle editing an address
   const handleEditClick = (index, address) => {
     setEditingIndex(index);
     setEditedAddress({ ...address });
   };
 
-  //Handle Input Change for Edited Address
+  // Handle input change for edited address
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditedAddress((prev) => ({
@@ -25,39 +33,31 @@ const Addresses = () => {
     }));
   };
 
-  const handleSaveClick = (index) => {
-    // Safely handle null or undefined addresses by initializing as an empty array
-    const currentAddresses = userDetail.addresses || [];
-    
-    // Create a copy and update the specific address
-    const updatedAddresses = [...currentAddresses];
+  // Save edited address
+  const handleSaveClick = async (index) => {
+    const updatedAddresses = [...userDetail.addresses];
     updatedAddresses[index] = editedAddress;
-  
-    console.log(updatedAddresses);
-    
-    const updatedAddressJson = { addresses: updatedAddresses };
-  
-    updateUserDetail(updatedAddressJson)
-      .then(() => {
-        setEditingIndex(null); // Exit editing mode
-      })
-      .catch((error) => {
-        console.error("Failed to update address:", error);
-      });
-  };
-  
 
-  //Handle Cancel Click for Edited Address
+    try {
+      await updateUserDetail({ addresses: updatedAddresses });
+      setEditingIndex(null);
+    } catch (error) {
+      console.error("Failed to update address:", error);
+    }
+  };
+
+  // Cancel editing
   const handleCancelClick = () => {
     setEditingIndex(null);
     setEditedAddress({});
   };
 
-  //Handling Add New Address
+  // Handle adding a new address
   const handleAddClick = () => {
     setIsAdding(true);
   };
-//Handle input changes for new Address
+
+  // Handle input changes for new address
   const handleNewInputChange = (e) => {
     const { name, value } = e.target;
     setNewAddress((prev) => ({
@@ -66,52 +66,65 @@ const Addresses = () => {
     }));
   };
 
-  //Add new Address
-  const handleNewSaveClick = () => {
-    // Safely handle null or undefined addresses by initializing as an empty array
-    const currentAddresses = userDetail.addresses || [];
-  
-    // Add the new address to the list
-    const updatedAddresses = [...currentAddresses, newAddress];
-  
-    console.log(updatedAddresses);
-  
-    // Create JSON object for the updated addresses
-    const updatedAddressJson = { addresses: updatedAddresses };
-  
-    // Update the user details
-    updateUserDetail(updatedAddressJson)
-      .then(() => {
-        setIsAdding(false); // Exit the "add address" mode
-        setNewAddress({}); // Reset the new address input
-      })
-      .catch((error) => {
-        console.error("Failed to add new address:", error);
-      });
-  };
-  
+  // Save new address
+  const handleNewSaveClick = async () => {
+    const updatedAddresses = [...(userDetail.addresses || []), newAddress];
 
-//Cancel New Address Adding
+    try {
+      await updateUserDetail({ addresses: updatedAddresses });
+      setIsAdding(false);
+      setNewAddress({
+        address: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        country: "",
+        phone: "",
+        primary: false,
+      });
+    } catch (error) {
+      console.error("Failed to add new address:", error);
+    }
+  };
+
+  // Cancel adding new address
   const handleNewCancelClick = () => {
     setIsAdding(false);
-    setNewAddress({});
+    setNewAddress({
+      address: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      country: "",
+      phone: "",
+      primary: false,
+    });
   };
 
+  // Remove an address
+  const handleRemove = async (index) => {
+    const updatedAddresses = userDetail.addresses.filter((_, i) => i !== index);
 
-  //Remove a Address from the list
-  const handleRemove = (index) => {
-    const updatedAddresses = userDetail.addresses.filter((_, i) => i !== index); // Filter out the item at the given index
-    const updatedAddressJson = { addresses: updatedAddresses }; // Create JSON object for updated addresses to be passed to the request
-  
-    updateUserDetail(updatedAddressJson)
-      .then(() => {
-        setEditingIndex(null);
-      })
-      .catch((error) => {
-        console.error("Failed to update address:", error);
-      });
+    try {
+      await updateUserDetail({ addresses: updatedAddresses });
+    } catch (error) {
+      console.error("Failed to remove address:", error);
+    }
   };
-  
+
+  // Set primary address
+  const handleSetPrimary = async (index) => {
+    const updatedAddresses = userDetail.addresses.map((addr, i) => ({
+      ...addr,
+      primary: i === index,
+    }));
+
+    try {
+      await updateUserDetail({ addresses: updatedAddresses });
+    } catch (error) {
+      console.error("Failed to set primary address:", error);
+    }
+  };
 
   if (!userDetail) {
     return <p>Loading user details...</p>;
@@ -123,73 +136,29 @@ const Addresses = () => {
       <div className="address-cards">
         {userDetail.addresses && userDetail.addresses.length > 0 ? (
           userDetail.addresses.map((address, index) => (
-            <div key={index} className="address-card">
+            <div key={index} className={`address-card ${address.primary ? "primary" : ""}`}>
               <h3>Shipping Address</h3>
               {editingIndex === index ? (
                 <div className="edit-form">
-                  <input
-                    type="text"
-                    name="address"
-                    value={editedAddress.address || ""}
-                    onChange={handleInputChange}
-                    placeholder="Address"
-                  />
-                  <input
-                    type="text"
-                    name="city"
-                    value={editedAddress.city || ""}
-                    onChange={handleInputChange}
-                    placeholder="City"
-                  />
-                  <input
-                    type="text"
-                    name="state"
-                    value={editedAddress.state || ""}
-                    onChange={handleInputChange}
-                    placeholder="State"
-                  />
-                  <input
-                    type="text"
-                    name="zipCode"
-                    value={editedAddress.zipCode || ""}
-                    onChange={handleInputChange}
-                    placeholder="Zip Code"
-                  />
-                  <input
-                    type="text"
-                    name="country"
-                    value={editedAddress.country || ""}
-                    onChange={handleInputChange}
-                    placeholder="Country"
-                  />
-                  <input
-                    type="text"
-                    name="phone"
-                    value={editedAddress.phone || ""}
-                    onChange={handleInputChange}
-                    placeholder="Phone"
-                  />
-                  <button onClick={() => handleSaveClick(index)} className="save-button">
-                    Save
-                  </button>
-                  <button onClick={handleCancelClick} className="cancel-button">
-                    Cancel
-                  </button>
+                  <input type="text" name="address" value={editedAddress.address} onChange={handleInputChange} placeholder="Address" />
+                  <input type="text" name="city" value={editedAddress.city} onChange={handleInputChange} placeholder="City" />
+                  <input type="text" name="state" value={editedAddress.state} onChange={handleInputChange} placeholder="State" />
+                  <input type="text" name="zipCode" value={editedAddress.zipCode} onChange={handleInputChange} placeholder="Zip Code" />
+                  <input type="text" name="country" value={editedAddress.country} onChange={handleInputChange} placeholder="Country" />
+                  <input type="text" name="phone" value={editedAddress.phone} onChange={handleInputChange} placeholder="Phone" />
+                  <button onClick={() => handleSaveClick(index)} className="save-button">Save</button>
+                  <button onClick={handleCancelClick} className="cancel-button">Cancel</button>
                 </div>
               ) : (
                 <div className="address-details">
-                  <p>{address.address || ""}</p>
-                  <p>
-                    {address.city || ""}, {address.state || ""}, {address.zipCode || ""}
-                  </p>
-                  <p>{address.country || ""}</p>
-                  <p>{address.phone || ""}</p>
-                  <button onClick={() => handleEditClick(index, address)} className="edit-button">
-                    Edit
-                  </button>
-                  <button onClick={() => handleRemove(index)} className="remove-button">
-                    Remove
-                  </button>
+                  <p>{address.address}</p>
+                  <p>{address.city}, {address.state}, {address.zipCode}</p>
+                  <p>{address.country}</p>
+                  <p>{address.phone}</p>
+                  <p className="primary-text">{address.primary ? "Primary Address" : ""}</p>
+                  <button onClick={() => handleEditClick(index, address)} className="edit-button">Edit</button>
+                  <button onClick={() => handleRemove(index)} className="remove-button">Remove</button>
+                  {!address.primary && <button onClick={() => handleSetPrimary(index)} className="primary-button">Set as Primary</button>}
                 </div>
               )}
             </div>
@@ -201,59 +170,17 @@ const Addresses = () => {
           <h3>Add New Address</h3>
           {isAdding ? (
             <div className="edit-form">
-              <input
-                type="text"
-                name="address"
-                value={newAddress.address || ""}
-                onChange={handleNewInputChange}
-                placeholder="Address"
-              />
-              <input
-                type="text"
-                name="city"
-                value={newAddress.city || ""}
-                onChange={handleNewInputChange}
-                placeholder="City"
-              />
-              <input
-                type="text"
-                name="state"
-                value={newAddress.state || ""}
-                onChange={handleNewInputChange}
-                placeholder="State"
-              />
-              <input
-                type="text"
-                name="zipCode"
-                value={newAddress.zipCode || ""}
-                onChange={handleNewInputChange}
-                placeholder="Zip Code"
-              />
-              <input
-                type="text"
-                name="country"
-                value={newAddress.country || ""}
-                onChange={handleNewInputChange}
-                placeholder="Country"
-              />
-              <input
-                type="text"
-                name="phone"
-                value={newAddress.phone || ""}
-                onChange={handleNewInputChange}
-                placeholder="Phone"
-              />
-              <button onClick={handleNewSaveClick} className="save-button">
-                Save New Address
-              </button>
-              <button onClick={handleNewCancelClick} className="cancel-button">
-                Cancel
-              </button>
+              <input type="text" name="address" value={newAddress.address} onChange={handleNewInputChange} placeholder="Address" />
+              <input type="text" name="city" value={newAddress.city} onChange={handleNewInputChange} placeholder="City" />
+              <input type="text" name="state" value={newAddress.state} onChange={handleNewInputChange} placeholder="State" />
+              <input type="text" name="zipCode" value={newAddress.zipCode} onChange={handleNewInputChange} placeholder="Zip Code" />
+              <input type="text" name="country" value={newAddress.country} onChange={handleNewInputChange} placeholder="Country" />
+              <input type="text" name="phone" value={newAddress.phone} onChange={handleNewInputChange} placeholder="Phone" />
+              <button onClick={handleNewSaveClick} className="save-button">Save New Address</button>
+              <button onClick={handleNewCancelClick} className="cancel-button">Cancel</button>
             </div>
           ) : (
-            <button onClick={handleAddClick} className="add-button">
-              Add New Address
-            </button>
+            <button onClick={handleAddClick} className="add-button">Add New Address</button>
           )}
         </div>
       </div>
