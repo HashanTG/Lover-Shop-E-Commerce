@@ -28,6 +28,10 @@ public class Order {
     private LocalDateTime lastUpdatedAt;
     private boolean confirmedByUser; // User confirms delivery
     private String updatedBy; // Admin who made the last status change
+
+    private Address shippingAddress;  // Include shipping address
+    private PaymentDetails paymentDetails; // Include payment details
+    private RecieveDetail recieveDetail; // Include reciever details
 }
 
 @Data
@@ -37,3 +41,26 @@ class OrderItem {
     private double price;
 }
 
+@Data
+class Address {
+    private String address;
+    private String city;
+    private String state;
+    private String zipCode;
+    private String country;
+    private String phone;
+}
+
+@Data
+class PaymentDetails {
+    private String paymentMethod; // "credit_card" or "cod"
+    private String cardLast4Digits; // Last 4 digits of the card (if applicable)
+    private String cardExpiry; // Optional: "MM/YY"
+}
+
+@Data
+class RecieveDetail{
+    private String recieverFirstName;
+    private String recieverLastName;
+
+}

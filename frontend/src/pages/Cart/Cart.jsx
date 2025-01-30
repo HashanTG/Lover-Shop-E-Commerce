@@ -3,17 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { CartContext } from "../../context/CartContext";
 import { useAlert } from "../../context/GlobalAlertContext";
 import OrderProgress from "../../components/OrderProgress/OrderProgress";
+import Spinner from "../../components/Spinner/Spinner";
 import "./cart.css"; // Ensure this CSS file reflects the grid-based styling
 
 const Cart = () => {
   // Local state for cart and shipping
   const [cart, setCart] = useState({ items: [] });
-  // const [debounceCart,setDebounceCart] = useState({ items: [] });
   const [shipping, setShipping] = useState(0);
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
   //Context states
-  const { cartItems, removeFromCart, fetchCart } = useContext(CartContext);
+  const { cartItems, removeFromCart, addToCart } = useContext(CartContext);
   const { showAlert } = useAlert();
   //Navigate Object
   const navigate = useNavigate();
@@ -22,7 +22,6 @@ const Cart = () => {
   // Effect to update local state when cartItems from CartContext change
   useEffect(() => {
     setCart({ items: cartItems });
-    // setDebounceCart({ items: cartItems });
   }, [cartItems]);
 
   
@@ -48,68 +47,39 @@ const Cart = () => {
   }, [cart, calculateSubtotal]); // Dependencies
 
 
-  // const trackChanged = () =>{
-  //   const changedItems = cart.items.filter((item, index) => {
-  //     return item.quantity !== debounceCart.items[index]?.quantity;
-  //   });
 
-  //   if (changedItems.length > 0) {
-  //     console.log("Changed items:", changedItems);
-  //   }
-  //   return changedItems;
-  // }
 
-  // const debounceApiCall =async () =>{
-  //   try {
-  //     const result = await addToCart(productId, quantity); // Use the quantity state
-
-  //     if (result.success) {
-  //       showAlert("Item added to cart successfully");
-  //     } else {
-  //       showAlert("Failed to Add to Cart");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error adding item to cart:", error);
-  //     showAlert("An error occurred while adding the item to the cart.");
-  //   } 
-  // }
-
-  // const checkForRemove = () =>{
-  //   if(changedItems){
-      
-  //   }
-  // // }
-
-  // //Deboucing and Add Items After Increment or decrement - Handling Quantity Change
-  // useEffect(() => {
-  //   if (cart.items.length !== debounceCart.items.length) {
-  //     console.log("Item has been removed");
-  //   } else {
-  //     trackChanged();
-      
-  //   }
-  
-  //   // const timer = setTimeout(() => {
-  //   //   if (JSON.stringify(debouncedCart) !== JSON.stringify(cart)) {
-  //   //     setDebounceCart(cart); // Update debounced state
-  //   //     updateCartInDatabase(cart);
-  //   //   }
-  //   // }, 500);
-  
-  //   // return () => clearTimeout(timer); // Cleanup previous timer
-  // }, [cart]); // Runs when cart changes
   
 //Handling the Quantity Change
-  const handleQuantityChange = (productId, delta) => {
-    setCart((prevCart) => {
-      const updatedItems = prevCart.items.map((item) =>
-        item.productId === productId
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-          : item
-      );
-      return { ...prevCart, items: updatedItems };
-    });
-  };
+// Handling Quantity Change with API Call and Loading State
+const handleQuantityChange = async (productId, delta) => {
+  setCart((prevCart) => {
+    const updatedItems = prevCart.items.map((item) =>
+      item.productId === productId
+        ? { ...item, loading: true, quantity: Math.max(1, item.quantity + delta) }
+        : item
+    );
+    return { ...prevCart, items: updatedItems };
+  });
+
+  try {
+    await addToCart(productId, delta);
+  } catch (error) {
+    console.error("Failed to update cart:", error);
+    showAlert("Failed to update item quantity.");
+  }
+
+  // Update UI after API call
+  setCart((prevCart) => {
+    const updatedItems = prevCart.items.map((item) =>
+      item.productId === productId
+        ? { ...item, loading: false } // Remove loading state
+        : item
+    );
+    return { ...prevCart, items: updatedItems };
+  });
+};
+
 
 
 
@@ -179,21 +149,23 @@ const Cart = () => {
               </div>
 
               <div className="cart-item-actions">
-                <div className="cart-item-quantity">
-                  <button
-                    className="quantity-btn"
-                    onClick={() => handleQuantityChange(item.productId, -1)}
-                  >
-                    -
-                  </button>
-                  <span>{item.quantity}</span>
-                  <button
-                    className="quantity-btn"
-                    onClick={() => handleQuantityChange(item.productId, 1)}
-                  >
-                    +
-                  </button>
-                </div>
+              <div className="cart-item-quantity">
+  <button
+    className="quantity-btn"
+    onClick={() => handleQuantityChange(item.productId, -1)}
+    disabled={item.loading} // Disable button when loading
+  >
+    {item.loading ? <Spinner size="14px" />  : "-"}
+  </button>
+  <span>{item.quantity}</span>
+  <button
+    className="quantity-btn"
+    onClick={() => handleQuantityChange(item.productId, 1)}
+    disabled={item.loading} // Disable button when loading
+  >
+    {item.loading ? <Spinner size="14px" />  : "+"}
+  </button>
+</div>
               </div>
 
               <div className="cart-item-price">

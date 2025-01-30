@@ -3,7 +3,7 @@ import { config } from '../config';
 
 const API_URL = `${config.apiUrl}/api/orders`; // Replace with your backend API URL
 
-export const placeOrder = async (cartItems, totalAmount,) => {
+export const placeOrder = async (cartItems, totalAmount,address,payment,reciever) => {
   try {
     const orderPayload = {
       userId:null,
@@ -19,6 +19,9 @@ export const placeOrder = async (cartItems, totalAmount,) => {
       lastUpdatedAt: new Date().toISOString(),
       confirmedByUser: false,
       updatedBy: null,
+      shippingAddress:address,
+      paymentDetails:payment,
+      recieveDetail:reciever
     };
 
     const response = await axios.post(`${API_URL}`, orderPayload, {

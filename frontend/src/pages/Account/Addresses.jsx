@@ -151,10 +151,10 @@ const Addresses = () => {
                 </div>
               ) : (
                 <div className="address-details">
-                  <p>{address.address}</p>
-                  <p>{address.city}, {address.state}, {address.zipCode}</p>
-                  <p>{address.country}</p>
-                  <p>{address.phone}</p>
+                  <p>{address.address || "Not set"}</p>
+                  <p>{address.city || "Not set"}, {address.state || "Not set"}, {address.zipCode || "Not set"}</p>
+                  <p>{address.country || "Not set"}</p>
+                  <p>{address.phone || "Not set"}</p>
                   <p className="primary-text">{address.primary ? "Primary Address" : ""}</p>
                   <button onClick={() => handleEditClick(index, address)} className="edit-button">Edit</button>
                   <button onClick={() => handleRemove(index)} className="remove-button">Remove</button>

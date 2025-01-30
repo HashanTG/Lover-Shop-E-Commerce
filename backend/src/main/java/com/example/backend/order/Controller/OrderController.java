@@ -37,8 +37,7 @@ public class OrderController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
-            @RequestParam(defaultValue = "DESC") String sortDir
-    ) {
+            @RequestParam(defaultValue = "DESC") String sortDir) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
 
         if (startDate != null && endDate != null) {
@@ -54,17 +53,19 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getAllOrders(pageable));
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<Page<Order>> getOrdersByUser(
-            @PathVariable String userId,
+    @GetMapping("/user")
+    public ResponseEntity<Page<Order>> getOrdersByUser( // Fetch user ID dynamically from SecurityContext
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "DESC") String sortDir
     ) {
+        String userId = SecurityUtil.getCurrentUserId();
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
         return ResponseEntity.ok(orderService.getOrdersByUserId(userId, pageable));
     }
+
+    // Create A Order
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
         String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically from SecurityContext
@@ -73,8 +74,8 @@ public class OrderController {
         Order createdOrder = orderService.createOrder(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
     }
-    
 
+    // Get order by Id
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable String id) {
         Optional<Order> order = orderService.getOrderById(id);
@@ -82,12 +83,12 @@ public class OrderController {
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
+    // Update Status
     @PutMapping("/{id}/status")
     public ResponseEntity<Order> updateOrderStatus(
             @PathVariable String id,
             @RequestParam OrderStatus status,
-            @RequestParam String adminId
-    ) {
+            @RequestParam String adminId) {
         Order updatedOrder = orderService.updateOrderStatus(id, status, adminId);
         return ResponseEntity.ok(updatedOrder);
     }
