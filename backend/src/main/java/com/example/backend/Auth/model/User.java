@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id; // Missing import
 import org.springframework.data.mongodb.core.mapping.Document;
+import com.example.backend.Auth.Enums.Role; 
 
 @Getter
 @Setter
@@ -22,5 +23,7 @@ public class User {
 
     private String password;
 
-    private String role; // e.g., ROLE_USER, ROLE_ADMIN
+    private Role role;
+
+    private UserDetail userDetail; 
 }

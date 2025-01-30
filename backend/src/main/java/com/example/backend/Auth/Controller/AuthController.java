@@ -10,8 +10,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Cookie;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 
+
+import com.example.backend.Auth.Enums.Role;
+import com.example.backend.Auth.UtilSecurity.SecurityUtil;
+import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.Optional;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -24,10 +31,6 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello, world!";
-    }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody User user, HttpServletResponse response) {
@@ -41,7 +44,7 @@ public class AuthController {
         Optional<User> authenticatedUser = userService.authenticateUser(email, password);
         if (authenticatedUser.isPresent()) {
             String userId = authenticatedUser.get().getId();
-            String role = authenticatedUser.get().getRole();
+            Role role = authenticatedUser.get().getRole();
             try {
                 String jwtToken = jwtUtil.generateToken(userId, email, role);
 
@@ -104,5 +107,51 @@ public class AuthController {
         return ResponseEntity.status(401).body("No token provided");
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response) {
+        // Create a cookie with the same name as your JWT cookie, set it to expire immediately
+        ResponseCookie cookie = ResponseCookie.from("jwt", "")
+                .path("/")
+                .httpOnly(true)
+                .maxAge(0) // Expire immediately
+                .build();
+
+        // Add the cookie to the response header
+        response.addHeader("Set-Cookie", cookie.toString());
+
+        return ResponseEntity.ok("Logout successful");
+    }
+
+    // Endpoint to assign a role to a user
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{userId}/assign-role")
+    public ResponseEntity<?> assignRoleToUser(
+            @PathVariable("userId") String userId,
+            @RequestParam("role") String roleString) {
+
+        // Check if the current user has ADMIN role
+        if (!SecurityUtil.currentUserHasRole(Role.ADMIN)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to assign roles.");
+        }
+
+        try {
+            // Convert the role string to a Role enum
+            Role role = Role.valueOf(roleString.toUpperCase());
+
+            // Assign the role and get the updated user
+            User updatedUser = userService.assignRoleToUser(userId, role);
+
+            // Return the updated user as the response
+            return ResponseEntity.ok(updatedUser);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid role specified. Allowed roles: " + Arrays.toString(Role.values()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error assigning role: " + e.getMessage());
+        }
+    }
 
 }

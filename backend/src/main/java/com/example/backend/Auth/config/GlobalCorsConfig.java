@@ -12,7 +12,7 @@ public class GlobalCorsConfig implements WebMvcConfigurer {
         registry.addMapping("/**") // Allow CORS for all endpoints
                 .allowedOrigins("http://localhost:5173") // Allowed origin
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allowed methods
-                .allowedHeaders("Authorization", "Content-Type") // Allowed headers
+                .allowedHeaders("*") 
                 .allowCredentials(true); // Allow cookies or Authorization headers
     }
 }

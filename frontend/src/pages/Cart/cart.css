@@ -11,30 +11,14 @@
   box-sizing: border-box;
 }
 
-.cart-progress {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 20px;
-}
 
-.step {
-  width: 30%;
-  padding: 10px;
-  text-align: center;
-  border-bottom: 5px solid #ccc;
-}
-
-.step.active {
-  background-color: #6c63ff;
-  color: white;
-}
 .grid-wrapper{
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 20px;
   width: 100%;
   margin-top: 50px;
+  min-height: 80vh;
 }
 
 .grid-headings{
@@ -154,7 +138,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  max-height: 60%;
+  max-height: 400px;
 }
 
 .cart-summary h3 {

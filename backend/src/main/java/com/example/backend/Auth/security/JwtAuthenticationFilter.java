@@ -6,6 +6,8 @@ import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -19,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Collection;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -49,6 +52,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // Extract email and userId from the token
                 String email = jwtUtil.extractUsername(jwtToken);
                 String userId = jwtUtil.extractUserId(jwtToken);
+                String userRole = jwtUtil.getRoleFromToken(jwtToken); 
+               
 
                 // Validate token and check expiration
                 if (email != null && userId != null && !jwtUtil.isTokenExpired(jwtToken)) {
@@ -62,11 +67,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             if (userOptional.isPresent()) {
                                 User user = userOptional.get();
 
+                                // Create authorities with role prefix
+                                Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userRole);
+                                
+
                                 // Create a UsernamePasswordAuthenticationToken with userId as the principal
                                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                                         userId, // Store userId as the principal
                                         null,   // No credentials
-                                        null    // Add user roles/authorities if needed
+                                        authorities // Set authorities
                                 );
 
                                 // Set authentication in security context

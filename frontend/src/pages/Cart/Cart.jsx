@@ -1,124 +1,119 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { CartContext } from "../../context/CartContext";
+import { useAlert } from "../../context/GlobalAlertContext";
+import OrderProgress from "../../components/OrderProgress/OrderProgress";
+import Spinner from "../../components/Spinner/Spinner";
 import "./cart.css"; // Ensure this CSS file reflects the grid-based styling
 
 const Cart = () => {
-  // Hardcoded cart and product data
-
-  const initialCart = {
-    _id: "cartId",
-    userId: "userId",
-    items: [
-      { productId: "productId1", quantity: 2 }, // Butterfly Chain
-      { productId: "productId2", quantity: 1 }, // Customized Mug
-      { productId: "productId4", quantity: 1 }, // Leather Wallet
-      { productId: "productId5", quantity: 3 }, // Wooden Photo Frame
-    ],
-  };
-
-  const products = [
-    {
-      _id: "productId1",
-      name: "Butterfly Chain",
-      price: 350,
-      images: ["butterfly-chain.jpg"],
-      variations: [{ type: "Color", options: [{ value: "Black" }] }],
-    },
-    {
-      _id: "productId2",
-      name: "Customized Mug",
-      price: 500,
-      images: ["custom-mug.jpg"],
-      variations: [{ type: "Color", options: [{ value: "Red" }] }],
-    },
-    {
-      _id: "productId3",
-      name: "Rose Gold Ring",
-      price: 1200,
-      images: ["rose-gold-ring.jpg"],
-      variations: [
-        {
-          type: "Size",
-          options: [{ value: "6" }, { value: "7" }, { value: "8" }],
-        },
-      ],
-    },
-    {
-      _id: "productId4",
-      name: "Leather Wallet",
-      price: 800,
-      images: ["leather-wallet.jpg"],
-      variations: [
-        { type: "Color", options: [{ value: "Brown" }, { value: "Black" }] },
-      ],
-    },
-    {
-      _id: "productId5",
-      name: "Wooden Photo Frame",
-      price: 600,
-      images: ["wooden-photo-frame.jpg"],
-      variations: [
-        { type: "Size", options: [{ value: "4x6" }, { value: "5x7" }] },
-      ],
-    },
-    {
-      _id: "productId6",
-      name: "Personalized Keychain",
-      price: 250,
-      images: ["personalized-keychain.jpg"],
-      variations: [
-        {
-          type: "Material",
-          options: [{ value: "Metal" }, { value: "Plastic" }],
-        },
-      ],
-    },
-  ];
-
-  // Local state
-  const [cart, setCart] = useState(initialCart);
+  // Local state for cart and shipping
+  const [cart, setCart] = useState({ items: [] });
   const [shipping, setShipping] = useState(0);
+  const [subtotal, setSubtotal] = useState(0);
+  const [total, setTotal] = useState(0);
+  //Context states
+  const { cartItems, removeFromCart, addToCart } = useContext(CartContext);
+  const { showAlert } = useAlert();
+  //Navigate Object
+  const navigate = useNavigate();
 
+
+  // Effect to update local state when cartItems from CartContext change
+  useEffect(() => {
+    setCart({ items: cartItems });
+  }, [cartItems]);
+
+  
+  //Calculate Part
   // Calculate subtotal
   const calculateSubtotal = () => {
-    return cart.items.reduce((total, item) => {
-      const product = products.find((p) => p._id === item.productId);
-      return total + item.quantity * (product?.price || 0);
+    return cart?.items.reduce((total, item) => {
+      return total + item.quantity * (item.productDetails.price || 0);
     }, 0);
-  };
-
-  const handleQuantityChange = (productId, delta) => {
-    setCart((prevCart) => {
-      const updatedItems = prevCart.items.map((item) =>
-        item.productId === productId
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-          : item
-      );
-      return { ...prevCart, items: updatedItems };
-    });
-  };
-
-  const handleRemoveItem = (productId) => {
-    setCart((prevCart) => ({
-      ...prevCart,
-      items: prevCart.items.filter((item) => item.productId !== productId),
-    }));
   };
 
   const handleShippingChange = (cost) => {
     setShipping(cost);
   };
 
-  const subtotal = calculateSubtotal();
-  const total = subtotal + shipping;
+
+  useEffect(() => {
+    const newSubtotal = calculateSubtotal(cart); // Recalculate subtotal
+    setSubtotal(newSubtotal);
+
+    // Recalculate total (e.g., subtotal + shipping/taxes)
+    setTotal(newSubtotal + shipping);
+  }, [cart, calculateSubtotal]); // Dependencies
+
+
+
+
+  
+//Handling the Quantity Change
+// Handling Quantity Change with API Call and Loading State
+const handleQuantityChange = async (productId, delta) => {
+  setCart((prevCart) => {
+    const updatedItems = prevCart.items.map((item) =>
+      item.productId === productId
+        ? { ...item, loading: true, quantity: Math.max(1, item.quantity + delta) }
+        : item
+    );
+    return { ...prevCart, items: updatedItems };
+  });
+
+  try {
+    await addToCart(productId, delta);
+  } catch (error) {
+    console.error("Failed to update cart:", error);
+    showAlert("Failed to update item quantity.");
+  }
+
+  // Update UI after API call
+  setCart((prevCart) => {
+    const updatedItems = prevCart.items.map((item) =>
+      item.productId === productId
+        ? { ...item, loading: false } // Remove loading state
+        : item
+    );
+    return { ...prevCart, items: updatedItems };
+  });
+};
+
+
+
+
+  //Removing a Item from a Cart
+  const handleRemoveItem = async (productId) => {
+    try {
+      const result = await removeFromCart(productId); //Use Context function to remove
+      if (result.success) {
+        showAlert("Item Removed Successfully");
+      }
+    } catch (error) {
+      console.error("Failed to remove item from cart", error);
+      showAlert("An error occurred while removing the item from the cart.");
+    }
+  };
+
+  //Proceed to Payment Step
+
+  const proceedToPay = () => {
+    const fee = {
+      shipping: shipping,
+      subtotal: subtotal,
+      total: total,
+    };
+    // Save the fee details in localStorage
+    localStorage.setItem("feeDetails", JSON.stringify(fee));
+    // Navigate to the checkout page
+    navigate("/checkout");
+  };
 
   return (
     <div className="cart-container">
       {/* Progress Bar */}
-      <div className="cart-progress">
-        <div className="step active">1 Shopping cart</div>
-        <div className="step">2 Checkout details</div>
-        <div className="step">3 Order complete</div>
-      </div>
+      <OrderProgress step={1} />
 
       <div className="grid-wrapper">
         {/* Cart Section */}
@@ -127,59 +122,61 @@ const Cart = () => {
           <div className="cart-item">
             <div className="grid-headings">Product</div>
             <div className="grid-headings">Quantity</div>
-            <div className="grid-headings">price</div>
+            <div className="grid-headings">Price</div>
             <div className="grid-headings">Sub Total</div>
           </div>
-          {cart.items.map((item) => {
-            const product = products.find((p) => p._id === item.productId);
-            return (
-              <div className="cart-item" key={item.productId}>
-                <div className="cart-item-info">
-                  <img
-                    src={product.images[0]}
-                    alt={product.name}
-                    className="cart-item-image"
-                  />
-                  <div className="cart-item-details">
-                    <h4>{product.name}</h4>
-                    <p>Color: {product.variations[0].options[0].value}</p>
-                    <button
-                      className="remove-btn"
-                      onClick={() => handleRemoveItem(item.productId)}
-                    >
-                      
-                      Remove
-                    </button>
-                  </div>
-                </div>
-                <div className="cart-item-actions">
-                  <div className="cart-item-quantity">
-                    <button
-                      className="quantity-btn"
-                      onClick={() => handleQuantityChange(item.productId, -1)}
-                    >
-                      -
-                    </button>
-                    <span>{item.quantity}</span>
-                    <button
-                      className="quantity-btn"
-                      onClick={() => handleQuantityChange(item.productId, 1)}
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-
-                <div className="cart-item-price">
-                  Rs.{product.price.toFixed(2)}
-                </div>
-
-                <div className="cart-item-price">
-                  Rs. {(product.price * item.quantity).toFixed(2)}
+          {cart.items.map((item) => (
+            <div className="cart-item" key={item.productId}>
+              <div className="cart-item-info">
+                <img
+                  src={item.productDetails.images[0]}
+                  alt={item.productDetails.name}
+                  className="cart-item-image"
+                />
+                <div className="cart-item-details">
+                  <h4>{item.productDetails.name}</h4>
+                  <p>Category: {item.productDetails.category}</p>
+                  <p>
+                    Color: {item.productDetails.variations[0]?.options[0].value}
+                  </p>
+                  <button
+                    className="remove-btn"
+                    onClick={() => handleRemoveItem(item.productId)}
+                  >
+                    Remove
+                  </button>
                 </div>
               </div>
-            );
-          })}
+
+              <div className="cart-item-actions">
+              <div className="cart-item-quantity">
+  <button
+    className="quantity-btn"
+    onClick={() => handleQuantityChange(item.productId, -1)}
+    disabled={item.loading} // Disable button when loading
+  >
+    {item.loading ? <Spinner size="14px" />  : "-"}
+  </button>
+  <span>{item.quantity}</span>
+  <button
+    className="quantity-btn"
+    onClick={() => handleQuantityChange(item.productId, 1)}
+    disabled={item.loading} // Disable button when loading
+  >
+    {item.loading ? <Spinner size="14px" />  : "+"}
+  </button>
+</div>
+              </div>
+
+              <div className="cart-item-price">
+                Rs. {item.productDetails.price.toFixed(2)}
+              </div>
+
+              <div className="cart-item-price">
+                Rs. {(item.productDetails.price * item.quantity).toFixed(2)}
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Cart Summary */}
@@ -197,8 +194,7 @@ const Cart = () => {
                 />
                 <span>Free shipping</span>
               </span>
-              <span className="price">Rs.0.00</span>
-
+              <span className="price">Rs. 0.00</span>
             </label>
             <label>
               <span>
@@ -209,10 +205,9 @@ const Cart = () => {
                   onChange={() => handleShippingChange(245)}
                   className="shipping-radio"
                 />
-                <span >Express shipping</span>
+                <span>Express shipping</span>
               </span>
-
-              <span className="price">+Rs.245.00</span>
+              <span className="price">+Rs. 245.00</span>
             </label>
             <label>
               <span>
@@ -225,21 +220,23 @@ const Cart = () => {
                 />
                 <span>Pick Up</span>
               </span>
-              <span className="price">+Rs.21.00</span>
+              <span className="price">+Rs. 21.00</span>
             </label>
           </div>
           <div className="summary-totals">
             <div className="subtotal">
               <span>Subtotal:</span>
-              <span>Rs.{subtotal.toFixed(2)}</span>
+              <span>Rs. {subtotal.toFixed(2)}</span>
             </div>
             <hr />
             <div className="total">
               <span>Total:</span>
-              <span>Rs.{total.toFixed(2)}</span>
+              <span>Rs. {total.toFixed(2)}</span>
             </div>
           </div>
-          <button className="checkout-btn">Checkout</button>
+          <button className="checkout-btn" onClick={() => proceedToPay()}>
+            Checkout
+          </button>
         </div>
       </div>
     </div>

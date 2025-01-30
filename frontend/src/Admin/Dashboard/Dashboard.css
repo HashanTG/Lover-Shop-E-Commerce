@@ -1,0 +1,115 @@
+/* Summary Row */
+  .summary-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .card {
+    background-color: white;
+    flex: 1;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .card h3 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+  }
+  
+  .card p {
+    font-size: 24px;
+    margin: 0;
+  }
+  
+  .card span {
+    font-size: 14px;
+    color: green;
+  }
+  
+  /* Orders Section */
+  .orders-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .orders-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .orders-header span {
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    margin-left: 20px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .orders-header span:hover {
+    background-color: #63b3ed;
+  }
+  
+  .orders-table {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .table-header {
+    display: contents;
+ 
+  }
+
+  .table-header > div {
+    padding: 10px;
+    font-weight: bold;
+    text-align: left;
+    background-color:#c8d0d6 ;
+  }
+  
+  .table-row {
+    display: contents;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .orders-table > div {
+    padding: 10px;
+  }
+  
+  .status {
+    font-weight: bold;
+    text-transform: capitalize;
+    border-radius: 5px;
+    padding: 5px 10px;
+    text-align: center;
+  }
+  
+  .status.processing {
+    background-color: #f6ad55;
+    color: white;
+  }
+  
+  .status.shipped {
+    background-color: #63b3ed;
+    color: white;
+  }
+  
+  .status.delivered {
+    background-color: #48bb78;
+    color: white;
+  }
+  
+  .status.cancelled {
+    background-color: #e53e3e;
+    color: white;
+  }
+  

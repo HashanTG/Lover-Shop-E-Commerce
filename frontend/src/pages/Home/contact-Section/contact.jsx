@@ -12,7 +12,7 @@ const Contact = () => {
             
             <h3>ADDRESS</h3>
             
-            <p>234 Hai Trieu, Ho Chi Minh City, Viet Nam</p>
+            <p>234 University of Kelaniya, Kelaniya</p>
             </div>
         <div className="contact_item">
             {/* contact_image */}
@@ -33,7 +33,7 @@ const Contact = () => {
           <input type="email" placeholder="Your Email" className="form_input" />
           <label htmlFor="message">MESSAGE</label>
           <textarea placeholder="Your Message" className="form_input2" />
-          <Button className="button_width" label={"Send Message"} onClick={() => alert("Form Submitted!")} />
+          <Button className="form-button" label={"Send Message"} onClick={() => alert("Form Submitted!")} />
         </form>
         <div className="map_container">
           <iframe

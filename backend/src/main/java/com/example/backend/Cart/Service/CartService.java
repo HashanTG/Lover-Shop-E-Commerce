@@ -1,15 +1,16 @@
 package com.example.backend.Cart.Service;
 
-import com.example.backend.Cart.Model.CartModel;
-import com.example.backend.Cart.Repository.CartRepository;
-// import com.example.backend.Product.Model.ProductModel;
-// import com.example.backend.Product.Service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.backend.Cart.Model.CartModel;
+import com.example.backend.Cart.Repository.CartRepository;
+import com.example.backend.Product.Model.Product;
+import com.example.backend.Product.Service.ProductService;
 
 @Service
 public class CartService {
@@ -17,8 +18,8 @@ public class CartService {
     @Autowired
     private CartRepository cartRepository;
 
-    // @Autowired
-    // private ProductService productService;
+    @Autowired
+    private ProductService productService;
 
     // Get cart with product details for the user
     public CartModel getCartWithProductDetails(String userId) {
@@ -30,19 +31,19 @@ public class CartService {
                 .collect(Collectors.toList());
 
         // Fetch product details in batch from MongoDB
-        // List<ProductModel> products = productService.getProductsByIds(productIds);
+        List<Product> products = productService.getProductsByIds(productIds);
 
         // Map product details to cart items
-        // for (CartModel.Item item : cart.getItems()) {
-        //     ProductModel product = products.stream()
-        //             .filter(p -> p.getProductId().equals(item.getProductId()))
-        //             .findFirst()
-        //             .orElse(null);
+        for (CartModel.Item item : cart.getItems()) {
+            Product product = products.stream()
+                    .filter(p -> p.getId().equals(item.getProductId()))
+                    .findFirst()
+                    .orElse(null);
 
-        //     if (product != null) {
-        //         item.setProductDetails(product);
-        //     }
-        // }
+            if (product != null) {
+                item.setProductDetails(product);
+            }
+        }
 
         return cart;
     }
