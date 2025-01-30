@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import axios from "axios";
 import "./AddProduct.css";
 
-const AddProduct = () => {
+const AddProduct = ({editProduct,onClose}) => {
   const [productDetails, setProductDetails] = useState({
     name: "",
     description: "",
@@ -20,6 +20,24 @@ const AddProduct = () => {
   const [newVariationOptions, setNewVariationOptions] = useState([{ value: "", stock: "" }]);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
+
+    // Load product details if editing
+    useEffect(() => {
+      if (editProduct) {
+        setProductDetails({
+          name: editProduct.name,
+          description: editProduct.description,
+          category: editProduct.category,
+          subCategory: editProduct.subCategory,
+          price: editProduct.price,
+          previousPrice: editProduct.previousPrice,
+          stock: editProduct.stock,
+          sku: editProduct.sku,
+          images: editProduct.images || [],
+        });
+        setVariations(editProduct.variations || []);
+      }
+    }, [editProduct]);
 
   // Handle input changes for product details
   const handleInputChange = (e) => {

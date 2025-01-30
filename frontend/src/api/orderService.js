@@ -35,3 +35,16 @@ export const placeOrder = async (cartItems, totalAmount,address,payment,reciever
     throw error; // Handle error in UI
   }
 };
+
+export const getOrder = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/user`, {
+      withCredentials: true, // If using authentication
+    });
+
+    return response.data; // Handle success
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    throw error; // Handle error in UI
+  }
+}

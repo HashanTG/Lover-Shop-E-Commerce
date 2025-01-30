@@ -1,91 +1,30 @@
-.orders {
-    max-width: 800px;
-    margin-top: 2px;
-    padding: 2rem;
-    
-    
-  }
+.orders-container {
+  padding: 20px;
+}
 
-  .orders h2 {
-    color: #333;
-    font-size: 24px;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #7469B6;
-  }
-  
-  .orders table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #ffffff;
-    border-radius: 8px;
-    overflow: hidden;
-  }
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
- 
-  
-  .orders th, .orders td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid #e1e1e1;
-  }
-  
-  .orders th {
-    background-color: #7469B6;
-    color: #ffffff;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  .orders tr:last-child td {
-    border-bottom: none;
-  }
-  
-  .orders tr:nth-child(even) {
-    background-color: #f8f9fa;
-  }
-  
-  .orders tr:hover {
-    background-color: #e9ecef;
-    transition: background-color 0.3s ease;
-  }
-  
-  @media (max-width: 768px) {
-    .orders {
-      padding: 1rem;
-    }
-  
-    .orders table, .orders thead, .orders tbody, .orders th, .orders td, .orders tr {
-      display: block;
-    }
-  
-    .orders thead tr {
-      position: absolute;
-      top: -9999px;
-      left: -9999px;
-    }
-  
-    .orders tr {
-      margin-bottom: 1rem;
-      border: 1px solid #e1e1e1;
-      border-radius: 8px;
-    }
-  
-    .orders td {
-      border: none;
-      position: relative;
-      padding-left: 50%;
-    }
-  
-    .orders td:before {
-      content: attr(data-label);
-      position: absolute;
-      left: 6px;
-      width: 45%;
-      padding-right: 10px;
-      white-space: nowrap;
-      font-weight: bold;
-    }
-  }
-  
+.order-table th, .order-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.order-table th {
+  background-color: #f4f4f4;
+}
+
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pagination button {
+  padding: 5px 10px;
+  cursor: pointer;
+}
