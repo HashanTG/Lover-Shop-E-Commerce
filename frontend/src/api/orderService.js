@@ -48,3 +48,18 @@ export const getOrder = async () => {
     throw error; // Handle error in UI
   }
 }
+
+
+export const confirmOrder = async (orderId) => {
+  try {
+    console.log(orderId)
+    const response = await axios.put(`${API_URL}/${orderId}/confirm`,{}, {
+      withCredentials: true, // If using authentication
+    });
+
+    return response.data; // Handle success
+  } catch (error) {
+    console.error('Error confirming order:', error);
+    throw error; // Handle error in UI
+  }
+}

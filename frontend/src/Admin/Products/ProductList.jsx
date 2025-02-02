@@ -28,7 +28,7 @@ const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(0);
   const [editProduct, setEditProduct] = useState(null);
-  const [showEditForm, setShowEditForm] = useState(false); // ✅ Added missing state
+  const [showEditForm, setShowEditForm] = useState(false); 
   const pageSize = 20;
 
   useEffect(() => {
@@ -88,7 +88,7 @@ const ProductList = () => {
               key={product.id}
               product={product}
               onDelete={handleDelete}
-              onEdit={handleEdit} // ✅ Fixed function call
+              onEdit={handleEdit} 
             />
           ))}
         </div>

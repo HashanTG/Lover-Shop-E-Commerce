@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
+import com.example.backend.Auth.UtilSecurity.SecurityUtil;
+
+
 import java.util.List;
 
 @RestController
@@ -31,9 +34,24 @@ public class ReviewController {
     // Add a new review
     @PostMapping
     public ResponseEntity<Review> addReview(@RequestBody Review review) {
+        String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically from SecurityContext
+    
+        review.setUserId(userId);
+    
+        // Check if the user has already posted a review for the given product
+        boolean reviewExists = reviewService.existsByUserIdAndProductId(userId, review.getProductId());
+    
+        if (reviewExists) {
+            // Return a conflict response if the user has already reviewed the product
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(null); // Optionally return a message indicating the conflict
+        }
+    
+        // Save the new review
         Review savedReview = reviewService.addReview(review);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReview);
     }
+    
 
     // Update an existing review
     @PutMapping("/{id}")

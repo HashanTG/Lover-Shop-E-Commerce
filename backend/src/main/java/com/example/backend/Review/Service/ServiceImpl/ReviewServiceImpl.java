@@ -60,5 +60,10 @@ public class ReviewServiceImpl implements ReviewService {
         review.setAdminReply(reply);
         return reviewRepository.save(review);
     }
+
+    public boolean existsByUserIdAndProductId(String userId, String productId) {
+        return reviewRepository.existsByUserIdAndProductId(userId, productId);
+    }
+    
 }
 

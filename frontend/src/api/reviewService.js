@@ -11,3 +11,15 @@ export const getRreviews = async (productId) => {
     throw error;
   }
 }
+
+export const addReview = async (review) => {
+  try {
+    const response = await axios.post(`${API_URL}`, review, {
+      withCredentials: true,
+      headers: { 'Content-Type': 'application/json' },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}

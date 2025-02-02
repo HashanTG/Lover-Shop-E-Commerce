@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
+import { confirmOrder } from '../../api/orderService';
+import { addReview } from '../../api/reviewService';
+
+import { useAlert } from '../../context/GlobalAlertContext';
 import './OrderModal.css';
 
 const OrderModal = ({ order, onClose }) => {
-  const [isConfirmed, setIsConfirmed] = useState(false);
+  //Alert
+  const { showAlert } = useAlert();
+
+  const [switchReview, setSwitchReview] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(order?.confirmedByUser || false);
   const [reviews, setReviews] = useState(
     order.items.reduce((acc, item) => {
       acc[item.productId] = { rating: 0, comment: '' };
@@ -10,9 +18,21 @@ const OrderModal = ({ order, onClose }) => {
     }, {})
   );
 
-  const handleConfirm = () => {
-    setIsConfirmed(true);
-  };
+  const handleConfirm = async () => {
+    if (isConfirmed){
+        setSwitchReview(true);
+        return ;
+    }; 
+  
+    try {
+      await confirmOrder(order.id);
+      showAlert('Order confirmed successfully!');
+      setSwitchReview(true);
+    } catch (error) {
+      showAlert('Failed to confirm order. Please try again.', 'error');
+      console.error('Order confirmation failed:', error);
+    }
+  }
 
   const handleClose = () => {
     onClose();
@@ -32,27 +52,40 @@ const OrderModal = ({ order, onClose }) => {
     }));
   };
 
-  const handleReviewSubmit = (productId) => {
-    const { rating, comment } = reviews[productId];
-
-    if (rating === 0 || !comment.trim()) {
-      alert('Please provide a rating and a comment.');
+  const handleReviewSubmit = async (productId) => { // Added 'async'
+    const reviewData = reviews[productId];
+  
+    if (!reviewData || reviewData.rating === 0 || !reviewData.comment.trim()) {
+      showAlert('Please provide a rating and a comment.');
       return;
     }
-
-    console.log('Review submitted for product:', productId, { rating, comment });
-
-    // Reset the review fields after submission
-    setReviews((prevReviews) => ({
-      ...prevReviews,
-      [productId]: { rating: 0, comment: '' },
-    }));
+  
+    const review = {
+      productId,
+      rating: reviewData.rating,
+      comment: reviewData.comment,
+    };
+  
+    try {
+      await addReview(review); // Ensure this is an async function
+      showAlert('Review added successfully!');
+      
+      // Reset review fields after successful submission
+      setReviews((prevReviews) => ({
+        ...prevReviews,
+        [productId]: { rating: 0, comment: '' },
+      }));
+    } catch (error) {
+      showAlert('Failed to add review. Please try again.', 'error');
+      console.error('Review addition failed:', error);
+    }
   };
+  
 
   return (
     <div className="order-modal">
       <div className="modal-content">
-        {!isConfirmed ? (
+        {!switchReview ? (
           <>
             <h2>Order Details</h2>
             <div className="order-detail">
@@ -96,9 +129,11 @@ const OrderModal = ({ order, onClose }) => {
 
             <h3>Total Price: ${order.total.toFixed(2)}</h3>
 
-            {order.status === 'DELIVERED' && (
-              <button className="confirm-btn" onClick={handleConfirm}>Confirm Order</button>
-            )}
+            {(order.status === 'DELIVERED' || order.status === 'CONFIRMED') && (
+  <button className="confirm-btn" onClick={handleConfirm}>
+    {isConfirmed ? "Review" : "Confirm Order"}
+  </button>
+)}
             <button className="ok-btn" onClick={handleClose}>OK</button>
           </>
         ) : (
