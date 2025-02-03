@@ -96,8 +96,8 @@ public class OrderController {
     @PutMapping("/{id}/status")
     public ResponseEntity<Order> updateOrderStatus(
             @PathVariable String id,
-            @RequestParam OrderStatus status,
-            @RequestParam String adminId) {
+            @RequestParam OrderStatus status) {
+        String adminId = SecurityUtil.getCurrentUserId(); 
         Order updatedOrder = orderService.updateOrderStatus(id, status, adminId);
         return ResponseEntity.ok(updatedOrder);
     }

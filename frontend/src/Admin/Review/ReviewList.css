@@ -1,0 +1,116 @@
+/* Container for all reviews */
+.reviews-container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 15px;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Title styling */
+  .reviews-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* No reviews message */
+  .no-reviews {
+    text-align: center;
+    color: #888;
+    font-size: 1.2rem;
+    margin-top: 20px;
+  }
+  
+  /* Each review is now styled as a small tab */
+  .review-tab {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+    margin: 0;
+  }
+  
+  /* Header area for compact product and rating display */
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+  }
+  
+  /* Styling for review details */
+  .review-details {
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+  }
+  
+  .review-details p {
+    margin: 3px 0;
+  }
+  
+  /* Bold labels for details */
+  .label {
+    font-weight: bold;
+    color: #555;
+  }
+  
+  /* Reply section styles */
+  .reply-section {
+    margin-top: 5px;
+  }
+  
+  .existing-reply p {
+    margin: 5px 0;
+    font-size: 0.85rem;
+  }
+  
+  /* Reply editor styling */
+  .reply-editor {
+    margin-top: 5px;
+  }
+  
+  .reply-textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 0.85rem;
+  }
+  
+  /* Reply buttons container */
+  .reply-buttons {
+    margin-top: 5px;
+    display: flex;
+    gap: 8px;
+  }
+  
+  /* Button common styling */
+  .btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.8rem;
+  }
+  
+  /* Specific button colors */
+  .btn-reply {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .btn-edit {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .btn-save {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .btn-cancel {
+    background-color: #dc3545;
+    color: white;
+  }
+  

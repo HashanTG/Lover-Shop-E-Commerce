@@ -36,12 +36,14 @@ export const placeOrder = async (cartItems, totalAmount,address,payment,reciever
   }
 };
 
+//Get User Orders
 export const getOrder = async () => {
   try {
     const response = await axios.get(`${API_URL}/user`, {
       withCredentials: true, // If using authentication
     });
-
+    console.log("response")
+    console.log(response);
     return response.data; // Handle success
   } catch (error) {
     console.error('Error fetching orders:', error);
@@ -60,6 +62,35 @@ export const confirmOrder = async (orderId) => {
     return response.data; // Handle success
   } catch (error) {
     console.error('Error confirming order:', error);
+    throw error; // Handle error in UI
+  }
+}
+
+//ADMIN PART
+
+export const getAllOrders = async () => {
+  try {
+    const response = await axios.get(`${API_URL}`, {
+      withCredentials: true, // If using authentication
+    });
+
+    return response.data; // Handle success
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    throw error; // Handle error in UI
+  }
+}
+
+export const updateOrderStatus = async (orderId, newStatus) => {
+  try {
+    const response = await axios.put(`${API_URL}/${orderId}/status?status=${newStatus}`, {}, {
+      withCredentials: true, // If using authentication
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return response.data; // Handle success
+  } catch (error) {
+    console.error('Error updating order status:', error);
     throw error; // Handle error in UI
   }
 }

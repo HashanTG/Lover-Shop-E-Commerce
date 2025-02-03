@@ -80,3 +80,57 @@ export const GetProductDetailById = async (id) => {
     throw error;
   }
 };
+
+
+///////////////ADMIN
+
+//Delete A Product
+export  const deleteProduct = async (id) => {
+  try {
+    const response = await axios.delete(`${API_URL}/${id}`, {
+      withCredentials: true, 
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    throw error;
+  }
+}
+
+//Add Product
+export const addProductApi = async (product) => {
+  try {
+    const response = await axios.post(API_URL, product, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error adding product:", error);
+    throw error;
+  }
+}
+
+//Edit a Product
+
+export const editProductApi = async (productId,product) =>{
+  try{
+    const respone = await axios.put(`${API_URL}/${productId}`,product,{
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return respone;
+  }
+  catch{
+    console.error("Error editing product:", error);
+    throw error;
+  }
+}

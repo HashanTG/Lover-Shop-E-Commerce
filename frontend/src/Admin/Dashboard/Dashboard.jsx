@@ -1,50 +1,88 @@
-import {React,useState,useEffect} from "react";
-import axios from "axios";
+import { React, useState, useEffect } from "react";
+import { getAllOrders,updateOrderStatus} from "../../api/orderService";
 import "./Dashboard.css";
 
-const Row = ({ order }) => {
-  console.log(order.id);
-  return (
-    <div className="table-row">
-      <div>{order.id}</div>
-      <div>{order.product}</div>
-      <div>{order.customer}</div>
-      <div>{order.total}</div>
-      <div>{order.payment}</div>
-      <div className={`status ${order.status.toLowerCase()}`}>
-        {order.status}
-      </div>
+const Row = ({ order, handleStatusChange }) => {
+  const { id, items, total, paymentStatus, shippingAddress, paymentDetails, recieveDetail, status } = order;
+
+  // Format item list
+  const itemList = items.map((item, index) => (
+    <div key={index} className="order-item">
+      <div>{item.productId}</div>
+      <div>{item.quantity}</div>
+      <div>Rs {item.price}</div>
     </div>
+  ));
+
+  return (
+    <tr className="table-row">
+      <td>{id}</td>
+      <td>{itemList}</td>
+      <td>{total}</td>
+      <td>{paymentStatus}</td>
+      <td>
+        {/* Status dropdown */}
+        <select 
+          value={status}
+          onChange={(e) => handleStatusChange(id, e.target.value)} // Trigger function when status changes
+        >
+          <option value="PENDING">PENDING</option>
+          <option value="CONFIRMED">CONFIRMED</option>
+          <option value="SHIPPED">SHIPPED</option>
+          <option value="DELIVERED">DELIVERED</option>
+          <option value="CANCELLED">CANCELLED</option>
+        </select>
+      </td>
+      <td>{shippingAddress.city}, {shippingAddress.state}</td>
+      <td>{paymentDetails.paymentMethod}</td>
+      <td>{paymentDetails.cardLast4Digits}</td>
+      <td>{recieveDetail.recieverFirstName} {recieveDetail.recieverLastName}</td>
+    </tr>
   );
 };
 
 const Dashboard = () => {
-
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/orders", {
-          withCredentials: true,
-        });
+        const response = await getAllOrders();
         console.log(response.data);  // Log the API response to check structure
-        if (response.data && Array.isArray(response.data)) {
-          setOrders(response.data);  // Ensure it's an array
+        if (response.content && Array.isArray(response.content)) {
+          setOrders(response.content);  // Ensure it's an array
         }
       } catch (error) {
         console.error("Error fetching orders:", error);
       }
     };
-  
+
     fetchOrders();
   }, []);
 
-  
+  const handleStatusChange = async (orderId, newStatus) => {
+
+    console.log(`Order ID: ${orderId} - Status changed to: ${newStatus}`);
+    
+    try {
+      const response = await updateOrderStatus(orderId, newStatus);
+      console.log(response);  // Log the API response to check structure
+      if (response.status === 200) {
+        
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order.id === orderId ? { ...order, status: newStatus } : order
+          )
+        );
+      }
+    }
+    catch (error) {
+      console.error("Error updating order status:", error);
+    }
+  };
 
   return (
     <div className="dashboard-container">
-      {/* Main Content */}
       <main className="main-content">
         {/* Summary Row */}
         <div className="summary-row">
@@ -64,26 +102,39 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Recent Orders */}
+        {/* Orders Table */}
         <div className="orders-section">
           <div className="orders-header">
             <h3>Recent Orders</h3>
             <span>+2 Orders</span>
           </div>
           <div className="orders-table">
-            <div className="table-header">
-              <div>Order ID</div>
-              <div>Product</div>
-              <div>Customer</div>
-              <div>Total</div>
-              <div>Payment</div>
-              <div>Status</div>
-            </div>
-            {orders && orders.length > 0 ? (
-              orders.map((order, index) => <Row key={index} order={order} />)
-            ) : (
-              <div>No orders found</div>
-            )}
+            <table>
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Items</th>
+                  <th>Total</th>
+                  <th>Payment Status</th>
+                  <th>Status</th>
+                  <th>Shipping Address</th>
+                  <th>Payment Method</th>
+                  <th>Card Last 4</th>
+                  <th>Receiver</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders && orders.length > 0 ? (
+                  orders.map((order, index) => (
+                    <Row key={index} order={order} handleStatusChange={handleStatusChange} />
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="9">No orders found</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </main>

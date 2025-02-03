@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getProducts } from "../../api/productService";
+import { getProducts,deleteProduct } from "../../api/productService";
 import AddEditProduct from "./AddProduct/AddEditProduct";
 import AddProduct from "./AddProduct/Addproduct";
 import "./ProductList.css";
@@ -44,11 +44,11 @@ const ProductList = () => {
     }
   };
 
+  //Handle the Deletion of a Product
   const handleDelete = async (productId) => {
     try {
-      // await deleteProduct(productId);
-      // setProducts(products.filter((product) => product.id !== productId));
-      console.log("Delete product with ID:", productId);
+      const response = await deleteProduct(productId);
+      setProducts(products.filter((product) => product.id !== productId));
     } catch (error) {
       console.error("Error deleting product:", error);
     }
@@ -61,7 +61,7 @@ const ProductList = () => {
 
   return (
     showEditForm ? (
-      <AddProduct
+      <AddEditProduct
         editProduct={editProduct} 
         onClose={() => setShowEditForm(false)} 
       />
