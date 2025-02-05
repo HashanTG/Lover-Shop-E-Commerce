@@ -61,11 +61,14 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+
+    //Confirm delivery of an order
     public Order confirmDelivery(String id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         if (order.getStatus() == OrderStatus.DELIVERED) {
             order.setConfirmedByUser(true);
+            order.setStatus(OrderStatus.CONFIRMED);
             order.setLastUpdatedAt(LocalDateTime.now());
             return orderRepository.save(order);
         } else {

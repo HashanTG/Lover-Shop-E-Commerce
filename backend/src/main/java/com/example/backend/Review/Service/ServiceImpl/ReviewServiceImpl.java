@@ -6,6 +6,9 @@ import com.example.backend.Review.Service.ReviewService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -16,13 +19,15 @@ public class ReviewServiceImpl implements ReviewService {
     private ReviewRepository reviewRepository;
 
     @Override
-    public List<Review> getAllReviews() {
-        return reviewRepository.findAll();
+    public Page<Review> getAllReviews(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return reviewRepository.findAll(pageable);
     }
 
     @Override
-    public List<Review> getReviewsByProductId(String productId) {
-        return reviewRepository.findByProductId(productId);
+    public Page<Review> getReviewsByProductId(String productId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return reviewRepository.findByProductId(productId, pageable);
     }
 
     @Override
@@ -45,20 +50,16 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Double getOverallRating(String productId) {
-        List<Review> reviews = reviewRepository.findByProductId(productId);
-        return reviews.stream()
-                .mapToInt(Review::getRating)
-                .average()
-                .orElse(0.0);
-    }
-
-    @Override
     public Review replyToReview(String reviewId, String reply) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new RuntimeException("Review not found"));
         review.setAdminReply(reply);
         return reviewRepository.save(review);
     }
+
+    public boolean existsByUserIdAndProductId(String userId, String productId) {
+        return reviewRepository.existsByUserIdAndProductId(userId, productId);
+    }
+    
 }
 

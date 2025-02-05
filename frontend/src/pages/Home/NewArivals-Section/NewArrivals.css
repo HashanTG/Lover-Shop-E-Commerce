@@ -13,9 +13,9 @@
   }
   
   /* Grid Layout */
-  .product-grid {
+  .product-grid-newArrive {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
   }
   
@@ -89,4 +89,13 @@
     font-size: 14px;
     color: #555;
   }
+
+/* Spinner */
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
   

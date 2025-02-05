@@ -1,13 +1,17 @@
 import axios from "axios";
+import { config } from "../config";
 
 //Fetch Cart Items
+
+const API_URL =`${config.apiUrl}/api/cart`; //BASE API_URL
+
+
 export const fetchCartData = async () => {
   try {
-    const response = await axios.get("http://localhost:8080/api/cart/details", {
+    const response = await axios.get(`${API_URL}/details`, {
       withCredentials: true, // Include cookies in the request
     });
     const data = response.data;
-    console.log("Cart data:", data);
     return data;
   } catch (error) {
     console.error("Failed to fetch cart data", error);
@@ -19,7 +23,7 @@ export const fetchCartData = async () => {
 export const addToCartApi = async (productId, quantity) => {
   try {
     const response = await axios.post(
-      "http://localhost:8080/api/cart/add", // Direct URL
+      `${API_URL}/add`, // Direct API_URL
       { productId, quantity },
       { withCredentials: true } // Include credentials (cookies) in the request
     );
@@ -36,7 +40,7 @@ export const addToCartApi = async (productId, quantity) => {
 export const removeFromCartApi = async (productId) => {
   try {
     const response = await axios.delete(
-      `http://localhost:8080/api/cart/remove?productId=${productId}`,
+      `${API_URL}/remove?productId=${productId}`,
       { withCredentials: true }
     );
     return response.data;

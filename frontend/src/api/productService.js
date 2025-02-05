@@ -4,9 +4,9 @@ import { config } from "../config";
 const API_URL = `${config.apiUrl}/api/products`; // Replace with your backend API URL
 
 //Get Products
-export const getProducts = async () => {
+export const getProducts = async (page = 0) => {
   try {
-    const response = await axios.get(API_URL);
+    const response = await axios.get(`${API_URL}?page=${page}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -68,3 +68,69 @@ export const searchProducts = async ({
     throw error;
   }
 };
+
+//Get Product Detail By ID
+
+export const GetProductDetailById = async (id) => {
+  try {
+    const response = await axios.get(`${API_URL}/${id}`);
+    return response;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    throw error;
+  }
+};
+
+
+///////////////ADMIN
+
+//Delete A Product
+export  const deleteProduct = async (id) => {
+  try {
+    const response = await axios.delete(`${API_URL}/${id}`, {
+      withCredentials: true, 
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    throw error;
+  }
+}
+
+//Add Product
+export const addProductApi = async (product) => {
+  try {
+    const response = await axios.post(API_URL, product, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error adding product:", error);
+    throw error;
+  }
+}
+
+//Edit a Product
+
+export const editProductApi = async (productId,product) =>{
+  try{
+    const respone = await axios.put(`${API_URL}/${productId}`,product,{
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return respone;
+  }
+  catch{
+    console.error("Error editing product:", error);
+    throw error;
+  }
+}

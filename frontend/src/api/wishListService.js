@@ -1,7 +1,7 @@
 import axios from 'axios';
+import { config } from '../config';
 
-
-const API_URL = 'http://localhost:8080/api/wishlist'; // Replace with your backend API URL 
+const API_URL = `${config.apiUrl}/api/wishlist`; // Replace with your backend API URL 
 
 export const getWishList = async () => {
     try {

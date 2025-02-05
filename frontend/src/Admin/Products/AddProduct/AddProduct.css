@@ -1,28 +1,32 @@
 /* General Styling */
 .add-product-container {
   max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ddd;
+  margin: 20px auto;
+  padding: 30px;
+  border: 1px solid #e0e0e0;
   border-radius: 10px;
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
 .add-product-container h2 {
   text-align: center;
-  margin-bottom: 20px;
-  color: #4f4f4f;
+  margin-bottom: 25px;
+  color: #333;
+  font-size: 28px;
+  font-weight: 600;
 }
 
 .add-product-container h3 {
   margin-top: 20px;
-  color: #4f4f4f;
+  color: #333;
+  font-size: 20px;
+  font-weight: 500;
 }
 
 /* Form Section */
 .form-section {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .form-section label {
@@ -30,23 +34,31 @@
   font-size: 14px;
   font-weight: bold;
   margin-bottom: 8px;
-  color: #333;
+  color: #555;
 }
 
 .form-section input,
 .form-section textarea,
 .form-section select {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 14px;
   color: #333;
+  transition: border-color 0.3s ease;
+}
+
+.form-section input:focus,
+.form-section textarea:focus,
+.form-section select:focus {
+  outline: none;
+  border-color: #6c63ff;
 }
 
 .form-section textarea {
-  height: 80px;
-  resize: none;
+  height: 100px;
+  resize: vertical;
 }
 
 /* Form Row Styling */
@@ -69,14 +81,14 @@
 
 .checkbox-group label {
   font-size: 14px;
-  color: #333;
+  color: #555;
 }
 
 /* Image Upload Section */
 .image-upload {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 15px;
 }
 
 .image-box {
@@ -90,11 +102,13 @@
   border-radius: 10px;
   position: relative;
   cursor: pointer;
-  background-color: #fff;
+  background-color: #fafafa;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .image-box:hover {
   background-color: #f1f1f1;
+  border-color: #6c63ff;
 }
 
 .image-box input[type="file"] {
@@ -113,13 +127,14 @@
   top: 5px;
   right: 5px;
   background: #ff4d4d;
-  color: white;
+  color: #fff;
   border: none;
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   font-size: 12px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .image-box button:hover {
@@ -129,10 +144,11 @@
 /* Variation Section */
 .variation-section {
   margin-top: 20px;
-  padding: 15px;
-  border: 1px solid #ddd;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
-  background-color: #fff;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .variation-section .form-group {
@@ -142,6 +158,7 @@
 .variation-section .form-row {
   display: flex;
   gap: 10px;
+  margin-bottom: 15px;
 }
 
 .add-option-button,
@@ -149,11 +166,12 @@
   margin-top: 10px;
   padding: 10px 15px;
   font-size: 14px;
-  color: white;
+  color: #fff;
   background-color: #6c63ff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .add-option-button:hover,
@@ -168,36 +186,42 @@
 
 .variation-item {
   margin-bottom: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 10px;
-  background-color: #f9f9f9;
+  padding: 15px;
+  background-color: #fafafa;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
 }
 
 .variation-item h4 {
   margin: 0 0 10px;
   color: #333;
+  font-size: 18px;
+  font-weight: 500;
 }
 
 .variation-item ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .variation-item ul li {
   font-size: 14px;
   margin: 5px 0;
+  color: #555;
 }
 
 .variation-item .edit-button {
   margin-top: 10px;
   padding: 5px 10px;
   font-size: 12px;
-  color: white;
+  color: #fff;
   background-color: #ff4d4d;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .variation-item .edit-button:hover {
@@ -211,14 +235,16 @@
   padding: 12px;
   font-size: 16px;
   font-weight: bold;
-  color: white;
+  color: #fff;
   background-color: #6c63ff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   text-transform: uppercase;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .add-button:hover {
   background-color: #574dcf;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }

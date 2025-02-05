@@ -10,7 +10,6 @@ import "./ProductPage.css";
 import ProductCard from "../../components/ProductCard";
 import Loading from "../../components/shared/Loading/Loading";
 
-
 // Reducer function for managing categoryFilter
 const filterReducer = (state, action) => {
   switch (action.type) {
@@ -28,7 +27,10 @@ const ProductPage = () => {
   const [categories, setCategories] = useState([]); // All categories
   const [isLoading, setIsLoading] = useState(true); // Loading state
 
+  //Pagination Status
 
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
 
   // Filter states managed by useReducer
   const [filterState, dispatchFilter] = useReducer(filterReducer, {
@@ -71,11 +73,13 @@ const ProductPage = () => {
   }, []); // Run on component mount
 
   // Fetch all products
-  const fetchAllProducts = async () => {
+  const fetchAllProducts = async (page) => {
     try {
       setIsLoading(true);
-      const data = await getProducts();
+      const data = await getProducts(page);
       setProducts(data.content);
+      setTotalPages(data.totalPages);
+      setCurrentPage(data.pageable.pageNumber);
     } catch (error) {
       console.error("Failed to fetch products.", error);
     } finally {
@@ -91,7 +95,6 @@ const ProductPage = () => {
         : undefined;
     const minPriceVal = minPrice !== "" ? parseFloat(minPrice) : undefined;
     const maxPriceVal = maxPrice !== "" ? parseFloat(maxPrice) : undefined;
-
 
     await searchProductsAndUpdateState({
       searchQuery,
@@ -145,10 +148,10 @@ const ProductPage = () => {
 
   return (
     <>
-      {isLoading && <Loading />}
-      {!isLoading && (
+      {isLoading ? (
+        <Loading />
+      ) : (
         <div className="product-page">
-          {/* Header Banner */}
           <div className="banner">
             <img
               src="/productpagefooter.png"
@@ -169,12 +172,14 @@ const ProductPage = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-
-              <Button label="Search" onClick={() =>searchWithFilters()} class="search-button" />
+              <Button
+                label="Search"
+                onClick={() => searchWithFilters()}
+                class="search-button"
+              />
             </div>
           </div>
 
-          {/* Filters */}
           <div className="filters">
             <select
               value={filterState.categoryFilter}
@@ -192,7 +197,6 @@ const ProductPage = () => {
                 </option>
               ))}
             </select>
-
             <div className="price-range">
               <input
                 type="number"
@@ -207,17 +211,41 @@ const ProductPage = () => {
                 onChange={(e) => setMaxPrice(e.target.value)}
               />
             </div>
-            <Button label="Apply Filter" onClick={() =>searchWithFilters()} class="search-button" />
+            <Button
+              label="Apply Filter"
+              onClick={() => searchWithFilters()}
+              class="search-button"
+            />
           </div>
 
-          {/* Products Grid */}
           {products.length === 0 ? (
             <div>No products found</div>
           ) : (
-            <div className="product-grid">
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+            <div>
+              <div className="product-grid">
+                {products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+
+              {/* Pagination Controls */}
+              <div className="pagination">
+                <button
+                  disabled={currentPage === 0}
+                  onClick={() => fetchAllProducts(currentPage - 1)}
+                >
+                  Previous
+                </button>
+                <span>
+                  Page {currentPage + 1} of {totalPages}
+                </span>
+                <button
+                  disabled={currentPage + 1 >= totalPages}
+                  onClick={() => fetchAllProducts(currentPage + 1)}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           )}
         </div>

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { addProductApi, editProductApi } from "../../../api/productService";
 import "./AddProduct.css";
 
-const AddProduct = ({ editProduct, onClose }) => {
+const AddEditProduct = ({ editProduct, onClose }) => {
+  // State for product details
   const [productDetails, setProductDetails] = useState({
     name: "",
     description: "",
@@ -15,15 +17,16 @@ const AddProduct = ({ editProduct, onClose }) => {
     images: [],
   });
 
+  // State for variations
   const [variations, setVariations] = useState([]);
   const [newVariationType, setNewVariationType] = useState("");
-  const [newVariationOptions, setNewVariationOptions] = useState([
-    { value: "", stock: "" },
-  ]);
+  const [newVariationOptions, setNewVariationOptions] = useState([{ value: "", stock: "" }]);
+
+  // State for image files and uploading status
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
 
-  // Load product details if editing
+  // Load product details if editing an existing product
   useEffect(() => {
     if (editProduct) {
       setProductDetails({
@@ -41,113 +44,94 @@ const AddProduct = ({ editProduct, onClose }) => {
     }
   }, [editProduct]);
 
-  // Handle input changes for product details
+  // Update product details on input change
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setProductDetails({
-      ...productDetails,
+    const { name, value } = e.target;
+    setProductDetails((prevDetails) => ({
+      ...prevDetails,
       [name]: value,
-    });
+    }));
   };
 
-  // Handle image upload
+  // Handle file input change for image uploads
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
-    setSelectedFiles((prev) => [...prev, ...files]);
+    setSelectedFiles((prevFiles) => [...prevFiles, ...files]);
   };
 
-  // Remove an image
+  // Remove an image from the selected list
   const handleRemoveImage = (index) => {
-    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+    setSelectedFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
-  // Add a new option to the variation
+  // Variation handling
   const handleAddOption = () => {
-    setNewVariationOptions([...newVariationOptions, { value: "", stock: "" }]);
+    setNewVariationOptions((prevOptions) => [...prevOptions, { value: "", stock: "" }]);
   };
 
-  // Update option values
   const handleOptionChange = (index, field, value) => {
     const updatedOptions = [...newVariationOptions];
     updatedOptions[index][field] = value;
     setNewVariationOptions(updatedOptions);
   };
 
-  // Add variation
   const handleAddVariation = () => {
-    if (newVariationType && newVariationOptions.length > 0) {
-      setVariations([
-        ...variations,
-        { type: newVariationType, options: newVariationOptions },
+    if (newVariationType.trim() && newVariationOptions.length > 0) {
+      setVariations((prevVariations) => [
+        ...prevVariations,
+        { type: newVariationType.trim(), options: newVariationOptions },
       ]);
       setNewVariationType("");
       setNewVariationOptions([{ value: "", stock: "" }]);
     }
   };
 
-  // Remove variation
   const handleRemoveVariation = (index) => {
-    setVariations(variations.filter((_, i) => i !== index));
+    setVariations((prevVariations) => prevVariations.filter((_, i) => i !== index));
   };
 
-  // Handle form submission
+  // Handle form submission (add or update product)
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const uploadedUrls = [];
     setUploading(true);
+    const uploadedUrls = [...productDetails.images]; // Retain any existing images
 
     try {
-      // Generate pre-signed URLs and upload files
+      // Upload each new image file
       for (const file of selectedFiles) {
-        console.log(file.name);
         const { data: presignedUrl } = await axios.post(
-          "http://localhost:8080/api/products/generate-presigned-url?fileName=" +
-            file.name
+          `http://localhost:8080/api/products/generate-presigned-url?fileName=${encodeURIComponent(file.name)}`
         );
 
-        console.log(presignedUrl);
-
         await axios.put(presignedUrl, file, {
-          headers: {
-            "Content-Type": file.type,
-          },
+          headers: { "Content-Type": file.type },
         });
 
+        // Get public URL (assumes presigned URL contains query parameters)
         const publicUrl = presignedUrl.split("?")[0];
         uploadedUrls.push(publicUrl);
       }
 
-      // Prepare the product data
+      // Prepare complete product data
       const productData = {
         ...productDetails,
-        images: uploadedUrls, // Include uploaded S3 URLs
+        images: uploadedUrls,
         variations,
       };
 
-      // Save product to backend
-      await axios.post("http://localhost:8080/api/products", productData, {
-        withCredentials: true, // Include cookies in the request
-      });
+      // Send data to API
+      if (editProduct) {
+        await editProductApi(editProduct.id, productData);
+        alert("Product updated successfully!");
+      } else {
+        await addProductApi(productData);
+        alert("Product added successfully!");
+      }
 
-      console.log(productData);
-
-      alert("Product added successfully!");
-      setProductDetails({
-        name: "",
-        description: "",
-        category: "Gift",
-        subCategory: "Girls",
-        price: "",
-        previousPrice: "",
-        stock: "",
-        sku: "",
-        images: [],
-      });
-      setSelectedFiles([]);
-      setVariations([]);
+      onClose(); // Close the form after successful submission
     } catch (error) {
       console.error("Error uploading images or saving product:", error);
+      alert("An error occurred while saving the product. Please try again.");
     } finally {
       setUploading(false);
     }
@@ -155,7 +139,7 @@ const AddProduct = ({ editProduct, onClose }) => {
 
   return (
     <div className="add-product-container">
-      <h2>Add Product</h2>
+      <h2>{editProduct ? "Edit Product" : "Add Product"}</h2>
       <form onSubmit={handleSubmit}>
         {/* Image Upload Section */}
         <div className="form-section">
@@ -163,11 +147,7 @@ const AddProduct = ({ editProduct, onClose }) => {
           <div className="image-upload">
             {selectedFiles.map((file, index) => (
               <div className="image-box" key={index}>
-                <img
-                  src={URL.createObjectURL(file)}
-                  alt="Preview"
-                  className="uploaded-image"
-                />
+                <img src={URL.createObjectURL(file)} alt="Preview" className="uploaded-image" />
                 <button type="button" onClick={() => handleRemoveImage(index)}>
                   ✕
                 </button>
@@ -187,53 +167,26 @@ const AddProduct = ({ editProduct, onClose }) => {
           </div>
         </div>
 
-        {/* Product Details */}
+        {/* Product Details Section */}
         <div className="form-section">
           <label>Product Name</label>
-          <input
-            type="text"
-            name="name"
-            value={productDetails.name}
-            onChange={handleInputChange}
-            placeholder="Enter product name"
-          />
+          <input type="text" name="name" value={productDetails.name} onChange={handleInputChange} />
         </div>
 
         <div className="form-section">
           <label>Product Description</label>
-          <textarea
-            name="description"
-            value={productDetails.description}
-            onChange={handleInputChange}
-            placeholder="Enter product description"
-          />
+          <textarea name="description" value={productDetails.description} onChange={handleInputChange} />
         </div>
 
         <div className="form-row">
           <div className="form-group">
             <label>Category</label>
-            <select
-              name="category"
-              value={productDetails.category}
-              onChange={handleInputChange}
-            >
+            <select name="category" value={productDetails.category} onChange={handleInputChange}>
               <option value="Gift">Gift</option>
               <option value="Electronics">Electronics</option>
               <option value="Clothing">Clothing</option>
             </select>
           </div>
-          {/* <div className="form-group">
-            <label>Sub Category</label>
-            <select
-              name="subCategory"
-              value={productDetails.subCategory}
-              onChange={handleInputChange}
-            >
-              <option value="Girls">Girls</option>
-              <option value="Boys">Boys</option>
-              <option value="Unisex">Unisex</option>
-            </select>
-          </div> */}
         </div>
 
         <div className="form-row">
@@ -297,32 +250,20 @@ const AddProduct = ({ editProduct, onClose }) => {
                 type="text"
                 placeholder="Option Value (e.g., Red)"
                 value={option.value}
-                onChange={(e) =>
-                  handleOptionChange(index, "value", e.target.value)
-                }
+                onChange={(e) => handleOptionChange(index, "value", e.target.value)}
               />
               <input
                 type="number"
                 placeholder="Stock"
                 value={option.stock}
-                onChange={(e) =>
-                  handleOptionChange(index, "stock", e.target.value)
-                }
+                onChange={(e) => handleOptionChange(index, "stock", e.target.value)}
               />
             </div>
           ))}
-          <button
-            type="button"
-            className="add-option-button"
-            onClick={handleAddOption}
-          >
+          <button type="button" className="add-option-button" onClick={handleAddOption}>
             Add Option
           </button>
-          <button
-            type="button"
-            className="add-variation-button"
-            onClick={handleAddVariation}
-          >
+          <button type="button" className="add-variation-button" onClick={handleAddVariation}>
             Add Variation
           </button>
         </div>
@@ -351,12 +292,13 @@ const AddProduct = ({ editProduct, onClose }) => {
           ))}
         </div>
 
+        {/* Submit Button */}
         <button type="submit" className="add-button">
-          Add Product
+          {editProduct ? "Update Product" : "Add Product"}
         </button>
       </form>
     </div>
   );
 };
 
-export default AddProduct;
+export default AddEditProduct;

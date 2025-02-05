@@ -1,19 +1,15 @@
 import React, { useState } from "react";
 import Dashboard from "../Dashboard/Dashboard";
 import Product from "../Products/ProductList";
+import ReviewsList from "../Review/ReviewList";
 import "./Pannel.css";
 import OrderCard from "../Order/OrderCard";
 
 function Pannel() {
   const [activeComponent, setActiveComponent] = useState("Dashboard");
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   const handleNavClick = (component) => {
     setActiveComponent(component);
-  };
-
-  const toggleDropdown = () => {
-    setIsDropdownVisible(!isDropdownVisible);
   };
 
   return (
@@ -25,20 +21,13 @@ function Pannel() {
           <ul>
             <li onClick={() => handleNavClick("Dashboard")}>Dashboard</li>
 
-            <li onClick={toggleDropdown} className="has-submenu">
+            <li onClick={() => handleNavClick("Product List")} className="has-submenu">
               Product
             </li>
-            {isDropdownVisible && (
-                <ul className="sub-menu">
-                  <li onClick={() => handleNavClick("Product List")}>
-                    Product List
-                  </li>
-                  <li onClick={() => handleNavClick("Categories")}>Categories</li>
-                </ul>
-              )}
+  
 
             <li onClick={() => handleNavClick("Orders")}>Orders</li>
-            <li onClick={() => handleNavClick("Customers")}>Customers</li>
+            <li onClick={() => handleNavClick("Review")}>Review</li>
           </ul>
         </nav>
       </aside>
@@ -48,6 +37,7 @@ function Pannel() {
         {activeComponent === "Dashboard" && <Dashboard />}
         {activeComponent === "Product List" && <Product />}
         {activeComponent === "Orders" && <OrderCard />}
+        {activeComponent === "Review" && <ReviewsList />}
         
       </main>
     </div>

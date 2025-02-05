@@ -1,34 +1,42 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../../context/CartContext";
+import { useAlert } from "../../context/GlobalAlertContext";
 import OrderProgress from "../../components/OrderProgress/OrderProgress";
+import Spinner from "../../components/Spinner/Spinner";
 import "./cart.css"; // Ensure this CSS file reflects the grid-based styling
 
 const Cart = () => {
   // Local state for cart and shipping
   const [cart, setCart] = useState({ items: [] });
   const [shipping, setShipping] = useState(0);
-  const { cartItems, removeFromCart, fetchCart } = useContext(CartContext);
-
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
-
+  //Context states
+  const { cartItems, removeFromCart, addToCart } = useContext(CartContext);
+  const { showAlert } = useAlert();
+  //Navigate Object
   const navigate = useNavigate();
 
-  // Consume CartContext to get the cartItems
 
   // Effect to update local state when cartItems from CartContext change
   useEffect(() => {
-    console.log("Cart items updated:", cartItems);
     setCart({ items: cartItems });
   }, [cartItems]);
 
+  
+  //Calculate Part
   // Calculate subtotal
   const calculateSubtotal = () => {
-    return cartItems.reduce((total, item) => {
+    return cart?.items.reduce((total, item) => {
       return total + item.quantity * (item.productDetails.price || 0);
     }, 0);
   };
+
+  const handleShippingChange = (cost) => {
+    setShipping(cost);
+  };
+
 
   useEffect(() => {
     const newSubtotal = calculateSubtotal(cart); // Recalculate subtotal
@@ -38,31 +46,54 @@ const Cart = () => {
     setTotal(newSubtotal + shipping);
   }, [cart, calculateSubtotal]); // Dependencies
 
-  const handleQuantityChange = (productId, delta) => {
-    setCart((prevCart) => {
-      const updatedItems = prevCart.items.map((item) =>
-        item.productId === productId
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-          : item
-      );
-      return { ...prevCart, items: updatedItems };
-    });
-  };
 
+
+
+  
+//Handling the Quantity Change
+// Handling Quantity Change with API Call and Loading State
+const handleQuantityChange = async (productId, delta) => {
+  setCart((prevCart) => {
+    const updatedItems = prevCart.items.map((item) =>
+      item.productId === productId
+        ? { ...item, loading: true, quantity: Math.max(1, item.quantity + delta) }
+        : item
+    );
+    return { ...prevCart, items: updatedItems };
+  });
+
+  try {
+    await addToCart(productId, delta);
+  } catch (error) {
+    console.error("Failed to update cart:", error);
+    showAlert("Failed to update item quantity.");
+  }
+
+  // Update UI after API call
+  setCart((prevCart) => {
+    const updatedItems = prevCart.items.map((item) =>
+      item.productId === productId
+        ? { ...item, loading: false } // Remove loading state
+        : item
+    );
+    return { ...prevCart, items: updatedItems };
+  });
+};
+
+
+
+
+  //Removing a Item from a Cart
   const handleRemoveItem = async (productId) => {
     try {
-      const result = await removeFromCart(productId);
-      if (!result.success) {
-        alert(result.message);
+      const result = await removeFromCart(productId); //Use Context function to remove
+      if (result.success) {
+        showAlert("Item Removed Successfully");
       }
     } catch (error) {
       console.error("Failed to remove item from cart", error);
-      alert("An error occurred while removing the item from the cart.");
+      showAlert("An error occurred while removing the item from the cart.");
     }
-  };
-
-  const handleShippingChange = (cost) => {
-    setShipping(cost);
   };
 
   //Proceed to Payment Step
@@ -73,10 +104,8 @@ const Cart = () => {
       subtotal: subtotal,
       total: total,
     };
-
     // Save the fee details in localStorage
     localStorage.setItem("feeDetails", JSON.stringify(fee));
-
     // Navigate to the checkout page
     navigate("/checkout");
   };
@@ -120,21 +149,23 @@ const Cart = () => {
               </div>
 
               <div className="cart-item-actions">
-                <div className="cart-item-quantity">
-                  <button
-                    className="quantity-btn"
-                    onClick={() => handleQuantityChange(item.productId, -1)}
-                  >
-                    -
-                  </button>
-                  <span>{item.quantity}</span>
-                  <button
-                    className="quantity-btn"
-                    onClick={() => handleQuantityChange(item.productId, 1)}
-                  >
-                    +
-                  </button>
-                </div>
+              <div className="cart-item-quantity">
+  <button
+    className="quantity-btn"
+    onClick={() => handleQuantityChange(item.productId, -1)}
+    disabled={item.loading} // Disable button when loading
+  >
+    {item.loading ? <Spinner size="14px" />  : "-"}
+  </button>
+  <span>{item.quantity}</span>
+  <button
+    className="quantity-btn"
+    onClick={() => handleQuantityChange(item.productId, 1)}
+    disabled={item.loading} // Disable button when loading
+  >
+    {item.loading ? <Spinner size="14px" />  : "+"}
+  </button>
+</div>
               </div>
 
               <div className="cart-item-price">

@@ -1,136 +1,105 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getProducts,deleteProduct } from "../../api/productService";
+import AddEditProduct from "./AddProduct/AddEditProduct";
 import AddProduct from "./AddProduct/Addproduct";
 import "./ProductList.css";
 
-const ProductRow = ({ product }) => {
+const ProductRow = ({ product, onDelete, onEdit }) => {
   return (
     <div className="product-row">
       <div>
-        <input type="checkbox" />
+        <img src={product.images[0]} alt={product.name} className="product-thumbnail" />
       </div>
       <div>{product.name}</div>
       <div>{product.sku}</div>
-      <div>{product.stock}</div>
       <div>{product.price}</div>
-      <div
-        className={`status ${product.status.toLowerCase().replace(/\s/g, "-")}`}
-      >
-        {product.status}
-      </div>
       <div>
-        <button className="action-button">🗑️</button>
+        {product.stock < 5 ? <span className="low-stock">Low Stock</span> : product.stock}
+      </div>
+      <div className="action-buttons">
+        <button className="edit-button" onClick={() => onEdit(product)}>✏️</button>
+        <button className="delete-button" onClick={() => onDelete(product.id)}>🗑️</button>
       </div>
     </div>
   );
 };
 
 const ProductList = () => {
-  const products = [
-    {
-      name: "Handmade Pouch",
-      sku: "302012",
-      stock: 10,
-      price: "$121.00",
-      status: "Low Stock",
-    },
-    {
-      name: "Smartwatch E2",
-      sku: "302011",
-      stock: 204,
-      price: "$590.00",
-      status: "Published",
-    },
-    {
-      name: "Smartwatch E1",
-      sku: "302002",
-      stock: 48,
-      price: "$125.00",
-      status: "Draft",
-    },
-    {
-      name: "Headphone G1 Pro",
-      sku: "301901",
-      stock: 401,
-      price: "$348.00",
-      status: "Published",
-    },
-    {
-      name: "Iphone X",
-      sku: "301900",
-      stock: 120,
-      price: "$607.00",
-      status: "Published",
-    },
-    {
-      name: "Puma Shoes",
-      sku: "301881",
-      stock: 432,
-      price: "$234.00",
-      status: "Published",
-    },
-    {
-      name: "Imac 2021",
-      sku: "301643",
-      stock: 0,
-      price: "$760.00",
-      status: "Out of Stock",
-    },
-    {
-      name: "Nike Shoes",
-      sku: "301600",
-      stock: 347,
-      price: "$400.00",
-      status: "Published",
-    },
-    {
-      name: "Lego Car",
-      sku: "301555",
-      stock: 299,
-      price: "$812.00",
-      status: "Published",
-    },
-    {
-      name: "Skincare A1a 1",
-      sku: "301002",
-      stock: 38,
-      price: "$123.00",
-      status: "Draft",
-    },
-  ];
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(0);
+  const [editProduct, setEditProduct] = useState(null);
+  const [showEditForm, setShowEditForm] = useState(false); 
+  const pageSize = 20;
 
-  const [edit, setEdit] = useState(true);
+  useEffect(() => {
+    fetchProducts();
+  }, [page]);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await getProducts(page, pageSize);
+      setProducts(response.content);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  //Handle the Deletion of a Product
+  const handleDelete = async (productId) => {
+    try {
+      const response = await deleteProduct(productId);
+      setProducts(products.filter((product) => product.id !== productId));
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
+  };
+
+  const handleEdit = (product) => {
+    setEditProduct(product); 
+    setShowEditForm(true); 
+  };
 
   return (
-    <div className="product-list-container">
-      {/* Main Content */}
-      {edit ?(
-        <main className="main-content">
-          <div className="product-add-header">
-            <h1>Product</h1>
-            <button className="add-product-button" onClick={() =>setEdit(false)}>+ Add Product</button>
+    showEditForm ? (
+      <AddEditProduct
+        editProduct={editProduct} 
+        onClose={() => setShowEditForm(false)} 
+      />
+    ) : (
+      <div className="product-list-container">
+        <div className="product-add-header">
+          <h1>Products</h1>
+          <button className="add-product-button" onClick={() => setShowEditForm(true)}>
+            + Add Product
+          </button>
+        </div>
+  
+        <div className="product-table">
+          <div className="table-header">
+            <div>Image</div>
+            <div>Product</div>
+            <div>SKU</div>
+            <div>Price</div>
+            <div>Stock</div>
+            <div>Actions</div>
           </div>
-          <div className="search-bar">
-            <input type="text" placeholder="Search product..." />
-          </div>
-
-          {/* Product Table */}
-          <div className="product-table">
-            <div className="table-header">
-              <div>Product</div>
-              <div>SKU</div>
-              <div>Stock</div>
-              <div>Price</div>
-              <div>Status</div>
-              <div>Action</div>
-            </div>
-            {products.map((product, index) => (
-              <ProductRow key={index} product={product} />
-            ))}
-          </div>
-        </main>
-      ):(<main className="main-content"><AddProduct></AddProduct></main>)}
-    </div>
+          {products.map((product) => (
+            <ProductRow
+              key={product.id}
+              product={product}
+              onDelete={handleDelete}
+              onEdit={handleEdit} 
+            />
+          ))}
+        </div>
+  
+        <div className="pagination">
+          <button disabled={page === 0} onClick={() => setPage(page - 1)}>⬅️ Prev</button>
+          <span>Page {page + 1}</span>
+          <button onClick={() => setPage(page + 1)}>Next ➡️</button>
+        </div>
+      </div>
+    )
   );
 };
 

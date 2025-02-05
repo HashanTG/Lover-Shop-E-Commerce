@@ -1,69 +1,106 @@
 import React, { useEffect, useState, useContext } from "react";
+//CSS Import
+import "./ProductDetailComponent.css";
+//Context Imports
 import { useParams } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
-import axios from "axios";
+import { useAlert } from "../../context/GlobalAlertContext";
+import { useWishlist } from "../../context/WishlistContext";
+//Component Import
 import ProductImageSection from "./productImageSection/ProductImageSection";
-import "./ProductDetailComponent.css";
-import CustomAlert from "../../components/CustomAlert";
 import Review from "./Reviews/Review";
-import { getRreviews } from "../../api/reviewService";
+import Loading from "../../components/shared/Loading/Loading";
+import Spinner from "../../components/Spinner/Spinner";
 
-// API endpoint to fetch product by ID
-const PRODUCT_API_ENDPOINT = "http://localhost:8080/api/products";
+//Api Services Import
+import { GetProductDetailById } from "../../api/productService";
+import { getRreviews } from "../../api/reviewService";
 
 const ProductDetail = () => {
   const { productId } = useParams(); // Get the productId from the URL
   const [product, setProduct] = useState(null); // State for the product data
   const [quantity, setQuantity] = useState(1);
-  const [wishlist, setWishlist] = useState([]); // Wishlist state
-  const [isLoading, setIsLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
-  const [showAlert, setShowAlert] = useState(false);
+  const [selectedVariations, setSelectedVariations] = useState({}); //Saving currently Selected Variation (eg : color:brown )
+  const [variationState, setVariationState] = useState({}); //Variation Object
+
+  //Pagination
+  const [currPage, setCurrPage] = useState(0); //Page
+  const [totalPages, setTotalPages] = useState(1); //Total Pages
+
+  //Other States
   const [reviews, setReviews] = useState([]); //Reviews
 
-  const { addToCart } = useCart();
-  const { isAuthenticated } = useAuth();
+  //Loading And Alert States
+  const [isLoading, setIsLoading] = useState(true); // Loading state
+  //Cart and Wishlist States
+  const [isInWishlist, setIsInWishlist] = useState(false);
+  const [isInCart, setIsInCart] = useState(false);
+  const [isCartLoading, setIsCartLoading] = useState(false);
+  const [isWishlistLoading, setIsWishlistLoading] = useState(false);
+  //Error State
+  const [error, setError] = useState(null); // Error state
 
-  const [selectedVariations, setSelectedVariations] = useState({});
-  const [selectedStock, setSelectedStock] = useState({});
+  //Context Import
+  const { cartItems, addToCart, removeFromCart } = useCart(); //Cart Context
+  const { isAuthenticated } = useAuth(); //Auth Context
+  const { wishlistItems, addToWishlist, removeFromWishlist } = useWishlist(); //Wishlist Context
+  const { showAlert } = useAlert(); //For Alerts
 
+  // Fetch product details and reviews only when productId changes
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        if (productId) {
+          await Promise.all([
+            fetchProductDetails(productId),
+            fetchReviews(productId),
+          ]);
+        }
+      } catch (error) {
+        console.error("Error fetching product or reviews:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [productId]);
+
+  // Update wishlist status when wishlistItems or productId change
+  useEffect(() => {
+    if (productId) {
+      const wishlistStatus = wishlistItems.some(
+        (item) => item.id === productId
+      );
+      setIsInWishlist(wishlistStatus);
+    }
+  }, [wishlistItems, productId]);
+
+  // Update cart status when cartItems or productId change
+  useEffect(() => {
+    if (productId) {
+      const cartStatus = cartItems.some(
+        (item) => item.productId === productId
+      );
+      setIsInCart(cartStatus);
+    }
+  }, [cartItems, productId]);
+
+  //
   useEffect(() => {
     if (product) {
-      setSelectedVariations(initializeVariations(product));
-      setSelectedStock(initializeStock(product));
+      setSelectedVariations(initializeVariations(product)); //Variation Intialization
+      setVariationState(initializeStock(product)); //Intialize the stocks from product Object (variations)
     }
   }, [product]);
-
-  // Add item to cart
-  const handleAddToCart = async () => {
-    if (!isAuthenticated) {
-      setShowAlert(true);
-      return;
-    }
-
-    setIsLoading(true); // Start loading
-    try {
-      const result = await addToCart(productId, quantity); // Use the quantity state
-
-      if (result.success) {
-        console.log("Item added to cart successfully");
-      } else {
-        alert(result.message);
-      }
-    } catch (error) {
-      console.error("Error adding item to cart:", error);
-      alert("An error occurred while adding the item to the cart.");
-    } finally {
-      setIsLoading(false); // End loading
-    }
-  };
 
   // Fetch product details by ID
   const fetchProductDetails = async (id) => {
     try {
       setIsLoading(true);
-      const response = await axios.get(`${PRODUCT_API_ENDPOINT}/${id}`);
+      const response = await GetProductDetailById(id);
       setProduct(response.data);
       setIsLoading(false);
     } catch (err) {
@@ -72,22 +109,17 @@ const ProductDetail = () => {
     }
   };
 
-  const fetchReviews = async (productId) => {
+  const fetchReviews = async (productId, page) => {
     try {
-      const reviews = await getRreviews(productId);
+      const reviews = await getRreviews(productId, page);
       console.log(reviews);
-      setReviews(reviews);
+      setReviews(reviews.content);
+      setCurrPage(reviews.pageable.pageNumber);
+      setTotalPages(reviews.totalPages);
     } catch (error) {
       console.error("Error fetching reviews:", error);
     }
   };
-
-  useEffect(() => {
-    if (productId) {
-      fetchProductDetails(productId);
-      fetchReviews(productId);
-    }
-  }, [productId]);
 
   // Initialize variations and stock based on product data
   const initializeVariations = (product) => {
@@ -106,30 +138,66 @@ const ProductDetail = () => {
     }, {});
   };
 
+  //Functions
 
+  // Add item to cart
+  const handleAddToCart = async () => {
+    // Showing Alert If not Authenticated
+    if (!isAuthenticated) {
+      showAlert("Please log in to add items to the cart.");
+      return;
+    }
 
-  // Check if the product is in the wishlist
-  const isInWishlist = wishlist.some(
-    (item) => item.productId === productId && item.userId === userId
-  );
-
-  // Toggle the wishlist status
-  const toggleWishlist = () => {
-    setWishlist((prevWishlist) => {
-      if (isInWishlist) {
-        return prevWishlist.filter(
-          (item) => item.productId !== productId || item.userId !== userId
-        );
-      } else {
-        return [...prevWishlist, { userId, productId }];
+    if (isInCart) {
+      setIsCartLoading(true); // Start loading
+      try {
+        const response = await removeFromCart(productId);
+        if (response.success) {
+          showAlert("Item removed from cart");
+          setIsInCart(false); // Update state to reflect removal
+        } else {
+          showAlert("Failed to remove item from cart");
+        }
+      } catch (error) {
+        console.error("Error removing item from cart:", error);
+        showAlert("An unexpected error occurred");
+      } finally {
+        setIsCartLoading(false); // Stop loading in both success and failure cases
       }
-    });
+      return;
+    }
+
+    setIsCartLoading(true); // Start loading
+    try {
+      const result = await addToCart(productId, quantity); // Use the quantity state
+
+      if (result.success) {
+        showAlert("Item added to cart successfully");
+      } else {
+        showAlert("Failed to Add to Cart");
+      }
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+      showAlert("An error occurred while adding the item to the cart.");
+    } finally {
+      setIsCartLoading(false); // End loading
+    }
   };
 
+  //Other Functionalities
+
+  //Change Quantity Upon changing the variation
+
+  useEffect(() => {
+    setQuantity(1);
+  }, [selectedVariations]);
+
+  //Handle thw Changing the quanity Finctionality
+  //Use for limit for stock
   const handleQuantityChange = (type) => {
     const selectedStockValue = Object.values(selectedVariations).reduce(
-      (minStock, selectedOption) =>
-        Math.min(minStock, selectedStock[selectedOption]),
+      (maxStock, selectedOption) =>
+        Math.max(maxStock, variationState[selectedOption]),
       product.stock
     );
 
@@ -141,6 +209,7 @@ const ProductDetail = () => {
     }
   };
 
+  //Change the state for the variation ( eg:color:"red" )
   const handleVariationChange = (type, value) => {
     setSelectedVariations((prev) => ({
       ...prev,
@@ -148,8 +217,47 @@ const ProductDetail = () => {
     }));
   };
 
-  if (isLoading) return <p>Loading product details...</p>;
-  if (error) return <p>{error}</p>;
+  //Wishlist Functionalities
+
+  const handleWishlist = async () => {
+    try {
+      if(!isAuthenticated){
+        showAlert("Please log in to add items to the wishlist.");
+        return;
+      }
+      setIsWishlistLoading(true);
+      const response = await addToWishlist(productId);
+      setIsWishlistLoading(false);
+
+      if (response.success) {
+        showAlert("Item added to Wishlist!");
+        setIsInWishlist(true);
+        console.log("Item added to wishlist:", response.data);
+      } else {
+        showAlert("Failed to add item to Wishlist.");
+      }
+    } catch (error) {
+      setIsWishlistLoading(false);
+      console.error("Error adding item to wishlist:", error);
+      showAlert("An error occurred. Please try again.");
+    }
+  };
+
+  // Toggle the wishlist status
+  const toggleWishlist = async () => {
+    if (isInWishlist) {
+      setIsWishlistLoading(true);
+      await removeFromWishlist(productId);
+      showAlert("Item Removed from Wishlist");
+      setIsWishlistLoading(false);
+    } else {
+      handleWishlist();
+    }
+  };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -200,12 +308,20 @@ const ProductDetail = () => {
                   +
                 </button>
               </div>
+              {/* Wishlist Button */}
               <button
                 className="wishlist-button"
                 style={{ color: isInWishlist ? "red" : "black" }}
                 onClick={toggleWishlist}
+                disabled={isWishlistLoading}
               >
-                {isInWishlist ? "♥ In Wishlist" : "♡ Add to Wishlist"}
+                {isWishlistLoading ? (
+                  <Spinner size="24px" color="#ff12dc" />
+                ) : isInWishlist ? (
+                  "♥ In Wishlist"
+                ) : (
+                  "♡ Add to Wishlist"
+                )}
               </button>
             </div>
 
@@ -213,9 +329,15 @@ const ProductDetail = () => {
               <button
                 className="add-to-cart-button"
                 onClick={handleAddToCart}
-                disabled={isLoading}
+                disabled={isCartLoading}
               >
-                {isLoading ? "Loading..." : "Add to Cart"}
+                {isCartLoading ? (
+                  <Spinner size="24px" color="#ff12dc" />
+                ) : isInCart ? (
+                  "In Cart"
+                ) : (
+                  "Add to Cart"
+                )}
               </button>
             </div>
             <hr />
@@ -228,21 +350,35 @@ const ProductDetail = () => {
               </p>
             </div>
           </div>
-
-          {showAlert && (
-            <CustomAlert
-              message="Please log in to add items to the cart."
-              onClose={() => setShowAlert(false)}
-              duration={2000}
-            />
-          )}
         </div>
       )}
 
       <div className="review-list">
-        {reviews.map((review) => (
-          <Review key={review.id} review={review} />
-        ))}
+        <h2>Reviews</h2>
+        {reviews.length > 0 ? (
+          reviews.map((review) => <Review key={review.id} review={review} />)
+        ) : (
+          <p className="no-reviews">No reviews available for this product.</p>
+        )}
+
+        {/* Pagination Controls */}
+        <div className="pagination">
+          <button
+            disabled={currPage === 0}
+            onClick={() => fetchReviews(productId, currPage - 1)}
+          >
+            Previous
+          </button>
+          <span>
+            Page {currPage + 1} of {totalPages}
+          </span>
+          <button
+            disabled={currPage + 1 >= totalPages}
+            onClick={() => fetchReviews(productId, currPage + 1)}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </>
   );
