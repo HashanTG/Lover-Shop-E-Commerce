@@ -47,9 +47,11 @@ const Contact = () => {
           <h3>CONTACT US</h3>
           <p>+94 78 254 3766</p>
         </div>
+
         <div className="contact_item">
           <h3>EMAIL</h3>
           <p>rosalovershop@gmail.com</p>
+
         </div>
       </div>
 

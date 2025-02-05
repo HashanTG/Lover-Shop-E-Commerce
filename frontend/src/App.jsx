@@ -24,6 +24,12 @@ import Pannel from './Admin/Pannel/Pannel';
 import CheckoutDetails from './pages/CheckOut_OrderComplete/CheckoutDetails';
 import OrderComplete from './pages/CheckOut_OrderComplete/OrderComplete';
 import { WishlistProvider } from './context/WishlistContext';
+import ShippingPolicy from './assets/Footer_Pages/Shipping_policy/shippingPolicy';
+import ReturnAndRefund from './assets/Footer_Pages/ReturnRefund/ReturnRefund';
+import FAQs from './assets/Footer_Pages/FAQs/FAQs';
+import SupportPage from './assets/Footer_Pages/Support/support';
+import PrivacyPolicy from './assets/Footer_Pages/PrivacyPolicy/privacyPolicy';
+import TermsCondition from './assets/Footer_Pages/TermsConditions/termsCondition'
 
 
 
@@ -51,6 +57,7 @@ const App = () => {
 
             <Route path="/product/:productId" element={<ProductDetail />} />
 
+            
             <Route path="/cart" element={<Cart />} />
             <Route path="/products" element={<ProductPage />} />
           
@@ -59,7 +66,16 @@ const App = () => {
             <Route path="/account" element={<AccountPage/>} />
 
             <Route path="/checkout" element={<CheckoutDetails />} />
-  <Route path="/order-complete" element={<OrderComplete />} />
+            <Route path="/order-complete" element={<OrderComplete />} />
+
+            /*Info Pages */
+            <Route path="/shiping_Policy" element={<ShippingPolicy/>} />
+            <Route path="/return_refund" element={<ReturnAndRefund/>}/>
+            <Route path="/faqS" element={<FAQs/>}/>
+            <Route path="/support_Page" element={<SupportPage/>}/>
+
+            <Route path = "/privacy_Policy" element={<PrivacyPolicy/>}/>
+            <Route path = "Terms_condition" element={<TermsCondition/>}/>
 
 
            

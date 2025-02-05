@@ -1,0 +1,83 @@
+.shipping_policy {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to right, #f7f9fc, #e6ebf2);
+    padding: 40px 20px;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  .shipping_policy_container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+  }
+  
+  .shipping_policy_container h1 {
+    font-size: 2.4rem;
+    color: #0056b3;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .shipping_policy_container h2 {
+    font-size: 1.8rem;
+    color: #004494;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    border-left: 4px solid #0056b3;
+    padding-left: 10px;
+  }
+  
+  .shipping_policy_container h3 {
+    font-size: 1.4rem;
+    color: #333;
+    margin-top: 20px;
+  }
+  
+  .shipping_policy_container p {
+    font-size: 1rem;
+    margin: 10px 0;
+  }
+  
+  .shipping_policy_container ul {
+    margin: 15px 0;
+    padding-left: 20px;
+  }
+  
+  .shipping_policy_container ul li {
+    margin-bottom: 8px;
+    font-size: 1rem;
+    color: #444;
+  }
+  
+  .shipping_policy_container strong {
+    color: #0056b3;
+  }
+  
+  .shipping_policy_container a {
+    color: #0056b3;
+    text-decoration: none;
+  }
+  
+  .shipping_policy_container a:hover {
+    text-decoration: underline;
+  }
+  
+  .shipping_policy_container .contact {
+    margin-top: 30px;
+    font-size: 1rem;
+    color: #333;
+    text-align: center;
+    background: #f4f8fc;
+    padding: 15px;
+    border-radius: 10px;
+  }
+  
+  .shipping_policy_container .contact strong {
+    color: #0056b3;
+  }
+  
+  
