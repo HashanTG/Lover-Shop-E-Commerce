@@ -198,13 +198,13 @@
 
 .review-list{
   display: flex;
-  align-items: flex-start; /* Adjust alignment for better readability */
-  justify-content: center;
+  align-items: center;
+  justify-self:center;
   flex-direction: column;
-  gap: 2rem;
-  padding: 2rem;
   max-width: 1200px; /* Limit container width */
   margin: 20px auto; /* Center on the page */
+  max-height: 600px;
+  overflow-y: scroll;
 }
 .no-reviews {
   text-align: center;

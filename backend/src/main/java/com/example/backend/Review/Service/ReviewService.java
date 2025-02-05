@@ -3,14 +3,16 @@ package com.example.backend.Review.Service;
 import com.example.backend.Review.Model.Review;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+
 
 public interface ReviewService {
 
     // Retrieve all reviews
-    List<Review> getAllReviews();
+    Page<Review> getAllReviews(int page, int size);
 
     // Retrieve reviews by product ID
-    List<Review> getReviewsByProductId(String productId);
+    Page<Review> getReviewsByProductId(String productId, int page, int size);
 
     // Add a new review
     Review addReview(Review review);
@@ -20,9 +22,6 @@ public interface ReviewService {
 
     // Delete a review by ID
     void deleteReview(String id);
-
-    // Calculate the overall rating for a product
-    Double getOverallRating(String productId);
 
     // Admin reply to a review
     Review replyToReview(String reviewId, String reply);

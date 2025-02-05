@@ -3,9 +3,9 @@ import { config } from "../config";
 
 const API_URL = `${config.apiUrl}/api/reviews`;
 
-export const getRreviews = async (productId) => {
+export const getRreviews = async (productId,page=0) => {
   try {
-    const response = await axios.get(`${API_URL}/product/${productId}`);
+    const response = await axios.get(`${API_URL}/product/${productId}?page=${page}`);
     return response.data;
   } catch (error) {
     throw error;

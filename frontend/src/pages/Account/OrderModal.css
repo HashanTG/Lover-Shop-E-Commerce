@@ -21,48 +21,6 @@
   overflow-y: auto;
 }
 
-.order-modal h3 {
-  margin-top: 15px;
-  text-align: left;
-}
-
-.order-modal button {
-  margin-top: 15px;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.order-modal button:hover {
-  background-color: #0056b3;
-}
-
-.ok-btn {
-  background-color: #dc3545;
-}
-
-.ok-btn:hover {
-  background-color: #c82333;
-}
-
-.confirm-btn {
-  background-color: #28a745;
-}
-
-.confirm-btn:hover {
-  background-color: #218838;
-}
-
-.submit-review-btn {
-  background-color: #ffc107;
-}
-
-.submit-review-btn:hover {
-  background-color: #e0a800;
-}
 
 .order-modal textarea {
   width: 100%;

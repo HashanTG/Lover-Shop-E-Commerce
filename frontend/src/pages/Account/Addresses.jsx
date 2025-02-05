@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import "./Addresses.css";
+import Spinner from "../../components/Spinner/Spinner";
 import { useUserDetail } from "../../context/UserDetailContext";
 
 const Addresses = () => {
   const { userDetail, updateUserDetail } = useUserDetail();
-
+  const [isLoading,setIsLoading] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
   const [editedAddress, setEditedAddress] = useState({});
   const [isAdding, setIsAdding] = useState(false);
@@ -114,6 +114,7 @@ const Addresses = () => {
 
   // Set primary address
   const handleSetPrimary = async (index) => {
+    setIsLoading(true);
     const updatedAddresses = userDetail.addresses.map((addr, i) => ({
       ...addr,
       primary: i === index,
@@ -123,6 +124,9 @@ const Addresses = () => {
       await updateUserDetail({ addresses: updatedAddresses });
     } catch (error) {
       console.error("Failed to set primary address:", error);
+    }
+    finally{
+      setIsLoading(false);
     }
   };
 
@@ -146,8 +150,8 @@ const Addresses = () => {
                   <input type="text" name="zipCode" value={editedAddress.zipCode} onChange={handleInputChange} placeholder="Zip Code" />
                   <input type="text" name="country" value={editedAddress.country} onChange={handleInputChange} placeholder="Country" />
                   <input type="text" name="phone" value={editedAddress.phone} onChange={handleInputChange} placeholder="Phone" />
-                  <button onClick={() => handleSaveClick(index)} className="save-button">Save</button>
-                  <button onClick={handleCancelClick} className="cancel-button">Cancel</button>
+                  <button onClick={() => handleSaveClick(index)} className="save-btn">Save</button>
+                  <button onClick={handleCancelClick} className="cancel-btn">Cancel</button>
                 </div>
               ) : (
                 <div className="address-details">
@@ -156,9 +160,20 @@ const Addresses = () => {
                   <p>{address.country || "Not set"}</p>
                   <p>{address.phone || "Not set"}</p>
                   <p className="primary-text">{address.primary ? "Primary Address" : ""}</p>
-                  <button onClick={() => handleEditClick(index, address)} className="edit-button">Edit</button>
-                  <button onClick={() => handleRemove(index)} className="remove-button">Remove</button>
-                  {!address.primary && <button onClick={() => handleSetPrimary(index)} className="primary-button">Set as Primary</button>}
+                  <button onClick={() => handleEditClick(index, address)} className="edit-btn">Edit</button>
+                  <button onClick={() => handleRemove(index)} className="remove-btn">Remove</button>
+                  {!address.primary && (
+      <button 
+        onClick={() => handleSetPrimary(index)} 
+        className="primary-btn"
+        disabled={isLoading} // Disable button while loading
+      >
+        {isLoading ? (
+          <Spinner size="16px" color="#ffffff" /> 
+        ) : (
+          'Set as Primary'
+        )}
+      </button>)}
                 </div>
               )}
             </div>
@@ -176,11 +191,11 @@ const Addresses = () => {
               <input type="text" name="zipCode" value={newAddress.zipCode} onChange={handleNewInputChange} placeholder="Zip Code" />
               <input type="text" name="country" value={newAddress.country} onChange={handleNewInputChange} placeholder="Country" />
               <input type="text" name="phone" value={newAddress.phone} onChange={handleNewInputChange} placeholder="Phone" />
-              <button onClick={handleNewSaveClick} className="save-button">Save New Address</button>
-              <button onClick={handleNewCancelClick} className="cancel-button">Cancel</button>
+              <button onClick={handleNewSaveClick} className="save-btn">Save New Address</button>
+              <button onClick={handleNewCancelClick} className="cancel-btn">Cancel</button>
             </div>
           ) : (
-            <button onClick={handleAddClick} className="add-button">Add New Address</button>
+            <button onClick={handleAddClick} className="add-btn">Add New Address</button>
           )}
         </div>
       </div>

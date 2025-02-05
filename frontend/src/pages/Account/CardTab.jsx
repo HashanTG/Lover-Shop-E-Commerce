@@ -91,11 +91,11 @@ const CardDetails = () => {
                 <p>Card Number: {maskCardNumber(card.cardNumber)}</p>
                 <p>Cardholder Name: {card.cardHolderName || 'N/A'}</p>
                 <p>Expiry Date: {card.expirationDate || 'N/A'}</p>
-                <button onClick={() => handleRemove(index)} className="remove-button">
+                <button onClick={() => handleRemove(index)} className="remove-btn">
                   Remove
                 </button>
                 {!card.primary && (
-                  <button onClick={() => handleSetPrimary(index)} className="primary-button">
+                  <button onClick={() => handleSetPrimary(index)} className="primary-btn">
                     Set as Primary
                   </button>
                 )}
@@ -152,15 +152,15 @@ const CardDetails = () => {
                 />
                 Set as Primary
               </label>
-              <button onClick={handleNewSaveClick} className="save-button">
+              <button onClick={handleNewSaveClick} className="save-btn">
                 Save New Card
               </button>
-              <button onClick={() => setIsAdding(false)} className="cancel-button">
+              <button onClick={() => setIsAdding(false)} className="cancel-btn">
                 Cancel
               </button>
             </div>
           ) : (
-            <button onClick={() => setIsAdding(true)} className="add-button">
+            <button onClick={() => setIsAdding(true)} className="add-btn">
               Add New Card
             </button>
           )}

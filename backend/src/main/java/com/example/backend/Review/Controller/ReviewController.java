@@ -3,12 +3,12 @@ package com.example.backend.Review.Controller;
 import com.example.backend.Review.Model.Review;
 import com.example.backend.Review.Service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
 import com.example.backend.Auth.UtilSecurity.SecurityUtil;
-
 
 import java.util.List;
 
@@ -19,39 +19,44 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
-    // Get all reviews
+    // Get all reviews with pagination
     @GetMapping
-    public List<Review> getAllReviews() {
-        return reviewService.getAllReviews();
+    public Page<Review> getAllReviews(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return reviewService.getAllReviews(page, size);
     }
 
     // Get reviews for a specific product
     @GetMapping("/product/{productId}")
-    public List<Review> getReviewsByProductId(@PathVariable String productId) {
-        return reviewService.getReviewsByProductId(productId);
+    public Page<Review> getReviewsByProductId(
+            @PathVariable String productId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        return reviewService.getReviewsByProductId(productId, page, size);
     }
+    
 
     // Add a new review
     @PostMapping
     public ResponseEntity<Review> addReview(@RequestBody Review review) {
         String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically from SecurityContext
-    
+
         review.setUserId(userId);
-    
+
         // Check if the user has already posted a review for the given product
         boolean reviewExists = reviewService.existsByUserIdAndProductId(userId, review.getProductId());
-    
+
         if (reviewExists) {
             // Return a conflict response if the user has already reviewed the product
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(null); // Optionally return a message indicating the conflict
         }
-    
+
         // Save the new review
         Review savedReview = reviewService.addReview(review);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReview);
     }
-    
 
     // Update an existing review
     @PutMapping("/{id}")
@@ -67,13 +72,6 @@ public class ReviewController {
         return ResponseEntity.noContent().build();
     }
 
-    // Calculate the overall rating for a product
-    @GetMapping("/product/{productId}/rating")
-    public ResponseEntity<Double> getOverallRating(@PathVariable String productId) {
-        Double averageRating = reviewService.getOverallRating(productId);
-        return ResponseEntity.ok(averageRating);
-    }
-
     // Admin reply to a review
     @PutMapping("/{id}/reply")
     public ResponseEntity<Review> replyToReview(
@@ -83,4 +81,3 @@ public class ReviewController {
         return ResponseEntity.ok(updatedReview);
     }
 }
-

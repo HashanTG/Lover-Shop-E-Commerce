@@ -24,22 +24,22 @@ function NewArrivals() {
   }, []);
 
   return (
-    <div className="new-arrivals">
-    <h1>New Arrivals</h1>
-  
-    {loading ? (
-      <div className="spinner-container">
-        <Spinner size="48px" color="#ff12dc" />
-      </div>
-    ) : (
-      <div className="product-grid">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
-    )}
-  </div>
-  
+   <div className="new-arrivals">
+  <h1>New Arrivals</h1>
+
+  {loading ? (
+    <div className="spinner-container">
+      <Spinner size="32px" color="#721c24" />
+    </div>
+  ) : (
+    <div className="product-grid">
+      {products.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
+  )}
+</div>
+
   );
 }
 

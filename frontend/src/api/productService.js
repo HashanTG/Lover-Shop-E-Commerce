@@ -4,9 +4,9 @@ import { config } from "../config";
 const API_URL = `${config.apiUrl}/api/products`; // Replace with your backend API URL
 
 //Get Products
-export const getProducts = async () => {
+export const getProducts = async (page = 0) => {
   try {
-    const response = await axios.get(API_URL);
+    const response = await axios.get(`${API_URL}?page=${page}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
