@@ -32,14 +32,14 @@ export const CartProvider = ({ children }) => {
     }
 };
 
-const addToCart = async (productId, quantity) => {
+const addToCart = async (productId, quantity,variation) => {
   if (!isAuthenticated) {
     return { success: false, message: "User not logged in." };
   }
 
   try {
     // Call the actual service or utility function for adding an item to the cart
-    await addToCartApi(productId, quantity); 
+    await addToCartApi(productId, quantity,variation); 
 
     // Refresh the cart context
     await fetchCart();
@@ -57,13 +57,13 @@ const addToCart = async (productId, quantity) => {
     fetchCart();
   }, [isAuthenticated]); // Run when authentication status changes
 
-  const removeFromCart = async (productId) => {
+  const removeFromCart = async (productId,variation) => {
     if (!isAuthenticated) {
       return { success: false, message: "User not logged in." };
     }
 
     try {
-      await removeFromCartApi(productId);
+      await removeFromCartApi(productId,variation);
       await fetchCart(); // Refresh the cart after removal
       return { success: true };
     } catch (error) {

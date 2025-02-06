@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import OrderModal from './OrderModal'; // Make sure the path is correct
+import OrderModal from "./OrderModal"; // Make sure the path is correct
 
 import { getOrder } from "../../api/orderService";
 import "./Orders.css"; // Add styles for table and pagination
@@ -10,7 +10,6 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 8;
-
 
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -70,22 +69,40 @@ const Orders = () => {
               <td>{order.status}</td>
               <td>{order.paymentStatus}</td>
               <td>
-              <button onClick={() => handleViewClick(order)}>View</button>
+                <button onClick={() => handleViewClick(order)}>
+                  {order.status === "DELIVERED"
+                    ? order?.confirmedByUser
+                      ? "REVIEW"
+                      : "CONFIRM ORDER"
+                    : order.status === "CONFIRMED"
+                    ? "REVIEW"
+                    : "MORE DETAIL"}
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      
-      {showModal && <OrderModal order={selectedOrder} onClose={handleCloseModal} />}
+
+      {showModal && (
+        <OrderModal order={selectedOrder} onClose={handleCloseModal} />
+      )}
 
       {/* Pagination */}
       <div className="pagination">
-        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
           Previous
         </button>
-        <span>Page {currentPage} of {totalPages}</span>
-        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
           Next
         </button>
       </div>

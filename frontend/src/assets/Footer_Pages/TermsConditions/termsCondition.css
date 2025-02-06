@@ -1,0 +1,30 @@
+.terms_Conditions{
+    padding: 2rem;
+    margin: 2rem auto;
+    max-width: 800px;
+    background-color: #fefefe;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-family: "Arial", sans-serif;
+    color: #333;
+}
+
+.terms_Conditions h1{
+    font-size: 2rem;
+    text-align: center;
+    color: #3a4ddf;
+    margin-bottom: 1.5rem;
+}
+
+.terms_Conditions h2{
+    font-size: 1.5rem;
+    color: #333;
+    margin-top: 1.5rem;
+}
+
+.terms_Conditions p{
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 1rem 0;
+    color: #555;
+}

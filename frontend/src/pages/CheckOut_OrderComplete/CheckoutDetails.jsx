@@ -14,7 +14,7 @@ const CheckoutDetails = () => {
   //Navigation
   const navigate = useNavigate();
   //Context API
-  const { cartItems } = useContext(CartContext);
+  const { cartItems,removeFromCart } = useContext(CartContext);
   const { userDetail } = useUserDetail();
   //Loading States
   const [loading, setLoading] = useState(false);
@@ -106,13 +106,26 @@ const CheckoutDetails = () => {
         recieverFirstName: formData.firstName,
         recieverLastName: formData.lastName,
       };
+
+      const reciverAdrress = {
+        address: formData.streetAddress,
+        city: formData.city,
+        state: formData.state,
+        zipCode: formData.zipCode,
+        country: formData.country,
+        phone: formData.phoneNumber,
+      }
       const orderData = await placeOrder(
         cartItems,
         fee?.total,
-        selectedAddress,
+        reciverAdrress,
         payment,
         reciever
       );
+
+      for (const item of cartItems) {
+        await removeFromCart(item.productId, item.variation);
+      }
       navigate("/order-complete", { state: { orderData } });
     } catch (error) {
       console.error("Order placement failed:", error);
@@ -182,6 +195,50 @@ const CheckoutDetails = () => {
                 </option>
               ))}
             </select>
+
+            {/* Address Details Inputs */}
+
+  <div className="address-details">
+    <label>Street Address</label>
+    <input
+      type="text"
+      name="streetAddress"
+      value={formData.streetAddress || ""}
+      onChange={handleInputChange}
+    />
+
+    <label>Country</label>
+    <input
+      type="text"
+      name="country"
+      value={formData.country || ""}
+      onChange={handleInputChange}
+    />
+
+    <label>State</label>
+    <input
+      type="text"
+      name="state"
+      value={formData.state || ""}
+      onChange={handleInputChange}
+    />
+
+    <label>City</label>
+    <input
+      type="text"
+      name="city"
+      value={formData.city || ""}
+      onChange={handleInputChange}
+    />
+
+    <label>Zip Code</label>
+    <input
+      type="text"
+      name="zipCode"
+      value={formData.zipCode || ""}
+      onChange={handleInputChange}
+    />
+  </div>
           </section>
 
           {/* Payment Method */}
@@ -228,7 +285,7 @@ const CheckoutDetails = () => {
                     </option>
                   ))}
                 </select>
-
+{/* 
                 <div className="card-details">
                   <div className="input-group">
                     <label htmlFor="cardNumber">Card Number</label>
@@ -265,7 +322,7 @@ const CheckoutDetails = () => {
                       />
                     </div>
                   </div>
-                </div>
+                </div> */}
               </>
             )}
           </section>

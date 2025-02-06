@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getProducts } from "../../api/productService";
+import { getProducts,deleteProduct } from "../../api/productService";
 import AddEditProduct from "./AddProduct/AddEditProduct";
 import AddProduct from "./AddProduct/Addproduct";
 import "./ProductList.css";
@@ -28,7 +28,7 @@ const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(0);
   const [editProduct, setEditProduct] = useState(null);
-  const [showEditForm, setShowEditForm] = useState(false); // ✅ Added missing state
+  const [showEditForm, setShowEditForm] = useState(false); 
   const pageSize = 20;
 
   useEffect(() => {
@@ -44,11 +44,11 @@ const ProductList = () => {
     }
   };
 
+  //Handle the Deletion of a Product
   const handleDelete = async (productId) => {
     try {
-      // await deleteProduct(productId);
-      // setProducts(products.filter((product) => product.id !== productId));
-      console.log("Delete product with ID:", productId);
+      const response = await deleteProduct(productId);
+      setProducts(products.filter((product) => product.id !== productId));
     } catch (error) {
       console.error("Error deleting product:", error);
     }
@@ -61,7 +61,7 @@ const ProductList = () => {
 
   return (
     showEditForm ? (
-      <AddProduct
+      <AddEditProduct
         editProduct={editProduct} 
         onClose={() => setShowEditForm(false)} 
       />
@@ -88,7 +88,7 @@ const ProductList = () => {
               key={product.id}
               product={product}
               onDelete={handleDelete}
-              onEdit={handleEdit} // ✅ Fixed function call
+              onEdit={handleEdit} 
             />
           ))}
         </div>

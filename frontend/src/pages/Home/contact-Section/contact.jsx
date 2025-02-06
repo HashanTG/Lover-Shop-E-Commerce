@@ -1,40 +1,98 @@
-
-import React from "react";
+import React, { useState } from "react";
 import "./contact.css";
 import Button from "../../../components/shared/button/Button";
+import { sendEmail } from "../../../api/emailService";
+import { useAlert } from "../../../context/GlobalAlertContext";
 
 const Contact = () => {
+
+  const {showAlert} = useAlert();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    sendEmail(formData)
+      .then(() => {
+        showAlert("Email sent successfully!");
+        setFormData({ name: "", email: "", message: "" });
+      })
+      .catch((error) => {
+        console.error("Failed to send email:", error);
+        showAlert("Failed to send email. Please try again later.");
+      })
+      .finally(() => setLoading(false));
+  };
+
   return (
     <div className="contact_us">
-    <h1 className="contact_title">Contact Us</h1>
-    <div className="contact_details">
+      <h1 className="contact_title">Contact Us</h1>
+      <div className="contact_details">
         <div className="contact_item">
-            
-            <h3>ADDRESS</h3>
-            
-            <p>234 University of Kelaniya, Kelaniya</p>
-            </div>
+          <h3>ADDRESS</h3>
+          <p>234 University of Kelaniya, Kelaniya</p>
+        </div>
         <div className="contact_item">
-            {/* contact_image */}
-            <h3>CONTACT US</h3>
-            <p>+94 78 254 3766</p>
+          <h3>CONTACT US</h3>
+          <p>+94 78 254 3766</p>
         </div>
-         <div className="contact_item">
-             {/* email_icon */}
-            <h3>EMAIL</h3>
-            <p>dilshankm91@gmail.com</p>
+
+        <div className="contact_item">
+          <h3>EMAIL</h3>
+          <p>rosalovershop@gmail.com</p>
+
         </div>
-    </div>
-    <div className="form_map_container">
-        <form className="contact_form">
-            <label htmlFor="name">FULL NAME</label>
-          <input type="text" placeholder="Your Name" className="form_input" />
-            <label htmlFor="email">EMAIL ADDRESS</label>
-          <input type="email" placeholder="Your Email" className="form_input" />
+      </div>
+
+      <div className="form_map_container">
+        <form className="contact_form" onSubmit={handleSubmit}>
+          <label htmlFor="name">FULL NAME</label>
+          <input
+            type="text"
+            name="name"
+            placeholder="Your Name"
+            className="form_input"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+          <label htmlFor="email">EMAIL ADDRESS</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Your Email"
+            className="form_input"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
           <label htmlFor="message">MESSAGE</label>
-          <textarea placeholder="Your Message" className="form_input2" />
-          <Button className="form-button" label={"Send Message"} onClick={() => alert("Form Submitted!")} />
+          <textarea
+            name="message"
+            placeholder="Your Message"
+            className="form_input2"
+            value={formData.message}
+            onChange={handleChange}
+            required
+          />
+          <Button
+            className="form-button"
+            label={loading ? "Sending..." : "Send Message"}
+            disabled={loading}
+          />
         </form>
+
         <div className="map_container">
           <iframe
             title="Google Map"
@@ -45,8 +103,8 @@ const Contact = () => {
             referrerPolicy="no-referrer-when-downgrade"
           ></iframe>
         </div>
+      </div>
     </div>
-</div>
   );
 };
 

@@ -4,21 +4,26 @@ import "./ProductCard.css";
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
 import { useAlert } from "../context/GlobalAlertContext";
+import { useAuth } from "../context/AuthContext";
 import Spinner from "./Spinner/Spinner";
 
 const ProductCard = ({ product }) => {
   const { addToWishlist } = useWishlist();
   const { addToCart } = useCart();
   const {showAlert} = useAlert();
+  const { isAuthenticated } = useAuth();
   const [isLoadingWhislist, setIsLoadingWhislist] = useState(false);
   const [isLoadingCart, setIsLoadingCart] = useState(false);
 
   const handleWishlistClick = async () => {
+    if (!isAuthenticated) {
+      return showAlert("Please login to add items to wishlist");
+    }
     setIsLoadingWhislist(true)
     const response = await addToWishlist(product.id);
     setIsLoadingWhislist(false)
     if (response.success) {
-      showAlert("Irem Added To wishlist")
+      showAlert("Item Added To wishlist")
       console.log("Item added to wishlist:", response.data);
     } else {
       showAlert("Failed to add item to wishlist.");
@@ -26,16 +31,30 @@ const ProductCard = ({ product }) => {
   };
 
   const handleAddtoCartClick = async () => {
-    setIsLoadingCart(true)
-    const response  =await addToCart(product.id, 1);
+    if (!isAuthenticated) {
+      return showAlert("Please login to add items to Cart");
+    }
+  
+    setIsLoadingCart(true);
+  
+    // Get the first variation if it exists, otherwise use an empty object
+    const variation = product.variations.length > 0 ? 
+      { [product.variations[0].type]: product.variations[0].options[0].value } : 
+      {}; // Default to empty object if no variations
+  
+    // Call the addToCart function
+    const response = await addToCart(product.id, 1, variation);
+    
     setIsLoadingCart(false);
+    
     if (response.success) {
-      showAlert("Item Added To Cart")
+      showAlert("Item Added To Cart");
       console.log("Item added to Cart:");
     } else {
       showAlert("Failed to add item to Cart.");
     }
   };
+  
 
   return (
     <div className="product-card">

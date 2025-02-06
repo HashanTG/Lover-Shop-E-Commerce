@@ -61,19 +61,17 @@ const Footer = () => {
             <h3>Page</h3>
             <ul>
               <li>
-                <a href="#">Home</a>
+                <a href="/">Home</a>
               </li>
               <li>
-                <a href="#">Shop</a>
+                <a href="/products">Shop</a>
               </li>
               <li>
-                <a href="#">Product</a>
+                <a href="/products">Product</a>
               </li>
+              
               <li>
-                <a href="#">Articles</a>
-              </li>
-              <li>
-                <a href="#">Contact Us</a>
+                <a href="contactus">Contact Us</a>
               </li>
             </ul>
           </div>
@@ -81,16 +79,16 @@ const Footer = () => {
             <h3>Info</h3>
             <ul>
               <li>
-                <a href="#">Shipping Policy</a>
+                <a href="/shiping_Policy">Shipping Policy</a>
               </li>
               <li>
-                <a href="#">Return & Refund</a>
+                <a href="/return_refund">Return & Refund</a>
               </li>
               <li>
-                <a href="#">Support</a>
+                <a href="/support_Page">Support</a>
               </li>
               <li>
-                <a href="#">FAQs</a>
+                <a href="/faqS">FAQs</a>
               </li>
             </ul>
           </div>
@@ -108,7 +106,7 @@ const Footer = () => {
       <div className="footer_bottom">
         <p>
           Copyright © 2023 rosalovers. All rights reserved |
-          <a href="#"> Privacy Policy</a> |<a href="#"> Terms & Conditions</a>
+          <a href="/privacy_policy"> Privacy Policy</a> |<a href="/Terms_condition"> Terms & Conditions</a>
         </p>
         <div className="payment_methods">
           <img src={visa} alt="Visa" />

@@ -24,6 +24,7 @@ const addToWishlist = async (productId) => {
       const response = await addToWishlistAPI(productId);
   
       if (response.success) {
+        await fetchWishlistItems();
         return response;
       } else {
         console.error("Failed to add item to wishlist:", response.message);
@@ -57,24 +58,7 @@ const addToWishlist = async (productId) => {
     }
   };
   
-  // Clear wishlist
-//   const clearWishlist = async () => {
-//     try {
-//       const response = await clearWishlistAPI();
-  
-//       if (response.success) {
-//         // Clear the local wishlist state
-//         setWishlistItems([]);
-//         return response;
-//       } else {
-//         console.error("Failed to clear wishlist:", response.message);
-//         return response;
-//       }
-//     } catch (error) {
-//       console.error("An unexpected error occurred:", error);
-//       alert("An error occurred while clearing the wishlist.");
-//     }
-//   };
+
   
 
     return (

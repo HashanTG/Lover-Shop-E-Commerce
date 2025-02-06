@@ -64,7 +64,7 @@ public class ProductController {
     }
 
     // Add a new product
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public Product addProduct(@RequestBody Product product) {
         return productService.addProduct(product);

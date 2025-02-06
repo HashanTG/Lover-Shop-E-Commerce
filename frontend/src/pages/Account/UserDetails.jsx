@@ -1,13 +1,14 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useUserDetail } from "../../context/UserDetailContext";
 import { useAlert } from "../../context/GlobalAlertContext";
+import Spinner from "../../components/Spinner/Spinner";
 import "./UserDetails.css";
 
 const UserDetails = () => {
-
-    const {showAlert} = useAlert();//For showing alerts
+  const { showAlert } = useAlert(); //For showing alerts
 
   const { userDetail, updateUserDetail } = useUserDetail();
+  const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editableUser, setEditableUser] = useState({
     firstName: "",
@@ -21,7 +22,7 @@ const UserDetails = () => {
       setEditableUser({
         firstName: userDetail.firstName || "",
         lastName: userDetail.lastName || "",
-        phoneNo: userDetail.phoneNo || "", 
+        phoneNo: userDetail.phoneNo || "",
       });
     }
   }, [userDetail]);
@@ -32,16 +33,18 @@ const UserDetails = () => {
   };
 
   const handleSave = async () => {
+    setIsLoading(true);
     try {
-      const updatedCardJson = {  ...editableUser };
-      console.log(updatedCardJson)
-      await updateUserDetail(updatedCardJson); // Call the update function from context
-      showAlert("User Updated Successfully")
+      const updatedCardJson = { ...editableUser };
+      await updateUserDetail(updatedCardJson);
+      showAlert("User Updated Successfully");
       setIsEditing(false);
-
     } catch (error) {
       console.error("Failed to update user details:", error);
       showAlert("Failed to update user details. Please try again.");
+    }
+    finally{
+      setIsLoading(false);
     }
   };
 
@@ -93,7 +96,7 @@ const UserDetails = () => {
           {!isEditing ? (
             <button
               type="button"
-              className="edit-button"
+              className="edit-btn"
               onClick={() => setIsEditing(true)}
             >
               Edit
@@ -102,14 +105,15 @@ const UserDetails = () => {
             <>
               <button
                 type="button"
-                className="save-button"
+                className="save-btn"
                 onClick={handleSave}
+                disabled={isLoading}
               >
-                Save
+                {isLoading ? <Spinner size="16px" color="#ffffff" /> : "Save"}
               </button>
               <button
                 type="button"
-                className="cancel-button"
+                className="cancel-btn"
                 onClick={handleCancel}
               >
                 Cancel
