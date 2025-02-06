@@ -3,9 +3,9 @@ import { config } from "../config";
 
 const API_URL = `${config.apiUrl}/api/reviews`;
 
-export const getRreviews = async (productId,page=0) => {
+export const getRreviews = async (productId,page=0,size=10) => {
   try {
-    const response = await axios.get(`${API_URL}/product/${productId}?page=${page}`);
+    const response = await axios.get(`${API_URL}/product/${productId}?page=${page}&size=${size}`);
     return response.data;
   } catch (error) {
     throw error;
@@ -26,17 +26,19 @@ export const addReview = async (review) => {
 
 //ADMIN
 
-export const getAllReviews = async () => {
+export const getAllReviews = async (page = 0, size = 10) => {
   try {
-    const respone = await axios.get(API_URL, {
+    const response = await axios.get(`${API_URL}?page=${page}&size=${size}`, {
       withCredentials: true,
       headers: { "Content-Type": "application/json" },
     });
-    return respone;
+    return response.data;  // Return only the response data
   } catch (error) {
+    console.error("Error fetching reviews:", error);
     throw error;
   }
 };
+
 
 export const replyReview = async (reviewId, reply) => {
   try {

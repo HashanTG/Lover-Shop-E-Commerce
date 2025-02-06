@@ -68,10 +68,12 @@ export const confirmOrder = async (orderId) => {
 
 //ADMIN PART
 
-export const getAllOrders = async () => {
+export const getAllOrders = async (page = 0, size = 5, sortBy = 'createdAt', sortDir = 'DESC') => {
   try {
-    const response = await axios.get(`${API_URL}`, {
+    
+    const response = await axios.get(`${API_URL}?page=${page}&size=${size}&sortBy=${sortBy}&sortDir=${sortDir}`, {
       withCredentials: true, // If using authentication
+      headers: { 'Content-Type': 'application/json' },
     });
 
     return response.data; // Handle success
@@ -79,7 +81,8 @@ export const getAllOrders = async () => {
     console.error('Error fetching orders:', error);
     throw error; // Handle error in UI
   }
-}
+};
+
 
 export const updateOrderStatus = async (orderId, newStatus) => {
   try {

@@ -166,8 +166,14 @@
 
 .shipping-options input[type="radio"] {
   accent-color: #6c63ff;
+  display: inline;
 }
-
+.shipping-options-inside{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
 .shipping-options .price {
   font-weight: bold;
   color: #333;
@@ -175,6 +181,9 @@
 
 .shipping-radio{
   margin-right: 10px;
+  font-size: 18px;
+  height: 14px;
+  width: auto;
 }
 
 .summary-totals {

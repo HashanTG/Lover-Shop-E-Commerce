@@ -1,12 +1,12 @@
-import { React, useState, useEffect } from "react";
-import { getAllOrders,updateOrderStatus} from "../../api/orderService";
+import React, { useState, useEffect } from "react";
+import { getAllOrders, updateOrderStatus } from "../../api/orderService";
+import './OrderCard.css'
 
-const Row = ({ order, handleStatusChange }) => {
+const OrderRow = ({ order, handleStatusChange }) => {
   const { id, items, total, paymentStatus, shippingAddress, paymentDetails, recieveDetail, status } = order;
 
-  // Format item list
   const itemList = items.map((item, index) => (
-    <div key={index} className="order-item">
+    <div key={index} className="ocard-item">
       <div>{item.productId}</div>
       <div>{item.quantity}</div>
       <div>Rs {item.price}</div>
@@ -14,16 +14,16 @@ const Row = ({ order, handleStatusChange }) => {
   ));
 
   return (
-    <tr className="table-row">
-      <td>{id}</td>
-      <td>{itemList}</td>
-      <td>{total}</td>
-      <td>{paymentStatus}</td>
-      <td>
-        {/* Status dropdown */}
-        <select 
+    <div className="ocard-row">
+      <div className="ocard-cell">{id}</div>
+      <div className="ocard-cell">{itemList}</div>
+      <div className="ocard-cell">{total}</div>
+      <div className="ocard-cell ocard-payment-status">{paymentStatus}</div>
+      <div className="ocard-cell">
+        <select
+          className="ocard-status-dropdown"
           value={status}
-          onChange={(e) => handleStatusChange(id, e.target.value)} // Trigger function when status changes
+          onChange={(e) => handleStatusChange(id, e.target.value)}
         >
           <option value="PENDING">PENDING</option>
           <option value="CONFIRMED">CONFIRMED</option>
@@ -31,109 +31,95 @@ const Row = ({ order, handleStatusChange }) => {
           <option value="DELIVERED">DELIVERED</option>
           <option value="CANCELLED">CANCELLED</option>
         </select>
-      </td>
-      <td>{shippingAddress.city}, {shippingAddress.state}</td>
-      <td>{paymentDetails.paymentMethod}</td>
-      <td>{paymentDetails.cardLast4Digits}</td>
-      <td>{recieveDetail.recieverFirstName} {recieveDetail.recieverLastName}</td>
-    </tr>
+      </div>
+      <div className="ocard-cell ocard-shipping-info">
+        <div><span>City: </span>{shippingAddress.city}</div>
+        <div><span>State: </span>{shippingAddress.state}</div>
+        <div><span>Receiver: </span>{`${recieveDetail.recieverFirstName} ${recieveDetail.recieverLastName}`}</div>
+        <div><span>Payment Method: </span>{paymentDetails.paymentMethod}</div>
+      </div>
+    </div>
   );
 };
 
 const OrderCard = () => {
   const [orders, setOrders] = useState([]);
+  const [currPage, setCurrPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await getAllOrders();
-        console.log(response.data);  // Log the API response to check structure
-        if (response.content && Array.isArray(response.content)) {
-          setOrders(response.content);  // Ensure it's an array
-        }
-      } catch (error) {
-        console.error("Error fetching orders:", error);
-      }
-    };
+    fetchOrders(currPage);
+  }, [currPage]);
 
-    fetchOrders();
-  }, []);
+  const fetchOrders = async (page) => {
+    try {
+      const response = await getAllOrders(page, 5);  // Fetch 5 orders per page
+      setOrders(response.content);
+      setTotalPages(response.totalPages);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
 
   const handleStatusChange = async (orderId, newStatus) => {
-
-    console.log(`Order ID: ${orderId} - Status changed to: ${newStatus}`);
-    
     try {
       const response = await updateOrderStatus(orderId, newStatus);
-      console.log(response);  // Log the API response to check structure
       if (response.status === 200) {
-        
         setOrders((prevOrders) =>
           prevOrders.map((order) =>
             order.id === orderId ? { ...order, status: newStatus } : order
           )
         );
       }
-    }
-    catch (error) {
+    } catch (error) {
       console.error("Error updating order status:", error);
     }
   };
 
-  return (
-    <div className="dashboard-container">
-      <main className="main-content">
-        {/* Summary Row */}
-        <div className="summary-row">
-          <div className="card">
-            <h3>Total Revenue</h3>
-            <p>Rs 75,500</p>
-            <span>+10%</span>
-          </div>
-          <div className="card">
-            <h3>Total Sales</h3>
-            <p>5300</p>
-            <span>+15%</span>
-          </div>
-          <div className="card">
-            <h3>Product SKU</h3>
-            <p>247</p>
-          </div>
-        </div>
+  const handlePrevPage = () => {
+    if (currPage > 0) setCurrPage(currPage - 1);
+  };
 
-        {/* Orders Table */}
-        <div className="orders-section">
-          <div className="orders-header">
-            <h3>Recent Orders</h3>
-            <span>+2 Orders</span>
+  const handleNextPage = () => {
+    if (currPage < totalPages - 1) setCurrPage(currPage + 1);
+  };
+
+  return (
+    <div className="ocard-dashboard">
+      <main className="ocard-main-content">
+        <div className="ocard-orders-section">
+          <div className="ocard-header">
+            <h3>Orders</h3>
+            <span>{`Page ${currPage + 1} of ${totalPages}`}</span>
           </div>
-          <div className="orders-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Items</th>
-                  <th>Total</th>
-                  <th>Payment Status</th>
-                  <th>Status</th>
-                  <th>Shipping Address</th>
-                  <th>Payment Method</th>
-                  <th>Card Last 4</th>
-                  <th>Receiver</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orders && orders.length > 0 ? (
-                  orders.map((order, index) => (
-                    <Row key={index} order={order} handleStatusChange={handleStatusChange} />
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="9">No orders found</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+          <div className="ocard-orders-list">
+            <div className="ocard-row header-row">
+              <div className="ocard-cell">Order ID</div>
+              <div className="ocard-cell">Items</div>
+              <div className="ocard-cell">Total</div>
+              <div className="ocard-cell">Payment Status</div>
+              <div className="ocard-cell">Status</div>
+              <div className="ocard-cell">Shipping Info</div>
+            </div>
+            {orders.length > 0 ? (
+              orders.map((order, index) => (
+                <OrderRow key={index} order={order} handleStatusChange={handleStatusChange} />
+              ))
+            ) : (
+              <div className="ocard-row no-orders">
+                <div className="ocard-cell" colSpan="6">No orders found</div>
+              </div>
+            )}
+          </div>
+
+          {/* Pagination Controls */}
+          <div className="ocard-pagination-controls">
+            <button onClick={handlePrevPage} disabled={currPage === 0} className="ocard-pagination-btn">
+              Previous
+            </button>
+            <button onClick={handleNextPage} disabled={currPage + 1 >= totalPages} className="ocard-pagination-btn">
+              Next
+            </button>
           </div>
         </div>
       </main>

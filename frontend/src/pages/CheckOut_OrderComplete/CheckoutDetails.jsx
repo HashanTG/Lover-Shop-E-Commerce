@@ -14,7 +14,7 @@ const CheckoutDetails = () => {
   //Navigation
   const navigate = useNavigate();
   //Context API
-  const { cartItems } = useContext(CartContext);
+  const { cartItems,removeFromCart } = useContext(CartContext);
   const { userDetail } = useUserDetail();
   //Loading States
   const [loading, setLoading] = useState(false);
@@ -122,6 +122,10 @@ const CheckoutDetails = () => {
         payment,
         reciever
       );
+
+      for (const item of cartItems) {
+        await removeFromCart(item.productId, item.variation);
+      }
       navigate("/order-complete", { state: { orderData } });
     } catch (error) {
       console.error("Order placement failed:", error);

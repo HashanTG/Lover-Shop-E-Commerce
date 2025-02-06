@@ -20,11 +20,11 @@ export const fetchCartData = async () => {
 };
 
 //Add item to cart
-export const addToCartApi = async (productId, quantity) => {
+export const addToCartApi = async (productId, quantity,variation) => {
   try {
     const response = await axios.post(
       `${API_URL}/add`, // Direct API_URL
-      { productId, quantity },
+      { productId, quantity,variation },
       { withCredentials: true } // Include credentials (cookies) in the request
     );
 
@@ -36,12 +36,17 @@ export const addToCartApi = async (productId, quantity) => {
     );
   }
 };
-
-export const removeFromCartApi = async (productId) => {
+export const removeFromCartApi = async (productId, variation) => {
   try {
     const response = await axios.delete(
-      `${API_URL}/remove?productId=${productId}`,
-      { withCredentials: true }
+      `${API_URL}/remove`, 
+      {
+        withCredentials: true,
+        data: {
+          productId: productId,
+          variation: variation
+        }
+      }
     );
     return response.data;
   } catch (error) {
@@ -51,3 +56,4 @@ export const removeFromCartApi = async (productId) => {
     );
   }
 };
+

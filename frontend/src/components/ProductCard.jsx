@@ -34,17 +34,27 @@ const ProductCard = ({ product }) => {
     if (!isAuthenticated) {
       return showAlert("Please login to add items to Cart");
     }
-
-    setIsLoadingCart(true)
-    const response  =await addToCart(product.id, 1);
+  
+    setIsLoadingCart(true);
+  
+    // Get the first variation if it exists, otherwise use an empty object
+    const variation = product.variations.length > 0 ? 
+      { [product.variations[0].type]: product.variations[0].options[0].value } : 
+      {}; // Default to empty object if no variations
+  
+    // Call the addToCart function
+    const response = await addToCart(product.id, 1, variation);
+    
     setIsLoadingCart(false);
+    
     if (response.success) {
-      showAlert("Item Added To Cart")
+      showAlert("Item Added To Cart");
       console.log("Item added to Cart:");
     } else {
       showAlert("Failed to add item to Cart.");
     }
   };
+  
 
   return (
     <div className="product-card">

@@ -32,7 +32,7 @@ function NewArrivals() {
       <Spinner size="32px" color="#721c24" />
     </div>
   ) : (
-    <div className="product-grid">
+    <div className="product-grid-newArrive">
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}

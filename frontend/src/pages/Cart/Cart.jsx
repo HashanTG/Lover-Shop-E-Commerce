@@ -18,6 +18,9 @@ const Cart = () => {
   //Navigate Object
   const navigate = useNavigate();
 
+  //Loading States for removing 
+  const [removingItemId, setRemovingItemId] = useState(null);
+
 
   // Effect to update local state when cartItems from CartContext change
   useEffect(() => {
@@ -52,7 +55,7 @@ const Cart = () => {
   
 //Handling the Quantity Change
 // Handling Quantity Change with API Call and Loading State
-const handleQuantityChange = async (productId, delta) => {
+const handleQuantityChange = async (productId, delta,variation) => {
   setCart((prevCart) => {
     const updatedItems = prevCart.items.map((item) =>
       item.productId === productId
@@ -63,7 +66,7 @@ const handleQuantityChange = async (productId, delta) => {
   });
 
   try {
-    await addToCart(productId, delta);
+    await addToCart(productId, delta,variation);
   } catch (error) {
     console.error("Failed to update cart:", error);
     showAlert("Failed to update item quantity.");
@@ -81,12 +84,12 @@ const handleQuantityChange = async (productId, delta) => {
 };
 
 
-
-
   //Removing a Item from a Cart
-  const handleRemoveItem = async (productId) => {
+  const handleRemoveItem = async (removeKey,productId,variation) => {
+
+    setRemovingItemId(removeKey);
     try {
-      const result = await removeFromCart(productId); //Use Context function to remove
+      const result = await removeFromCart(productId,variation); //Use Context function to remove
       if (result.success) {
         showAlert("Item Removed Successfully");
       }
@@ -94,11 +97,20 @@ const handleQuantityChange = async (productId, delta) => {
       console.error("Failed to remove item from cart", error);
       showAlert("An error occurred while removing the item from the cart.");
     }
+    finally{
+      setRemovingItemId(null);
+    }
   };
 
   //Proceed to Payment Step
 
   const proceedToPay = () => {
+    
+    if(cart.items.length == 0 ){
+      showAlert("No Items In the Cart");
+      return;
+    }
+
     const fee = {
       shipping: shipping,
       subtotal: subtotal,
@@ -109,6 +121,7 @@ const handleQuantityChange = async (productId, delta) => {
     // Navigate to the checkout page
     navigate("/checkout");
   };
+
 
   return (
     <div className="cart-container">
@@ -122,61 +135,92 @@ const handleQuantityChange = async (productId, delta) => {
           <div className="cart-item">
             <div className="grid-headings">Product</div>
             <div className="grid-headings">Quantity</div>
-            <div className="grid-headings">Price</div>
+            <div className="grid-headings">Unit Price</div>
             <div className="grid-headings">Sub Total</div>
           </div>
-          {cart.items.map((item) => (
-            <div className="cart-item" key={item.productId}>
-              <div className="cart-item-info">
-                <img
-                  src={item.productDetails.images[0]}
-                  alt={item.productDetails.name}
-                  className="cart-item-image"
-                />
-                <div className="cart-item-details">
-                  <h4>{item.productDetails.name}</h4>
-                  <p>Category: {item.productDetails.category}</p>
-                  <p>
-                    Color: {item.productDetails.variations[0]?.options[0].value}
-                  </p>
-                  <button
-                    className="remove-btn"
-                    onClick={() => handleRemoveItem(item.productId)}
-                  >
-                    Remove
-                  </button>
-                </div>
-              </div>
+          {cart.items.length > 0 ? (
+  cart.items.map((item,index) => {
 
-              <div className="cart-item-actions">
-              <div className="cart-item-quantity">
-  <button
-    className="quantity-btn"
-    onClick={() => handleQuantityChange(item.productId, -1)}
-    disabled={item.loading} // Disable button when loading
-  >
-    {item.loading ? <Spinner size="14px" />  : "-"}
-  </button>
-  <span>{item.quantity}</span>
-  <button
-    className="quantity-btn"
-    onClick={() => handleQuantityChange(item.productId, 1)}
-    disabled={item.loading} // Disable button when loading
-  >
-    {item.loading ? <Spinner size="14px" />  : "+"}
-  </button>
-</div>
-              </div>
 
-              <div className="cart-item-price">
-                Rs. {item.productDetails.price.toFixed(2)}
-              </div>
+    return (
+      <div className="cart-item" key={index}>
+        {/* Item Info */}
+        <div className="cart-item-info">
+          <img
+            src={item.productDetails.images[0]}
+            alt={item.productDetails.name}
+            className="cart-item-image"
+          />
+          <div className="cart-item-details">
+            <h4>{item.productDetails.name}</h4>
+            <p>Category: {item.productDetails.category}</p>
+            <p>
+  Variation:{" "}
+  {item.variation && Object.keys(item.variation).length > 0 
+    ? Object.entries(item.variation)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join(', ')
+    : 'N/A'}
+</p>
+            <button
+              className="remove-btn"
+              onClick={() => handleRemoveItem(index,item.productId, item.variation)}
+              disabled={removingItemId === index} 
+            >
+              {removingItemId === index ? (
+                <Spinner size="14px" />
+              ) : (
+                "Remove"
+              )}
+            </button>
+          </div>
+        </div>
 
-              <div className="cart-item-price">
-                Rs. {(item.productDetails.price * item.quantity).toFixed(2)}
-              </div>
-            </div>
-          ))}
+        {/* Quantity Actions */}
+        <div className="cart-item-actions">
+          <div className="cart-item-quantity">
+            <button
+              className="quantity-btn"
+              onClick={() => handleQuantityChange(item.productId, -1, item.variation)}
+              disabled={item.loading || item.quantity === 1}
+            >
+              {item.loading && item.changeType === -1 ? (
+                <Spinner size="14px" />
+              ) : (
+                "-"
+              )}
+            </button>
+            <span>{item.quantity}</span>
+            <button
+              className="quantity-btn"
+              onClick={() => handleQuantityChange(item.productId, 1, item.variation)}
+              disabled={item.loading}
+            >
+              {item.loading && item.changeType === 1 ? (
+                <Spinner size="14px" />
+              ) : (
+                "+"
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Item Price */}
+        <div className="cart-item-price">
+          <span>Unit Price: Rs. {item.productDetails.price.toFixed(2)}</span>
+        </div>
+        <div className="cart-item-price">
+          <span>
+            Total: Rs. {(item.productDetails.price * item.quantity).toFixed(2)}
+          </span>
+        </div>
+      </div>
+    );
+  })
+) : (
+  <p className="empty-cart-message">No items in the cart.</p>
+)}
+
         </div>
 
         {/* Cart Summary */}
@@ -184,7 +228,7 @@ const handleQuantityChange = async (productId, delta) => {
           <h3>Cart summary</h3>
           <div className="shipping-options">
             <label>
-              <span>
+              <span className="shipping-options-inside">
                 <input
                   type="radio"
                   name="shipping"
@@ -192,7 +236,7 @@ const handleQuantityChange = async (productId, delta) => {
                   onChange={() => handleShippingChange(0)}
                   className="shipping-radio"
                 />
-                <span>Free shipping</span>
+                <span >Free shipping</span>
               </span>
               <span className="price">Rs. 0.00</span>
             </label>

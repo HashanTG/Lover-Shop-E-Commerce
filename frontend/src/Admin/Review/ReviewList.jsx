@@ -1,43 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { getAllReviews,replyReview } from '../../api/reviewService';
-import axios from 'axios';
-import './ReviewList.css'; // Import the CSS file
+import { getAllReviews, replyReview } from '../../api/reviewService';
+import './ReviewList.css'; 
 
 const ReviewsList = () => {
   const [reviews, setReviews] = useState([]);
+  const [currPage, setCurrPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [editingReplyId, setEditingReplyId] = useState(null);
   const [replyText, setReplyText] = useState('');
 
-  // Fetch reviews from your backend API when the component mounts
+  // Fetch reviews with pagination
+  const fetchReviews = async (page = 0, size = 5) => {
+    try {
+      const response = await getAllReviews(page, size);
+      setReviews(response.content);
+      setCurrPage(response.pageable.pageNumber);
+      setTotalPages(response.totalPages);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    }
+  };
+
   useEffect(() => {
-    getAllReviews()
-      .then(response => {
-        setReviews(response.data);
-      })
-      .catch(error => console.error('Error fetching reviews:', error));
+    fetchReviews(); // Initial fetch for the first page
   }, []);
 
-  // Handler to initialize replying or editing for a review
   const handleEditReply = (review) => {
     setEditingReplyId(review.id);
-    setReplyText(review.adminReply || ''); // Pre-fill the text if already replied
+    setReplyText(review.adminReply || '');
   };
 
-  // Handler for saving the reply
   const handleSaveReply = (reviewId) => {
     replyReview(reviewId, replyText)
-    .then(response => {
-      // Update the review in the list with the new reply
-      setReviews(reviews.map(review => 
-        review.id === reviewId ? response : review
-      ));
-      setEditingReplyId(null);
-      setReplyText('');
-    })
-    .catch(error => console.error('Error saving reply:', error));
+      .then((response) => {
+        setReviews((prevReviews) =>
+          prevReviews.map((review) => (review.id === reviewId ? response : review))
+        );
+        setEditingReplyId(null);
+        setReplyText('');
+      })
+      .catch((error) => console.error('Error saving reply:', error));
   };
 
-  // Cancel the reply editing
   const handleCancel = () => {
     setEditingReplyId(null);
     setReplyText('');
@@ -50,17 +54,17 @@ const ReviewsList = () => {
       {reviews.length === 0 ? (
         <p className="no-reviews">No reviews found</p>
       ) : (
-        reviews.map(review => (
+        reviews.map((review) => (
           <div key={review.id} className="review-tab">
             <div className="review-header">
               <span className="review-product">Product: {review.productId}</span>
               <span className="review-rating">Rating: {review.rating} / 5</span>
             </div>
             <div className="review-details">
-              <p><span className="label">User:</span> {review.userId}</p>
+              <p><span className="label">User:</span> {review.userId || 'Anonymous'}</p>
               <p><span className="label">Comment:</span> {review.comment}</p>
               <p>
-                <span className="label">Created At:</span> {new Date(review.createdAt).toLocaleString()}
+                <span className="label">Created At:</span> {review.createdAt ? new Date(review.createdAt).toLocaleString() : 'N/A'}
               </p>
               <p>
                 <span className="label">Status:</span> {review.adminReply ? 'Replied' : 'Not Replied'}
@@ -96,6 +100,25 @@ const ReviewsList = () => {
           </div>
         ))
       )}
+
+      {/* Pagination Controls */}
+      <div className="pagination">
+        <button
+          disabled={currPage === 0}
+          onClick={() => fetchReviews(currPage - 1)}
+        >
+          Previous
+        </button>
+        <span>
+          Page {currPage + 1} of {totalPages}
+        </span>
+        <button
+          disabled={currPage + 1 >= totalPages}
+          onClick={() => fetchReviews(currPage + 1)}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

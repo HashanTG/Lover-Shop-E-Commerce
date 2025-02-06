@@ -78,15 +78,32 @@ const ProductDetail = () => {
     }
   }, [wishlistItems, productId]);
 
-  // Update cart status when cartItems or productId change
+  // Update cart status when cartItems, productId, or selectedVariations change
   useEffect(() => {
     if (productId) {
       const cartStatus = cartItems.some(
-        (item) => item.productId === productId
+        (item) =>
+          item.productId === productId &&
+          deepEqual(item.variation || {}, selectedVariations || {})
       );
       setIsInCart(cartStatus);
     }
-  }, [cartItems, productId]);
+  }, [cartItems, productId, selectedVariations]);
+
+  const deepEqual = (obj1 = {}, obj2 = {}) => {
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+
+    if (keys1.length !== keys2.length) return false;
+
+    for (const key of keys1) {
+      if (obj1[key] !== obj2[key]) {
+        return false;
+      }
+    }
+
+    return true;
+  };
 
   //
   useEffect(() => {
@@ -142,6 +159,9 @@ const ProductDetail = () => {
 
   // Add item to cart
   const handleAddToCart = async () => {
+    // console.log(selectedVariations)
+
+    // return
     // Showing Alert If not Authenticated
     if (!isAuthenticated) {
       showAlert("Please log in to add items to the cart.");
@@ -151,7 +171,7 @@ const ProductDetail = () => {
     if (isInCart) {
       setIsCartLoading(true); // Start loading
       try {
-        const response = await removeFromCart(productId);
+        const response = await removeFromCart(productId, selectedVariations);
         if (response.success) {
           showAlert("Item removed from cart");
           setIsInCart(false); // Update state to reflect removal
@@ -169,7 +189,7 @@ const ProductDetail = () => {
 
     setIsCartLoading(true); // Start loading
     try {
-      const result = await addToCart(productId, quantity); // Use the quantity state
+      const result = await addToCart(productId, quantity, selectedVariations); // Use the quantity state
 
       if (result.success) {
         showAlert("Item added to cart successfully");
@@ -221,7 +241,7 @@ const ProductDetail = () => {
 
   const handleWishlist = async () => {
     try {
-      if(!isAuthenticated){
+      if (!isAuthenticated) {
         showAlert("Please log in to add items to the wishlist.");
         return;
       }
