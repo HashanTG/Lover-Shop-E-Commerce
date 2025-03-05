@@ -1,12 +1,26 @@
 .auth_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: rgb(225,175,209);
+  background: linear-gradient(0deg, rgb(237, 164, 213) 0%, rgba(147,207,205,1) 53%, rgba(225,175,209,1) 100%);
+  font-family: "Arial", sans-serif;
+}
+
+  .auth_form{
+    place-self: center;
+    width: max(23vw,330px);
+    color: #808080;
+    background-color: white;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: rgb(225,175,209);
-    background: linear-gradient(0deg, rgb(237, 164, 213) 0%, rgba(147,207,205,1) 53%, rgba(225,175,209,1) 100%);
-    font-family: "Arial", sans-serif;
+    flex-direction: column;
+    gap: 25px;
+    padding: 25px 30px;
+    border-radius: 8px;
+    font-size: 14px;
+    animation: fadeIn 3s;
   }
 
   .auth_right{
