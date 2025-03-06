@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Spinner from "../../components/Spinner/Spinner";
 import { useUserDetail } from "../../context/UserDetailContext";
+import "./addresses.css"
 
 const Addresses = () => {
   const { userDetail, updateUserDetail } = useUserDetail();
