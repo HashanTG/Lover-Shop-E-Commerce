@@ -14,15 +14,16 @@ const Orders = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
+  const fetchOrders = async () => {
+    try {
+      const response = await getOrder();
+      setOrders(response.content || []);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
+  
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await getOrder();
-        setOrders(response.content || []);
-      } catch (error) {
-        console.error("Error fetching orders:", error);
-      }
-    };
     fetchOrders();
   }, []);
 
@@ -46,6 +47,7 @@ const Orders = () => {
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedOrder(null);
+    fetchOrders(); // Fetch updated orders after modal closes
   };
 
   return (
@@ -84,9 +86,10 @@ const Orders = () => {
         </tbody>
       </table>
 
+
       {showModal && (
-        <OrderModal order={selectedOrder} onClose={handleCloseModal} />
-      )}
+  <OrderModal order={selectedOrder} onClose={handleCloseModal} refreshOrders={fetchOrders} />
+)}
 
       {/* Pagination */}
       <div className="pagination">
