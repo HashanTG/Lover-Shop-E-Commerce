@@ -9,6 +9,9 @@ import { useNavigate } from "react-router-dom";
 
 const Header = () => {
 
+  const [menu, setMenu] = useState("home");
+
+
   const [profileMenuVisible, setProfileMenuVisible] = useState(false);
 
   const navigate = useNavigate();
@@ -54,9 +57,9 @@ const Header = () => {
       </div>
       <nav className="nav">
         <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/products">Product</Link></li>
-          <li><Link to="/contactus">Contact US</Link></li>
+          <li><Link to="/" onClick={()=> setMenu("home")} className={menu== "home"?"active":""}>Home</Link></li>
+          <li><Link to="/products" onClick={()=> setMenu("products")} className={menu== "products"?"active":""} >Product</Link></li>
+          <li><Link to="/contactus" onClick={()=> setMenu("contactus")} className={menu== "contactus"?"active":""}>Contact US</Link></li>
         </ul>
       </nav>
       <div className="icons">
