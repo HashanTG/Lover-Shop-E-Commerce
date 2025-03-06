@@ -4,16 +4,17 @@
     position: relative;
     align-items: center;
     justify-content: center;
-    background-color:var(--primary-color); /* Background color */
-   
-  
-    cursor: pointer; /* Indicates clickable behavior */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Adds hover effects */
+    background-color:#f9f7fe; 
+    cursor: pointer; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
   }
+
   
   /* Hover effect for cart-indicator */
   .cart-indicator:hover {
-    transform: scale(1.05); /* Slight zoom effect */
+    transform: scale(1.05);
+    color: #e35a97;
+    background-color: #f9f0f5; 
 
   }
   
