@@ -7,33 +7,35 @@ const OrderComplete = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Retrieve order data from navigation state or local storage
+  // Retrieve order data from navigation state or session storage
   const [orderData, setOrderData] = useState(
     location.state?.orderData || JSON.parse(sessionStorage.getItem("orderData"))
   );
 
-  // Save to local storage if coming from navigate (to persist on refresh)
+  // Save order data to session storage if it's coming from navigation state
   useEffect(() => {
     if (location.state?.orderData) {
       sessionStorage.setItem("orderData", JSON.stringify(location.state.orderData));
     }
   }, [location.state]);
 
-  // Redirect if no order data found
+  // Redirect to cart if no order data is found
   useEffect(() => {
     if (!orderData) {
-      navigate("/cart"); // Redirect back to cart if no order data available
+      navigate("/cart");
     }
   }, [orderData, navigate]);
 
-  if (!orderData) return null; // Prevent rendering if no order data
+  if (!orderData) return null; // Prevent rendering if order data is missing
 
   return (
     <div className="order-complete-wrapper">
       <OrderProgress step={3} />
       <div className="order-card">
         <div className="order-header">
-          <h2>Thank you, {orderData.recieveDetail.recieverFirstName}! 🎉</h2>
+          <h2>
+            Thank you, {orderData.receiveDetail?.receiverFirstName || "Valued Customer"}! 🎉
+          </h2>
           <h3>Your order has been received</h3>
         </div>
 
@@ -53,22 +55,29 @@ const OrderComplete = () => {
           <div className="detail-row">
             <span className="label">Payment method:</span>
             <span className="value">
-              {orderData.paymentDetails.paymentMethod === "cod" ? "Cash on Delivery" : "Credit Card"}
+              {orderData.paymentDetails.paymentMethod === "cod"
+                ? "Cash on Delivery"
+                : "Credit Card"}
             </span>
           </div>
-          {orderData.paymentDetails.paymentMethod === "credit_card" && (
-            <div className="detail-row">
-              <span className="label">Card Last 4 Digits:</span>
-              <span className="value">**** **** **** {orderData.paymentDetails.cardLast4Digits}</span>
-            </div>
-          )}
+          {orderData.paymentDetails.paymentMethod === "credit_card" &&
+            orderData.paymentDetails.cardLast4Digits && (
+              <div className="detail-row">
+                <span className="label">Card Last 4 Digits:</span>
+                <span className="value">
+                  **** **** **** {orderData.paymentDetails.cardLast4Digits}
+                </span>
+              </div>
+            )}
         </div>
 
         <div className="shipping-info">
           <h3>Shipping Information</h3>
           <div className="detail-row">
             <span className="label">Address:</span>
-            <span className="value">{orderData.shippingAddress.address}, {orderData.shippingAddress.city}</span>
+            <span className="value">
+              {orderData.shippingAddress.address}, {orderData.shippingAddress.city}
+            </span>
           </div>
           <div className="detail-row">
             <span className="label">Country:</span>

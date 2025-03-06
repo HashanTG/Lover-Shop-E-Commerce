@@ -53,9 +53,9 @@ class Address {
 
 @Data
 class PaymentDetails {
-    private String paymentMethod; // "credit_card" or "cod"
-    private String cardLast4Digits; // Last 4 digits of the card (if applicable)
-    private String cardExpiry; // Optional: "MM/YY"
+    private String paymentIntentId ;
+    private String paymentMethod    ;
+    private String paymentMethodId; 
 }
 
 @Data
