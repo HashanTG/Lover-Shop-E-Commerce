@@ -17,7 +17,7 @@ const ProductRow = ({ product, onDelete, onEdit }) => {
         {product.stock < 5 ? <span className="low-stock">Low Stock</span> : product.stock}
       </div>
       <div className="action-buttons">
-        <button className="edit-button" onClick={() => onEdit(product)}>✏️</button>
+        <button className="edit-button-product" onClick={() => onEdit(product)}>✏️</button>
         <button className="delete-button" onClick={() => onDelete(product.id)}>🗑️</button>
       </div>
     </div>
