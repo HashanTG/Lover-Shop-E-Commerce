@@ -6,6 +6,8 @@
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: hidden;
+    
+    background: #E1AFD1;;
   }
   
   .footer::before {
@@ -40,7 +42,7 @@
   .brand h2 {
     font-size: 32px;
     margin: 0;
-    background: linear-gradient(90deg, #fff, #f1c40f);
+    background: linear-gradient(90deg, #fff, #e90ff1);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -109,7 +111,7 @@
     bottom: -8px;
     width: 40px;
     height: 3px;
-    background: #f1c40f;
+    background:#e90ff1;
     border-radius: 3px;
   }
   
@@ -144,12 +146,12 @@
     height: 1px;
     bottom: -2px;
     left: 0;
-    background-color: #f1c40f;
+    background-color: #e90ff1;
     transition: width 0.3s;
   }
   
   .footer_links a:hover {
-    color: #f1c40f;
+    color: #e90ff1;
   }
   
   .footer_links a:hover::after {

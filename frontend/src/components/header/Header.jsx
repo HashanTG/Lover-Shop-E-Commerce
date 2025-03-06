@@ -83,7 +83,7 @@ const Header = () => {
                   <hr />
                   <ul>
                     <li><Link to="/account">Account</Link></li>
-                    <li><a href="#help-center">Help Center</a></li>
+                    <li><a href="/support_Page">Help Center</a></li>
                   </ul>
                 </>
               ) : (

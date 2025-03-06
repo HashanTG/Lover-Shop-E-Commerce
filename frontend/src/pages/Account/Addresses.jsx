@@ -159,7 +159,8 @@ const Addresses = () => {
                   <p>{address.city || "Not set"}, {address.state || "Not set"}, {address.zipCode || "Not set"}</p>
                   <p>{address.country || "Not set"}</p>
                   <p>{address.phone || "Not set"}</p>
-                  <p className="primary-text">{address.primary ? "Primary Address" : ""}</p>
+                  <p className="primary-text">{address.primary ? "Primary Address" : ""}</p> <br />
+                  
                   <button onClick={() => handleEditClick(index, address)} className="edit-btn">Edit</button>
                   <button onClick={() => handleRemove(index)} className="remove-btn">Remove</button>
                   {!address.primary && (
