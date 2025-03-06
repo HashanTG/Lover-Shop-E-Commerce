@@ -141,7 +141,7 @@ const AuthPage = () => {
                 onClick={toggleAuthMode}
                 className="auth-link"
               >
-                Sign in
+                Sign In
               </button>
             </p>
 
@@ -179,7 +179,7 @@ const AuthPage = () => {
               {isLoading ? (
                 <Spinner size="14px" /> 
               ) : (
-                "Sign In"
+                "Sign Up"
               )}
             </button>
             <button
