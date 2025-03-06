@@ -1,26 +1,240 @@
 .orders-container {
-  padding: 20px;
+  max-width: 1200px;
+  width: 100%;
+  padding: 2rem;
+  background-color: #e2e0e0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  margin: 0 auto;
+}
+
+.orders-container h2 {
+  font-family: 'Poppins', sans-serif;
+  color: #121212;
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 1.8rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 2px solid #E1AFD1;
+  position: relative;
+}
+
+.orders-container h2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 60px;
+  height: 2px;
+  background-color: #7469B6;
 }
 
 .order-table {
   width: 100%;
   border-collapse: collapse;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
 }
 
-.order-table th, .order-table td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: center;
+.order-table thead {
+  background-color: #7469B6;
 }
 
 .order-table th {
-  background-color: #f4f4f4;
+  padding: 15px;
+  text-align: left;
+  color: white;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
+.order-table tbody tr {
+  border-bottom: 1px solid #e1e1e1;
+  transition: all 0.2s ease;
+}
+
+.order-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.order-table tbody tr:hover {
+  background-color: rgba(225, 175, 209, 0.1);
+}
+
+.order-table td {
+  padding: 15px;
+  font-family: 'Inter', sans-serif;
+  color: #333;
+  font-size: 15px;
+}
+
+.order-table td.order_id {
+  font-weight: 600;
+  color: #7469B6;
+}
+
+
+
+.order-table button {
+  padding: 8px 16px;
+  background-color: #7469B6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.order-table button:hover {
+  background-color: #847CB1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Pagination styles */
 .pagination {
-  margin-top: 20px;
   display: flex;
   justify-content: center;
-  gap: 10px;
+  align-items: center;
+  margin-top: 1.5rem;
+  gap: 20px;
 }
 
+.pagination button {
+  padding: 10px 20px;
+  background-color: #7469B6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #847CB1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.pagination button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+
+/* Status-based styling */
+.order-table td:nth-child(3) {
+  font-weight: 600;
+}
+
+.order-table tr:has(td:nth-child(3):contains("DELIVERED")) td:nth-child(3) {
+  color: #28a745;
+}
+
+.order-table tr:has(td:nth-child(3):contains("PENDING")) td:nth-child(3) {
+  color: #ffc107;
+}
+
+.order-table tr:has(td:nth-child(3):contains("CONFIRMED")) td:nth-child(3) {
+  color: #17a2b8;
+}
+
+.order-table tr:has(td:nth-child(3):contains("CANCELLED")) td:nth-child(3) {
+  color: #dc3545;
+}
+
+/* Empty state */
+.no-orders {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px dashed #ccc;
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .orders-container {
+    padding: 1.8rem;
+  }
+  .orders-container h2 {
+    font-size: 24px;
+    margin-bottom: 1.5rem;
+  }
+  .order-table th, .order-table td {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .orders-container {
+    padding: 1.5rem;
+  }
+  .orders-container h2 {
+    font-size: 22px;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.6rem;
+  }
+  .order-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .order-table th, .order-table td {
+    padding: 10px;
+    font-size: 14px;
+  }
+  .pagination {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .orders-container {
+    padding: 1.2rem;
+  }
+  .orders-container h2 {
+    font-size: 20px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+  }
+  .order-table th, .order-table td {
+    padding: 8px;
+    font-size: 13px;
+  }
+  .order-table button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  .pagination button {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+  .pagination span {
+    font-size: 13px;
+  }
+}
