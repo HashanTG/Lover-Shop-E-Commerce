@@ -46,7 +46,7 @@
 }
 
 .order-modal h3 {
-  color: #3498db;
+  color: #7469B6;
   margin: 25px 0 0 0;
   font-size: 18px;
   text-align: left;
@@ -60,7 +60,7 @@
   display: inline-block;
   width: 6px;
   height: 18px;
-  background: #3498db;
+  background: #7469B6;
   margin-right: 10px;
   border-radius: 3px;
 }
@@ -127,7 +127,7 @@
   top: 0;
   height: 100%;
   width: 4px;
-  background: #3498db;
+  background:#7469B6;
   border-radius: 2px;
 }
 
@@ -174,7 +174,7 @@ strong {
 }
 
 .ok-btn {
-  background-color: #3498db;
+  background-color:#7469B6;
   color: white;
   border: none;
   padding: 12px 25px;
@@ -191,7 +191,7 @@ strong {
 }
 
 .ok-btn:hover {
-  background-color: #2980b9;
+  background-color:#6055a0;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(52, 152, 219, 0.3);
 }
@@ -219,7 +219,7 @@ strong {
   left: 0;
   width: 100%;
   height: 3px;
-  background: linear-gradient(to right, #3498db, #2ecc71);
+  background: linear-gradient(to right,#7469B6, #2ecc71);
   border-radius: 0 0 12px 12px;
   transform: scaleX(0);
   transform-origin: left;
@@ -285,7 +285,7 @@ strong {
 
 .order-modal textarea:focus {
   outline: none;
-  border-color: #3498db;
+  border-color: #7469B6;
   box-shadow: 0 0 0 3px rgba(52, 152, this, 0.1);
 }
 

@@ -3,6 +3,8 @@
   margin: 0 auto;
   margin-top: 2px;
   padding: 2rem;
+  background-color: #f0f0f0;
+  border-radius: 10px;
 }
 
 .wishlist h2 {
@@ -102,7 +104,7 @@
 }
 
 .add-to-bag {
-  background: #ec1fd7;
+  background:#7469B6;
   color: white;
   border: none;
   border-radius: 4px;
@@ -118,7 +120,7 @@
 }
 
 .add-to-bag:hover {
-  background: #d01ac0;
+  background:#5b528f;
   transform: translateY(-1px);
 }
 
