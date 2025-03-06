@@ -17,7 +17,7 @@ public interface ReviewRepository extends MongoRepository<Review, String> {
 
     Optional<Review> findById(String id); // Optional, useful for findById
 
-    boolean existsByUserIdAndProductId(String userId, String productId);
+    boolean existsByUserIdAndProductIdAndOrderId(String userId, String productId, String orderId);
 
 
 }

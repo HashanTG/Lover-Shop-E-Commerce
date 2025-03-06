@@ -287,6 +287,7 @@ const ProductDetail = () => {
           <div className="product-info-section">
             <h1 className="product-title">{product.name}</h1>
             <p className="product-description">{product.description}</p>
+            {product.stock !== null && (<p className="product-stock">In Stock: {product.stock}</p>)}
             <div className="price-section">
               <span className="current-price">Rs {product.price}</span>
               <span className="original-price">Rs {product.previousPrice}</span>

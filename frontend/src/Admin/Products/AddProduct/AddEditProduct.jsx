@@ -26,6 +26,13 @@ const AddEditProduct = ({ editProduct, onClose }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
 
+    // State for new category input visibility
+    const [isNewCategory, setIsNewCategory] = useState(false);
+    const [newCategory, setNewCategory] = useState("");
+
+    //error Message
+    const [errorMessage, setErrorMessage] = useState("");
+
   // Load product details if editing an existing product
   useEffect(() => {
     if (editProduct) {
@@ -69,6 +76,11 @@ const AddEditProduct = ({ editProduct, onClose }) => {
     setNewVariationOptions((prevOptions) => [...prevOptions, { value: "", stock: "" }]);
   };
 
+  const handleRemoveOption = (index) => {
+    const updatedOptions = newVariationOptions.filter((_, i) => i !== index);
+    setNewVariationOptions(updatedOptions);
+  };
+
   const handleOptionChange = (index, field, value) => {
     const updatedOptions = [...newVariationOptions];
     updatedOptions[index][field] = value;
@@ -76,18 +88,37 @@ const AddEditProduct = ({ editProduct, onClose }) => {
   };
 
   const handleAddVariation = () => {
-    if (newVariationType.trim() && newVariationOptions.length > 0) {
+    // Prevent adding empty variation options
+    if (newVariationType.trim() && newVariationOptions.every(option => option.value.trim() && option.stock.trim())) {
       setVariations((prevVariations) => [
         ...prevVariations,
         { type: newVariationType.trim(), options: newVariationOptions },
       ]);
       setNewVariationType("");
       setNewVariationOptions([{ value: "", stock: "" }]);
+      setErrorMessage(""); // Clear any error
+    } else {
+      setErrorMessage("Please fill in all variation options and stock.");
     }
   };
 
   const handleRemoveVariation = (index) => {
     setVariations((prevVariations) => prevVariations.filter((_, i) => i !== index));
+  };
+
+  // Handle category change
+  const handleCategoryChange = (e) => {
+    const { value } = e.target;
+    setProductDetails((prevDetails) => ({
+      ...prevDetails,
+      category: value,
+    }));
+
+    if (value === "Add New") {
+      setIsNewCategory(true); // Show input for new category
+    } else {
+      setIsNewCategory(false); // Hide input if not adding new
+    }
   };
 
   // Handle form submission (add or update product)
@@ -178,15 +209,28 @@ const AddEditProduct = ({ editProduct, onClose }) => {
           <textarea name="description" value={productDetails.description} onChange={handleInputChange} />
         </div>
 
+        {/* Category and Sub Category Section */}
         <div className="form-row">
           <div className="form-group">
             <label>Category</label>
-            <select name="category" value={productDetails.category} onChange={handleInputChange}>
+            <select name="category" value={productDetails.category} onChange={handleCategoryChange}>
               <option value="Gift">Gift</option>
               <option value="Electronics">Electronics</option>
               <option value="Clothing">Clothing</option>
+              <option value="Add New">Add New</option>
             </select>
           </div>
+          {isNewCategory && (
+            <div className="form-group">
+              <label>New Category</label>
+              <input
+                type="text"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                placeholder="Enter new category"
+              />
+            </div>
+          )}
         </div>
 
         <div className="form-row">
@@ -258,12 +302,14 @@ const AddEditProduct = ({ editProduct, onClose }) => {
                 value={option.stock}
                 onChange={(e) => handleOptionChange(index, "stock", e.target.value)}
               />
+              <button type="button" onClick={() => handleRemoveOption(index)}>Remove Option</button>
             </div>
           ))}
           <button type="button" className="add-option-button" onClick={handleAddOption}>
             Add Option
           </button>
-          <button type="button" className="add-variation-button" onClick={handleAddVariation}>
+      {errorMessage && <div className="error">{errorMessage}</div>}
+          <button type="button" onClick={handleAddVariation}>
             Add Variation
           </button>
         </div>

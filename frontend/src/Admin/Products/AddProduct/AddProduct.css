@@ -1,250 +1,243 @@
-/* General Styling */
+/* AddProduct.css - Improved Styling */
+
 .add-product-container {
-  max-width: 800px;
-  margin: 20px auto;
+  min-width: 800px;
+  max-width: 1000px;
+  margin: 0 auto;
   padding: 30px;
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
   background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .add-product-container h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eaeaea;
   text-align: center;
-  margin-bottom: 25px;
-  color: #333;
-  font-size: 28px;
-  font-weight: 600;
 }
 
-.add-product-container h3 {
-  margin-top: 20px;
-  color: #333;
-  font-size: 20px;
-  font-weight: 500;
-}
-
-/* Form Section */
 .form-section {
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .form-section label {
   display: block;
-  font-size: 14px;
-  font-weight: bold;
+  font-weight: 500;
   margin-bottom: 8px;
-  color: #555;
+  color: #444;
 }
 
-.form-section input,
-.form-section textarea,
-.form-section select {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
-  color: #333;
-  transition: border-color 0.3s ease;
-}
-
-.form-section input:focus,
-.form-section textarea:focus,
-.form-section select:focus {
-  outline: none;
-  border-color: #6c63ff;
-}
-
-.form-section textarea {
-  height: 100px;
-  resize: vertical;
-}
-
-/* Form Row Styling */
 .form-row {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
   margin-bottom: 20px;
 }
 
 .form-group {
-  flex: 1;
+  flex: 1 1 200px;
 }
 
-.checkbox-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.checkbox-group label {
+input, textarea, select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
   font-size: 14px;
-  color: #555;
+  transition: border-color 0.3s;
 }
 
-/* Image Upload Section */
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #6b7efe;
+  box-shadow: 0 0 0 3px rgba(107, 126, 254, 0.1);
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Image Upload Styling */
 .image-upload {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
+  margin-top: 10px;
 }
 
 .image-box {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 100px;
-  border: 2px dashed #ccc;
-  border-radius: 10px;
-  position: relative;
+  overflow: hidden;
+  background-color: #f9f9f9;
   cursor: pointer;
-  background-color: #fafafa;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition: all 0.3s;
 }
 
 .image-box:hover {
-  background-color: #f1f1f1;
-  border-color: #6c63ff;
+  border-color: #6b7efe;
 }
 
-.image-box input[type="file"] {
-  display: none;
+.image-box .file-input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
 }
 
-.image-box img.uploaded-image {
+.uploaded-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 10px;
 }
 
 .image-box button {
   position: absolute;
   top: 5px;
   right: 5px;
-  background: #ff4d4d;
-  color: #fff;
-  border: none;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  width: 22px;
-  height: 22px;
-  font-size: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-size: 12px;
+  transition: background 0.3s;
 }
 
 .image-box button:hover {
-  background: #e60000;
+  background: rgba(0, 0, 0, 0.8);
 }
 
-/* Variation Section */
+/* Variation Styling */
 .variation-section {
-  margin-top: 20px;
+  background-color: #f8f9fe;
   padding: 20px;
-  border: 1px solid #e0e0e0;
   border-radius: 8px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 25px;
 }
 
-.variation-section .form-group {
+.variation-section h3 {
+  font-size: 18px;
   margin-bottom: 15px;
+  color: #444;
 }
 
-.variation-section .form-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.add-option-button,
-.add-variation-button {
-  margin-top: 10px;
-  padding: 10px 15px;
-  font-size: 14px;
-  color: #fff;
-  background-color: #6c63ff;
+.add-option-button {
+  background-color: #e6e9ff;
+  color: #4456cc;
   border: none;
-  border-radius: 5px;
+  padding: 8px 15px;
+  border-radius: 6px;
+  margin-right: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 }
 
-.add-option-button:hover,
-.add-variation-button:hover {
-  background-color: #574dcf;
+.add-option-button:hover {
+  background-color: #d8defd;
 }
 
-/* Variation List */
 .variation-list {
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 .variation-item {
-  margin-bottom: 20px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  background-color: #f8f9fe;
   padding: 15px;
-  background-color: #fafafa;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
+  margin-bottom: 15px;
+  position: relative;
 }
 
 .variation-item h4 {
-  margin: 0 0 10px;
+  margin-top: 0;
+  margin-bottom: 10px;
   color: #333;
-  font-size: 18px;
-  font-weight: 500;
 }
 
 .variation-item ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  padding-left: 20px;
+  margin-bottom: 10px;
 }
 
-.variation-item ul li {
-  font-size: 14px;
-  margin: 5px 0;
-  color: #555;
+.variation-item li {
+  margin-bottom: 5px;
 }
 
-.variation-item .edit-button {
-  margin-top: 10px;
-  padding: 5px 10px;
-  font-size: 12px;
-  color: #fff;
-  background-color: #ff4d4d;
+.edit-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: #ff6b6b;
+  color: white;
   border: none;
-  border-radius: 5px;
+  padding: 5px 10px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 }
 
-.variation-item .edit-button:hover {
-  background-color: #e60000;
+.edit-button:hover {
+  background-color: #ff4f4f;
 }
 
-/* Submit Button */
+button {
+  background-color: #6b7efe;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #5468e7;
+}
+
 .add-button {
   display: block;
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   font-size: 16px;
-  font-weight: bold;
-  color: #fff;
-  background-color: #6c63ff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  text-transform: uppercase;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin-top: 25px;
+  background-color: #4456cc;
 }
 
 .add-button:hover {
-  background-color: #574dcf;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  background-color: #3a49b3;
+}
+
+.error {
+  color: #ff4f4f;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .add-product-container {
+    padding: 20px;
+  }
+  
+  .form-group {
+    flex: 1 1 100%;
+  }
 }

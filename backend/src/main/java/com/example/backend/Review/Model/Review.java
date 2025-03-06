@@ -24,6 +24,9 @@ public class Review {
     private String productId; // Links the review to a specific product
 
     @Indexed
+    private String orderId; // Links the review to a specific product
+
+    @Indexed
     private String userId; // Links the review to a specific user
 
     private Integer rating; // Rating out of 5

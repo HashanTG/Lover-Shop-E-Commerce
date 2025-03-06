@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.example.backend.order.ENUMS.OrderStatus;
 import com.example.backend.order.ENUMS.PaymentStatus;
+import com.example.backend.order.Model.OrderItem;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -34,12 +35,7 @@ public class Order {
     private RecieveDetail recieveDetail; // Include reciever details
 }
 
-@Data
-class OrderItem {
-    private String productId;
-    private int quantity;
-    private double price;
-}
+
 
 @Data
 class Address {
@@ -53,9 +49,9 @@ class Address {
 
 @Data
 class PaymentDetails {
-    private String paymentMethod; // "credit_card" or "cod"
-    private String cardLast4Digits; // Last 4 digits of the card (if applicable)
-    private String cardExpiry; // Optional: "MM/YY"
+    private String paymentIntentId ;
+    private String paymentMethod    ;
+    private String paymentMethodId; 
 }
 
 @Data
