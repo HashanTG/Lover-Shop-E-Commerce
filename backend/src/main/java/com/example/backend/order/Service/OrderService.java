@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+
+
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
@@ -44,7 +46,6 @@ public class OrderService {
         order.setCreatedAt(LocalDateTime.now());
         order.setLastUpdatedAt(LocalDateTime.now());
         order.setStatus(OrderStatus.PENDING); // Default status
-        order.setPaymentStatus(PaymentStatus.PENDING); // Default payment status
         return orderRepository.save(order);
     }
 

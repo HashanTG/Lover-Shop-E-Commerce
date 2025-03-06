@@ -10,6 +10,7 @@ const stripePromise = loadStripe('pk_test_51Qz9QKR5S1kTqIU94IEEBgnxwtoGGqL1321lJ
 export const placeOrder = async (cartItems, totalAmount, address, payment, receiver) => {
 
   let paymentIntentId = null;
+  let status  = "PENDING";
 
   // Step 1: Create PaymentIntent (Backend call)
   if (payment.paymentMethod === 'card') {
@@ -34,9 +35,9 @@ export const placeOrder = async (cartItems, totalAmount, address, payment, recei
       if (paymentIntent.status === "succeeded") {
         console.log("Payment successful!");
 
+        status = "PAID";
         // Proceed to create the order now that payment is confirmed
-        const orderResponse = await createOrder(cartItems, totalAmount, address, payment, receiver);
-        console.log(orderResponse);
+        const orderResponse = await createOrder(cartItems, totalAmount, address, payment, receiver,status);
         return orderResponse;  // Order placed successfully
       } else {
         console.log("throwing the error")
@@ -48,20 +49,26 @@ export const placeOrder = async (cartItems, totalAmount, address, payment, recei
       throw error;  // Handle error in UI
     }
   }
+  else {
+    // Proceed to create the order now that payment is confirmed
+    const orderResponse = await createOrder(cartItems, totalAmount, address, payment, receiver,status);
+    return orderResponse;  // Order placed successfully
+  }
 };
 
 // Function to place the order
-const createOrder = async (cartItems, totalAmount, address, payment, receiver) => {
+const createOrder = async (cartItems, totalAmount, address, payment, receiver,status) => {
   const orderPayload = {
     userId: null,  // User ID (dynamically set)
     items: cartItems.map(item => ({
       productId: item.productId,
       quantity: item.quantity,
       price: item.productDetails.price,
+      variation: item.variation,
     })),
     total: totalAmount,
     status: 'PENDING',  // Default order status
-    paymentStatus: 'PAID',  // Set payment status as successful
+    paymentStatus: status,  // Set payment status as successful
     createdAt: new Date().toISOString(),
     lastUpdatedAt: new Date().toISOString(),
     confirmedByUser: false,

@@ -2,6 +2,7 @@ package com.example.backend.order.Controller;
 
 import com.example.backend.order.ENUMS.OrderStatus;
 import com.example.backend.order.Model.Order;
+import com.example.backend.order.Model.OrderItem;
 import com.example.backend.order.Service.OrderService;
 import com.example.backend.Auth.UtilSecurity.SecurityUtil;
 
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.backend.Product.Service.ProductService;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -32,8 +35,10 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class OrderController {
     private final OrderService orderService;
+    private final ProductService productService;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, ProductService productService) {
+        this.productService = productService;
         this.orderService = orderService;
     }
 
@@ -76,13 +81,34 @@ public class OrderController {
 
     // Create A Order
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically from SecurityContext
-        // Attach the userId to the order before saving
+    public ResponseEntity<?> createOrder(@RequestBody Order order) {
+        String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically
         order.setUserId(userId);
+    
+        // Iterate through each product in the order
+        for (OrderItem item : order.getItems()) {
+            String productId = item.getProductId();
+            String variationType = item.getVariationType();
+            String variationValue = item.getVariationValue();
+            int quantity = item.getQuantity();
+            System.out.println("Product ID: " + productId);
+            System.out.println("Variation Type: " + variationType);
+            System.out.println("Variation Value: " + variationValue);
+            System.out.println("Quantity: " + quantity);
+    
+            try {
+                productService.reduceProductStock(productId, variationType, variationValue, quantity);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to reduce stock: " + e.getMessage());
+            }
+        }
+    
+        // Save the order after stock reduction
         Order createdOrder = orderService.createOrder(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
     }
+    
+    
 
     // Get order by Id
     @GetMapping("/{id}")

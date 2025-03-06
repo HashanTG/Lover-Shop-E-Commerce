@@ -89,21 +89,42 @@ public class ProductServiceImpl implements ProductService {
     // Reduce stock for a product variation (optional for inventory management)
     public void reduceProductStock(String productId, String variationType, String variationValue, int quantity) {
         Product product = getProductById(productId);
-        product.getVariations().forEach(variation -> {
-            if (variation.getType().equalsIgnoreCase(variationType)) {
-                variation.getOptions().forEach(option -> {
-                    if (option.getValue().equalsIgnoreCase(variationValue)) {
-                        if (option.getStock() >= quantity) {
-                            option.setStock(option.getStock() - quantity);
-                        } else {
-                            throw new RuntimeException("Insufficient stock for variation: " + variationValue);
+    
+        if (product.getVariations() == null || product.getVariations().isEmpty()) {
+            // If no variations exist, reduce stock directly from product
+            if (product.getStock() >= quantity) {
+                product.setStock(product.getStock() - quantity);
+            } else {
+                throw new RuntimeException("Insufficient stock for product: " + product.getName());
+            }
+        } else {
+            boolean variationFound = false; // Flag to check if variation exists
+    
+            for (Product.Variation variation : product.getVariations()) {
+                if (variation.getType().equalsIgnoreCase(variationType)) {
+                    for (Product.Variation.Option option : variation.getOptions()) {
+                        if (option.getValue().equalsIgnoreCase(variationValue)) {
+                            if (option.getStock() >= quantity) {
+                                option.setStock(option.getStock() - quantity);
+                                variationFound = true;
+                                break; // Stop checking more options
+                            } else {
+                                throw new RuntimeException("Insufficient stock for variation: " + variationValue);
+                            }
                         }
                     }
-                });
+                }
+                if (variationFound) break; // Stop checking other variations once found
             }
-        });
+    
+            if (!variationFound) {
+                throw new RuntimeException("Variation not found: " + variationType + " - " + variationValue);
+            }
+        }
+    
         productRepository.save(product);
     }
+    
     //Get prodcts by a Id List
     @Override
     public List<Product> getProductsByIds(List<String> productIds) {
