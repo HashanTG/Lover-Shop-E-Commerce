@@ -95,7 +95,7 @@ const ReviewsList = () => {
       {isLoading ? (
         <div className="loading-spinner">
           <div className="spinner"></div>
-          <p>Loading</p>
+          
         </div>
       ) : reviews.length === 0 ? (
         <div className="no-reviews">
