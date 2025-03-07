@@ -19,13 +19,69 @@ import { useUserDetail } from "../../context/UserDetailContext";
 import { placeOrder } from "../../api/orderService";
 
 // Initialize Stripe with your publishable key
-const stripePromise = loadStripe("pk_test_51Qz9QKR5S1kTqIU94IEEBgnxwtoGGqL1321lJJPVARjTslkOmTjpJpr5Ex51lPlHUGTxQA3MfwTv8d1gmzUouFKW00OvNxc9sl"); // Replace with your Stripe publishable key
+const stripePromise = loadStripe(
+  "pk_test_51Qz9QKR5S1kTqIU94IEEBgnxwtoGGqL1321lJJPVARjTslkOmTjpJpr5Ex51lPlHUGTxQA3MfwTv8d1gmzUouFKW00OvNxc9sl"
+); // Replace with your Stripe publishable key
 
 const CheckoutDetails = () => {
   const navigate = useNavigate();
   const { cartItems, removeFromCart } = useContext(CartContext);
   const { userDetail } = useUserDetail();
   const [loading, setLoading] = useState(false);
+
+  const [errors, setErrors] = useState({
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    email: "",
+    streetAddress: "",
+    country: "",
+    state: "",
+    city: "",
+    zipCode: "",
+  });
+
+  const validateFirstName = (firstName) => {
+    if (!firstName) return "First name is required";
+    return "";
+  };
+
+  const validateLastName = (lastName) => {
+    if (!lastName) return "Last name is required";
+    return "";
+  };
+
+  const validatePhoneNumber = (phoneNumber) => {
+    if (!phoneNumber) return "Phone number is required";
+    if (!/^\d{10}$/.test(phoneNumber)) return "Phone number is invalid"; // Example: 10 digits
+    return "";
+  };
+
+  const validateStreetAddress = (streetAddress) => {
+    if (!streetAddress) return "Street address is required";
+    return "";
+  };
+
+  const validateCountry = (country) => {
+    if (!country) return "Country is required";
+    return "";
+  };
+
+  const validateState = (state) => {
+    if (!state) return "State is required";
+    return "";
+  };
+
+  const validateCity = (city) => {
+    if (!city) return "City is required";
+    return "";
+  };
+
+  const validateZipCode = (zipCode) => {
+    if (!zipCode) return "Zip code is required";
+    if (!/^\d{5}$/.test(zipCode)) return "Zip code is invalid"; // Example: 5 digits
+    return "";
+  };
 
   // Stripe hooks
   const stripe = useStripe();
@@ -84,6 +140,39 @@ const CheckoutDetails = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Validate and update errors
+    let errorMessage = "";
+    switch (name) {
+      case "firstName":
+        errorMessage = validateFirstName(value);
+        break;
+      case "lastName":
+        errorMessage = validateLastName(value);
+        break;
+      case "phoneNumber":
+        errorMessage = validatePhoneNumber(value);
+        break;
+      case "streetAddress":
+        errorMessage = validateStreetAddress(value);
+        break;
+      case "country":
+        errorMessage = validateCountry(value);
+        break;
+      case "state":
+        errorMessage = validateState(value);
+        break;
+      case "city":
+        errorMessage = validateCity(value);
+        break;
+      case "zipCode":
+        errorMessage = validateZipCode(value);
+        break;
+      default:
+        break;
+    }
+
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMessage }));
   };
 
   // Handle card selection
@@ -98,7 +187,40 @@ const CheckoutDetails = () => {
     e.preventDefault();
     setLoading(true);
 
+    const firstNameError = validateFirstName(formData.firstName);
+    const lastNameError = validateLastName(formData.lastName);
+    const phoneNumberError = validatePhoneNumber(formData.phoneNumber);
+    const streetAddressError = validateStreetAddress(formData.streetAddress);
+    const countryError = validateCountry(formData.country);
+    const stateError = validateState(formData.state);
+    const cityError = validateCity(formData.city);
+    const zipCodeError = validateZipCode(formData.zipCode);
+
     try {
+      setErrors({
+        firstName: firstNameError,
+        lastName: lastNameError,
+        phoneNumber: phoneNumberError,
+        streetAddress: streetAddressError,
+        country: countryError,
+        state: stateError,
+        city: cityError,
+        zipCode: zipCodeError,
+      });
+
+      // If there are errors, stop the submission
+      if (
+        firstNameError ||
+        lastNameError ||
+        phoneNumberError ||
+        streetAddressError ||
+        countryError ||
+        stateError ||
+        cityError ||
+        zipCodeError
+      ) {
+        return;
+      }
       let paymentData;
 
       if (formData.paymentMethod === "credit") {
@@ -121,10 +243,16 @@ const CheckoutDetails = () => {
             return;
           }
 
-          paymentData = { paymentMethodId: paymentMethod.id ,paymentMethod: "card"};
+          paymentData = {
+            paymentMethodId: paymentMethod.id,
+            paymentMethod: "card",
+          };
         } else {
           // Use selected saved card
-          paymentData = { paymentMethodId: selectedCardId,paymentMethod: "card" };
+          paymentData = {
+            paymentMethodId: selectedCardId,
+            paymentMethod: "card",
+          };
         }
       } else {
         paymentData = { paymentMethod: "cod" }; // Cash on Delivery
@@ -184,6 +312,9 @@ const CheckoutDetails = () => {
                   onChange={handleInputChange}
                   required
                 />
+                {errors.firstName && (
+                  <p className="error-message">{errors.firstName}</p>
+                )}
               </div>
               <div className="input-group">
                 <label htmlFor="lastName">Last Name</label>
@@ -195,6 +326,9 @@ const CheckoutDetails = () => {
                   onChange={handleInputChange}
                   required
                 />
+                {errors.lastName && (
+                  <p className="error-message">{errors.lastName}</p>
+                )}
               </div>
             </div>
             <div className="input-group">
@@ -207,6 +341,9 @@ const CheckoutDetails = () => {
                 onChange={handleInputChange}
                 required
               />
+              {errors.phoneNumber && (
+                <p className="error-message">{errors.phoneNumber}</p>
+              )}
             </div>
           </section>
 
@@ -237,6 +374,9 @@ const CheckoutDetails = () => {
                 value={formData.streetAddress || ""}
                 onChange={handleInputChange}
               />
+              {errors.streetAddress && (
+                <p className="error-message">{errors.streetAddress}</p>
+              )}
               <label>Country</label>
               <input
                 type="text"
@@ -244,6 +384,9 @@ const CheckoutDetails = () => {
                 value={formData.country || ""}
                 onChange={handleInputChange}
               />
+              {errors.country && (
+                <p className="error-message">{errors.country}</p>
+              )}
               <label>State</label>
               <input
                 type="text"
@@ -251,6 +394,7 @@ const CheckoutDetails = () => {
                 value={formData.state || ""}
                 onChange={handleInputChange}
               />
+              {errors.state && <p className="error-message">{errors.state}</p>}
               <label>City</label>
               <input
                 type="text"
@@ -258,6 +402,7 @@ const CheckoutDetails = () => {
                 value={formData.city || ""}
                 onChange={handleInputChange}
               />
+              {errors.city && <p className="error-message">{errors.city}</p>}
               <label>Zip Code</label>
               <input
                 type="text"
@@ -265,6 +410,9 @@ const CheckoutDetails = () => {
                 value={formData.zipCode || ""}
                 onChange={handleInputChange}
               />
+              {errors.zipCode && (
+                <p className="error-message">{errors.zipCode}</p>
+              )}
             </div>
           </section>
 
