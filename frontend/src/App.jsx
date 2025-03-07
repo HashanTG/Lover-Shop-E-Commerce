@@ -47,31 +47,80 @@ const App = () => {
                 <AlertProvider>
                   {/* Wrap the entire app in Layout */}
                   <Layout>
-                  <Routes>
-  <Route path="/" element={<Home />} />
-  <Route path="login" element={<AuthPage />} />
-  <Route path="/product/:productId" element={<ProductDetail />} />
-  <Route path="/products" element={<ProductPage />} />
-  <Route path="/contactus" element={<Contact />} />
-  <Route path="/loading" element={<Loading />} />
-  <Route path="/shiping_Policy" element={<ShippingPolicy />} />
-  <Route path="/return_refund" element={<ReturnAndRefund />} />
-  <Route path="/faqS" element={<FAQs />} />
-  <Route path="/support_Page" element={<SupportPage />} />
-  <Route path="/privacy_Policy" element={<PrivacyPolicy />} />
-  <Route path="Terms_condition" element={<TermsCondition />} />
+                    <Routes>
+                      <Route path="/" element={<Home />} />
+                      <Route path="login" element={<AuthPage />} />
+                      <Route
+                        path="/product/:productId"
+                        element={<ProductDetail />}
+                      />
+                      <Route path="/products" element={<ProductPage />} />
+                      <Route path="/contactus" element={<Contact />} />
+                      <Route path="/loading" element={<Loading />} />
+                      <Route
+                        path="/shiping_Policy"
+                        element={<ShippingPolicy />}
+                      />
+                      <Route
+                        path="/return_refund"
+                        element={<ReturnAndRefund />}
+                      />
+                      <Route path="/faqS" element={<FAQs />} />
+                      <Route path="/support_Page" element={<SupportPage />} />
+                      <Route
+                        path="/privacy_Policy"
+                        element={<PrivacyPolicy />}
+                      />
+                      <Route
+                        path="Terms_condition"
+                        element={<TermsCondition />}
+                      />
 
-  {/* Protected Routes */}
-  <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
-  <Route path="/account" element={<ProtectedRoute><AccountPage /></ProtectedRoute>} />
-  <Route path="/checkout" element={<ProtectedRoute><CheckoutDetails /></ProtectedRoute>} />
-  <Route path="/order-complete" element={<ProtectedRoute><OrderComplete /></ProtectedRoute>} />
-  <Route path="/admin" element={<ProtectedRoute><Pannel /></ProtectedRoute>} />
+                      {/* Protected Routes */}
+                      <Route
+                        path="/cart"
+                        element={
+                          <ProtectedRoute>
+                            <Cart />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/account"
+                        element={
+                          <ProtectedRoute>
+                            <AccountPage />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/checkout"
+                        element={
+                          <ProtectedRoute>
+                            <CheckoutDetails />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/order-complete"
+                        element={
+                          <ProtectedRoute>
+                            <OrderComplete />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/admin"
+                        element={
+                          <ProtectedRoute>
+                            <Pannel />
+                          </ProtectedRoute>
+                        }
+                      />
 
-  {/* 404 Route (Should be the last route) */}
-  <Route path="*" element={<NotFound />} />
-</Routes>
-
+                      {/* 404 Route (Should be the last route) */}
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
                   </Layout>
                 </AlertProvider>
               </CartProvider>
