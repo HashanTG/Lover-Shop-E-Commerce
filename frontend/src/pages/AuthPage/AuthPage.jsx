@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { registerUser, loginUser } from "../../api/authService";
-import ModalComponent from "../shared/Model/Model";
+import ModalComponent from "../../components/shared/Model/Model";
 import "./AuthPage.css";
 import { useAuth } from "../../context/AuthContext"; // Import useAuth
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
-import Spinner from "../Spinner/Spinner";
+import Spinner from "../../components/Spinner/Spinner";
 
 const AuthPage = () => {
   const [isSignUp, setIsSignUp] = useState(true);
