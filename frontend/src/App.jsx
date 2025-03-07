@@ -13,7 +13,7 @@ import Layout from "./Layout";
 //Component Import
 
 import Home from "./pages/Home/Home"; // Home page
-import AuthPage from "./pages/AuthPage/AuthPage";
+import AuthPage from "./components/AuthPage/AuthPage";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import Cart from "./pages/Cart/Cart";
 import ProductPage from "./pages/Products/ProductPage";
