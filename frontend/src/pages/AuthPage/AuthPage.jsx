@@ -14,6 +14,13 @@ const AuthPage = () => {
     email: "",
     password: "",
   });
+
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+    terms: "", // For terms and conditions
+  });
+
   const [modal, setModal] = useState({
     isOpen: false,
     title: "",
@@ -44,13 +51,29 @@ const AuthPage = () => {
 
   // Handle input change
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    const inputValue = type === "checkbox" ? checked : value; // Handle checkboxes
+    setFormData((prev) => ({ ...prev, [name]: inputValue }));
+
+    // Validate and update errors
+    let errorMessage = "";
+    if (name === "email") {
+      errorMessage = validateEmail(inputValue);
+    } else if (name === "password") {
+      errorMessage = validatePassword(inputValue);
+    } else if (name === "terms") {
+      errorMessage = validateTerms(checked);
+    }
+
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMessage }));
   };
   // Handle Sign Up
   const handleSignUp = async (e) => {
     setIsLoading(true);
     e.preventDefault();
+    const emailError = validateEmail(formData.email);
+    const passwordError = validatePassword(formData.password);
+    const termsError = validateTerms(formData.terms);
     setModal({ isOpen: false, title: "", message: "", type: "" });
     try {
       const response = await registerUser({
@@ -72,14 +95,27 @@ const AuthPage = () => {
         type: "error",
         onConfirm: null,
       });
+
+      setErrors({
+        email: emailError,
+        password: passwordError,
+        terms: termsError,
+      });
+
+      // If there are errors, stop the submission
+      if (emailError || passwordError || termsError) {
+        return;
+      }
     } finally {
       setIsLoading(false);
     }
   };
-// Handle Sign In
+  // Handle Sign In
   const handleSignIn = async (e) => {
     setIsLoading(true);
     e.preventDefault();
+    const emailError = validateEmail(formData.email);
+    const passwordError = validatePassword(formData.password);
     setModal({ isOpen: false, title: "", message: "", type: "" });
 
     try {
@@ -98,6 +134,15 @@ const AuthPage = () => {
         type: "success",
         onConfirm: () => navigate("/"), // Navigate to home
       });
+
+      setErrors({
+        email: emailError,
+        password: passwordError,
+      });
+
+      if (emailError || passwordError) {
+        return;
+      }
     } catch (err) {
       setFormData({ email: "", password: "" }); // Reset form on error
       setModal({
@@ -111,11 +156,11 @@ const AuthPage = () => {
       setIsLoading(false);
     }
   };
-// Handle Google Login
+  // Handle Google Login
   const handleGoogleLogin = async () => {
     window.location.href = "http://localhost:8080/oauth2/authorization/google";
   };
-// Close the modal
+  // Close the modal
   const closeModal = () => {
     if (modal.onConfirm) modal.onConfirm(); // Trigger onConfirm callback
     setModal({
@@ -127,9 +172,35 @@ const AuthPage = () => {
     });
   };
 
+  const validateEmail = (email) => {
+    if (!email) {
+      return "Email is required";
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      return "Email is invalid";
+    }
+    return "";
+  };
+
+  const validatePassword = (password) => {
+    if (!password) {
+      return "Password is required";
+    }
+    if (password.length < 6) {
+      return "Password must be at least 6 characters";
+    }
+    return "";
+  };
+
+  const validateTerms = (terms) => {
+    if (!terms) {
+      return "You must agree to the terms and conditions";
+    }
+    return "";
+  };
+
   return (
     <div className="auth_container">
-
       <div className="auth_right">
         {isSignUp ? (
           <form className="auth_form" onSubmit={handleSignUp}>
@@ -155,6 +226,7 @@ const AuthPage = () => {
                 placeholder="Enter your email"
                 required
               />
+              {errors.email && <p className="error-message">{errors.email}</p>}
             </div>
             <div className="form_group">
               <label>Password</label>
@@ -166,35 +238,44 @@ const AuthPage = () => {
                 placeholder="Enter your password"
                 required
               />
+              {errors.password && (
+                <p className="error-message">{errors.password}</p>
+              )}
             </div>
             <div className="form_group_terms">
-              <input type="checkbox" id="terms" required />
+              <input
+                type="checkbox"
+                id="terms"
+                name="terms"
+                checked={formData.terms}
+                onChange={handleInputChange}
+                required
+              />
               <label htmlFor="terms">
                 I agree with <a href="/privacy_policy">Privacy Policy</a> and{" "}
                 <a href="/Terms_condition">Terms & Conditions</a>
               </label>
+              {errors.terms && <p className="error-message">{errors.terms}</p>}
             </div>
             <div className="button_container">
-            <button type="submit" className="auth-button" disabled={isLoading}>
-              {isLoading ? (
-                <Spinner size="14px" /> 
-              ) : (
-                "Sign Up"
-              )}
-            </button>
-            <button
-              type="button"
-              className="auth-button"
-              onClick={(e) => {
-                e.preventDefault();
-                handleGoogleLogin();
-              }}
-            >
-              Sign Up Using Google
-            </button>
+              <button
+                type="submit"
+                className="auth-button"
+                disabled={isLoading}
+              >
+                {isLoading ? <Spinner size="14px" /> : "Sign Up"}
+              </button>
+              <button
+                type="button"
+                className="auth-button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleGoogleLogin();
+                }}
+              >
+                Sign Up Using Google
+              </button>
             </div>
-
-
           </form>
         ) : (
           <form className="auth_form" onSubmit={handleSignIn}>
@@ -212,13 +293,14 @@ const AuthPage = () => {
             <div className="form_group">
               <label>Your username or email address</label>
               <input
-                type="text"
+                type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                placeholder="Enter your username or email"
+                placeholder="Enter your email"
                 required
               />
+              {errors.email && <p className="error-message">{errors.email}</p>}
             </div>
             <div className="form_group">
               <label>Password</label>
@@ -230,27 +312,29 @@ const AuthPage = () => {
                 placeholder="Enter your password"
                 required
               />
+              {errors.password && (
+                <p className="error-message">{errors.password}</p>
+              )}
             </div>
             <div className="button_container">
-            <button type="submit" className="auth-button" disabled={isLoading}>
-              {isLoading ? (
-                <Spinner size="14px" /> 
-              ) : (
-                "Sign In"
-              )}
-            </button>
-            <button
-              type="button"
-              className="auth-button"
-              onClick={(e) => {
-                e.preventDefault();
-                handleGoogleLogin();
-              }}
-            >
-              Sign In Using Google
-            </button>
+              <button
+                type="submit"
+                className="auth-button"
+                disabled={isLoading}
+              >
+                {isLoading ? <Spinner size="14px" /> : "Sign In"}
+              </button>
+              <button
+                type="button"
+                className="auth-button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleGoogleLogin();
+                }}
+              >
+                Sign In Using Google
+              </button>
             </div>
-    
           </form>
         )}
       </div>
