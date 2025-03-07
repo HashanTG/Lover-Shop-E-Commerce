@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { checkAuthStatus, logoutUser } from "../api/authService"; //Service for Api Requests
+import { checkAuthStatus, logoutUser,checkAdmin } from "../api/authService"; //Service for Api Requests
 
 import { useUserDetail } from "./UserDetailContext"; 
 import { useWishlist } from "./WishlistContext";
@@ -12,41 +12,66 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { fetchUserDetail } = useUserDetail();
   const { fetchWishlistItems } = useWishlist();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Check if the user is authenticated on mount
   useEffect(() => {
-      // Check authentication status from backend
-      const checkAuth = async () => {
+    // Check authentication status from backend
+    const checkAuth = async () => {
+      try {
+        // First, check if the user is authenticated
         const authStatus = await checkAuthStatus();
         if (authStatus) {
           console.log("User is authenticated");
           setIsAuthenticated(true);
           fetchAndPopulateUserDetails();
-
+  
+          // After confirming the user is authenticated, check if the user is an admin
+          const adminStatus = await checkAdmin();
+          console.log("Admin status:", adminStatus);
+          setIsAdmin(adminStatus);
+  
           localStorage.setItem("isAuthenticated", "true"); // Persist in localStorage
         } else {
           console.log("User is not authenticated");
           setIsAuthenticated(false);
+          setIsAdmin(false); // Reset admin status if not authenticated
           localStorage.setItem("isAuthenticated", "false"); // Persist in localStorage
         }
-      };
-
-      checkAuth();
+      } catch (error) {
+        console.error("Error during authentication or role check:", error);
+        setIsAuthenticated(false);
+        setIsAdmin(false);
+      }
+    };
+  
+    checkAuth();
   }, []);
+  
 
-  // Function to log in (for use when the user is authenticated)
-  const login = () => {
-    setIsAuthenticated(true);
-    fetchAndPopulateUserDetails();
-    localStorage.setItem("isAuthenticated", "true"); // Persist in localStorage
-  };
+// Function to log in (for use when the user is authenticated)
+const login = async () => {
+  setIsAuthenticated(true);
+  localStorage.setItem("isAuthenticated", "true"); // Persist in localStorage
 
-  // Function to log out (clear the token, etc.)
-  const logout = () => {
-    setIsAuthenticated(false);
-    localStorage.setItem("isAuthenticated", "false"); // Clear authentication status in localStorage
-    logoutUser(); // Call the logout service function
-  };
+  try {
+    await fetchAndPopulateUserDetails();
+    const adminStatus = await checkAdmin();
+    console.log("Admin status:", adminStatus);
+    setIsAdmin(adminStatus);
+  } catch (error) {
+    console.error("Error fetching user/admin details:", error);
+  }
+};
+
+// Function to log out (clear the token, etc.)
+const logout = () => {
+  setIsAuthenticated(false);
+  setIsAdmin(false);
+  localStorage.removeItem("isAuthenticated"); // Remove from localStorage
+  logoutUser(); // Call the logout service function
+};
+
 
   // Function to fetch and populate user details
   const fetchAndPopulateUserDetails = async () => {
@@ -68,11 +93,11 @@ export const AuthProvider = ({ children }) => {
       console.error("Unexpected error during API calls", error);
     }
   };
-  
+
 
   // Provide auth status and actions to children
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );
