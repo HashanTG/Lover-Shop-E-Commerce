@@ -5,6 +5,12 @@
     background-color: #f8f9fa;
     margin-top: 100px;
   }
+
+  .error-message {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+}
   
   .checkout-layout {
     display: grid;
