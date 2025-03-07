@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 40px;
-  background-color: #f9f7fe;
+  background-color: #E1AFD1;
   color: #333;
   z-index: 1000;
   position: fixed;
@@ -78,6 +78,8 @@
   padding-bottom: 6px;
   border-bottom: 2px solid #e35a97;
 }
+
+
 
 .dropdown-menu {
   position: absolute;

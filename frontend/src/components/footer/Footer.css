@@ -111,7 +111,7 @@
     bottom: -8px;
     width: 40px;
     height: 3px;
-    background:#e90ff1;
+    background:#e35a97;
     border-radius: 3px;
   }
   
@@ -146,12 +146,12 @@
     height: 1px;
     bottom: -2px;
     left: 0;
-    background-color: #e90ff1;
+    background-color:#e35a97;
     transition: width 0.3s;
   }
   
   .footer_links a:hover {
-    color: #e90ff1;
+    color: #e35a97;
   }
   
   .footer_links a:hover::after {

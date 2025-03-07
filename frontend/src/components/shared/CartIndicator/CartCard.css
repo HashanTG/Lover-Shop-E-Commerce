@@ -4,7 +4,7 @@
     position: relative;
     align-items: center;
     justify-content: center;
-    background-color:#f9f7fe; 
+    background-color:#E1AFD1; 
     cursor: pointer; 
     transition: transform 0.3s ease, box-shadow 0.3s ease; 
   }
@@ -14,20 +14,20 @@
   .cart-indicator:hover {
     transform: scale(1.05);
     color: #e35a97;
-    background-color: #f9f0f5; 
+    background-color: #d3acc7; 
 
   }
   
   /* Cart icon styles */
   .cart-icon {
-    margin-right: 2px; /* Space between the icon and the count */
+    margin-right: 2px; 
   }
   
   /* Cart item count styles */
   .cart-count {
     font-size: 10px;
-    font-weight: bold; /* Makes the count bold */
-    color: #d87c04; /* Text color */
+    font-weight: bold; 
+    color: #d87c04; 
     padding: 3px 6px;
     background-color: black;
     border-radius: 50%;
