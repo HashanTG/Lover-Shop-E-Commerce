@@ -102,7 +102,10 @@ export  const deleteProduct = async (id) => {
 
 //Add Product
 export const addProductApi = async (product) => {
+
+  console.log("Product", product);
   try {
+    
     const response = await axios.post(API_URL, product, {
       withCredentials: true,
       headers: {

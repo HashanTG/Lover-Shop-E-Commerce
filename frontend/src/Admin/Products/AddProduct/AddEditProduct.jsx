@@ -109,48 +109,78 @@ const AddEditProduct = ({ editProduct, onClose }) => {
   // Handle category change
   const handleCategoryChange = (e) => {
     const { value } = e.target;
-    setProductDetails((prevDetails) => ({
-      ...prevDetails,
-      category: value,
-    }));
-
+    
     if (value === "Add New") {
       setIsNewCategory(true); // Show input for new category
     } else {
       setIsNewCategory(false); // Hide input if not adding new
+      setProductDetails((prevDetails) => ({
+        ...prevDetails,
+        category: value, // Set the selected category directly
+      }));
     }
   };
+  
+  const handleConfirmNewCategory = () => {
+    if (newCategory.trim()) {
+      setProductDetails((prevDetails) => ({
+        ...prevDetails,
+        category: newCategory, // Set the new category
+      }));
+      setIsNewCategory(false); // Hide input after confirmation
+    }
+  };
+  
+  const handleCancelNewCategory = () => {
+    setIsNewCategory(false);
+    setNewCategory(""); // Clear input field
+  };
+  
 
   // Handle form submission (add or update product)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUploading(true);
-    const uploadedUrls = [...productDetails.images]; // Retain any existing images
-
+  
     try {
-      // Upload each new image file
-      for (const file of selectedFiles) {
-        const { data: presignedUrl } = await axios.post(
-          `http://localhost:8080/api/products/generate-presigned-url?fileName=${encodeURIComponent(file.name)}`
-        );
-
-        await axios.put(presignedUrl, file, {
-          headers: { "Content-Type": file.type },
-        });
-
-        // Get public URL (assumes presigned URL contains query parameters)
-        const publicUrl = presignedUrl.split("?")[0];
-        uploadedUrls.push(publicUrl);
-      }
-
-      // Prepare complete product data
+      const uploadedUrls = [...productDetails.images]; // Retain existing images
+  
+      // Upload new images in parallel
+      const uploadPromises = selectedFiles.map(async (file) => {
+        try {
+          // Get presigned URL
+          const response = await axios.post(
+            `http://localhost:8080/api/products/generate-presigned-url?fileName=${encodeURIComponent(file.name)}`,
+            {}, // Empty body
+            { withCredentials: true } // Correct placement
+          );
+  
+          const presignedUrl = response.data;
+  
+          // Upload file to S3
+          await axios.put(presignedUrl, file, {
+            headers: { "Content-Type": file.type },
+          });
+  
+          return presignedUrl.split("?")[0]; // Get public URL
+        } catch (uploadError) {
+          console.error(`Error uploading file ${file.name}:`, uploadError);
+          throw uploadError; // Propagate the error
+        }
+      });
+  
+      // Wait for all images to upload
+      const newImageUrls = await Promise.all(uploadPromises);
+      uploadedUrls.push(...newImageUrls);
+  
+      // Prepare final product data
       const productData = {
         ...productDetails,
         images: uploadedUrls,
         variations,
       };
-
-      // Send data to API
+  
+      // API Call: Add or Edit Product
       if (editProduct) {
         await editProductApi(editProduct.id, productData);
         alert("Product updated successfully!");
@@ -158,7 +188,7 @@ const AddEditProduct = ({ editProduct, onClose }) => {
         await addProductApi(productData);
         alert("Product added successfully!");
       }
-
+  
       onClose(); // Close the form after successful submission
     } catch (error) {
       console.error("Error uploading images or saving product:", error);
@@ -167,6 +197,7 @@ const AddEditProduct = ({ editProduct, onClose }) => {
       setUploading(false);
     }
   };
+  
 
   return (
     <div className="add-product-container">
@@ -211,27 +242,38 @@ const AddEditProduct = ({ editProduct, onClose }) => {
 
         {/* Category and Sub Category Section */}
         <div className="form-row">
-          <div className="form-group">
-            <label>Category</label>
-            <select name="category" value={productDetails.category} onChange={handleCategoryChange}>
-              <option value="Gift">Gift</option>
-              <option value="Electronics">Electronics</option>
-              <option value="Clothing">Clothing</option>
-              <option value="Add New">Add New</option>
-            </select>
-          </div>
-          {isNewCategory && (
-            <div className="form-group">
-              <label>New Category</label>
-              <input
-                type="text"
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-                placeholder="Enter new category"
-              />
-            </div>
-          )}
-        </div>
+  <div className="form-group">
+    <label>Category</label>
+    <select 
+      name="category" 
+      value={productDetails.category} 
+      onChange={handleCategoryChange}
+    >
+      <option value="Gift">Gift</option>
+      <option value="Electronics">Electronics</option>
+      <option value="Clothing">Clothing</option>
+      {newCategory && <option value={newCategory}>{newCategory}</option>} {/* Show new category */}
+      <option value="Add New">Add New</option>
+    </select>
+  </div>
+
+  {isNewCategory && (
+    <div className="form-group">
+      <label>New Category</label>
+      <input
+        type="text"
+        value={newCategory}
+        onChange={(e) => setNewCategory(e.target.value)}
+        placeholder="Enter new category"
+      />
+      <div className="button-group">
+        <button type="button" onClick={handleConfirmNewCategory}>OK</button>
+        <button type="button" onClick={handleCancelNewCategory}>Cancel</button>
+      </div>
+    </div>
+  )}
+</div>
+
 
         <div className="form-row">
           <div className="form-group">
