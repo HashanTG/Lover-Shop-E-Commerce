@@ -4,3 +4,8 @@
     border: none;
     border-radius: 8px;
 }
+
+.btn:hover{
+    background-color: #5C4C8A;
+    cursor: pointer;
+}

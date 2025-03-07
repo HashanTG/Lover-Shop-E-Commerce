@@ -1,124 +1,125 @@
-.auth-container {
+.auth_container {
     display: flex;
-    margin-top: 150px;
-    padding: 50px;
-    min-height: 700px;
-    
-  }
-  
-  .auth-left {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
     justify-content: center;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-    color: white;
-  }
-  
-  .logo {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
+    align-items: center;
+    height: 100vh;
+    background: rgb(225,175,209);
+    background: linear-gradient(0deg, rgb(237, 164, 213) 0%, rgba(147,207,205,1) 53%, rgba(225,175,209,1) 100%);
+    font-family: "Arial", sans-serif;
   }
 
-  .auth-right {
-    padding: 10px;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #D9D9D9;
-   
+  .auth_right{
+    background: #ffffff;
+    padding: 2rem; 
+    border-radius: 12px;
+    box-shadow: 0 8px 15px rgb(0,0,0,0.1);
+    width: 450px;
   }
-  
-  .auth-form {
-    width: 80%;
-    max-width: 400px;
-    min-width: 300px;
+
+  .auth_form h2{
     text-align: center;
-  }
-  
-  .auth-form h2 {
     margin-bottom: 1rem;
+    font-size: 1.8rem;
+    color: #6e45e2;
   }
-  
-  .auth-form p {
+
+  .auth_form p{
+    text-align: center;
     font-size: 0.9rem;
     color: #666;
     margin-bottom: 1.5rem;
   }
-  
-  .auth-form a,
+
   .auth-link {
-    color: #6c63ff;
-    text-decoration: none;
     background: none;
     border: none;
-    cursor: pointer;
+    color: #6e45e2;
     font-weight: bold;
-  }
-  
-  .form-group {
-    margin-bottom: 1rem;
-    text-align: left;
-  }
-  
-  .form-group label {
-    display: inline-block;
-    margin-bottom: 0.4rem;
+    cursor: pointer;
+    text-decoration: underline;
     font-size: 0.9rem;
+  }
+
+  .auth-link:hover{
+    color: #422e9f;
+  }
+
+  .form_group {
+    margin-bottom: 1.2rem;
+  }
+
+  .form_group label{
+    display: block; 
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
     color: #333;
   }
-  
-  .form-group input[type="text"],
-  .form-group input[type="email"],
-  .form-group input[type="password"] {
-    width: 100%;
-    padding: 0.8rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-  }
-  .form-group input[type="checkbox"] {
-    margin-right: 0.5rem;
-  }
-  
-  .form-group.terms {
-    display: flex;
-    align-items: center;
-    font-size: 0.85rem;
-  }
-  
-  .form-group.terms input {
-    margin-right: 0.5rem;
-  }
-  
-  .form-group.remember-me {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .auth-button {
-    width: 100%;
-    padding: 0.8rem;
-    background-color: #6c63ff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-top: 20px;
-  }
-  
-  .auth-button:hover {
-    background-color: #5a54e6;
-  }
-  
-  .forgot-password {
-    font-size: 0.85rem;
-    color: #6c63ff;
-    text-decoration: none;
-  }
-  
+
+.form_group input{
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  transition: border 0.3s ease;
+  outline: none;
+  border: 1px solid #ddd;
+}
+
+
+.form_group input:focus{
+  border: 1px solid #6e45e2 ;
+  box-shadow: 0 0 6px rgba(110,69,226,0.3);
+}
+
+.form_group_terms{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.form_group_terms input[type= "checkbox"]{
+  margin-right: 8px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.form_group_terms label{
+  color: #555;
+}
+
+.form_group_terms a{
+  color: #6e45e2;
+  text-decoration: none;
+  font-weight: bold;
+ 
+}
+
+.form_group_terms a:hover{
+  text-decoration: underline;
+}
+
+.button_container{
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.auth-button{
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff;
+  background:#6e45e2 ;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+

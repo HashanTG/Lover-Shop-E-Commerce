@@ -6,7 +6,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.example.backend.Product.Model.Product;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
+
 
 @Data
 @Document(collection = "carts") // MongoDB collection name
@@ -21,6 +24,7 @@ public class CartModel {
     public static class Item {
         private String productId; // Product ID for the item
         private int quantity; // Quantity of the product
+        private Map<String, String> variation = new HashMap<>();
         private Product productDetails; // Field to store product details (to be set when product is fetched)
     }
 }

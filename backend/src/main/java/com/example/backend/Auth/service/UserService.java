@@ -2,6 +2,7 @@ package com.example.backend.Auth.service;
 
 import com.example.backend.Auth.service.UserService;
 import com.example.backend.Auth.model.User;
+import com.example.backend.Auth.model.UserDetail;
 import com.example.backend.Auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -60,6 +61,9 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER); // Default role for new users
 
+        if (user.getUserDetail() == null) {
+            user.setUserDetail(new UserDetail());
+        }
         // Save the new user to the database
         userRepository.save(user);
         return true;

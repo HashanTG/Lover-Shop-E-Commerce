@@ -5,12 +5,12 @@ import "./AuthPage.css";
 import { useAuth } from "../../context/AuthContext"; // Import useAuth
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
+import Spinner from "../../components/Spinner/Spinner";
+
 const AuthPage = () => {
   const [isSignUp, setIsSignUp] = useState(true);
   const [isLoading, setIsLoading] = useState(false); // State for loading
   const [formData, setFormData] = useState({
-    name: "",
-    username: "",
     email: "",
     password: "",
   });
@@ -54,8 +54,6 @@ const AuthPage = () => {
     setModal({ isOpen: false, title: "", message: "", type: "" });
     try {
       const response = await registerUser({
-        name: formData.name,
-        username: formData.username,
         email: formData.email,
         password: formData.password,
       });
@@ -130,14 +128,11 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="auth-container">
-      {/* <div className="auth-left">
-        <h1 className="logo">ROSA LOVER</h1>
-        <div className="illustration"></div>
-      </div> */}
-      <div className="auth-right">
+    <div className="auth_container">
+
+      <div className="auth_right">
         {isSignUp ? (
-          <form className="auth-form" onSubmit={handleSignUp}>
+          <form className="auth_form" onSubmit={handleSignUp}>
             <h2>Sign up</h2>
             <p>
               Already have an account?{" "}
@@ -149,29 +144,8 @@ const AuthPage = () => {
                 Sign in
               </button>
             </p>
-            <div className="form-group">
-              <label>Your name</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Enter your name"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Username</label>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleInputChange}
-                placeholder="Enter your username"
-                required
-              />
-            </div>
-            <div className="form-group">
+
+            <div className="form_group">
               <label>Email address</label>
               <input
                 type="email"
@@ -182,7 +156,7 @@ const AuthPage = () => {
                 required
               />
             </div>
-            <div className="form-group">
+            <div className="form_group">
               <label>Password</label>
               <input
                 type="password"
@@ -193,16 +167,17 @@ const AuthPage = () => {
                 required
               />
             </div>
-            <div className="form-group terms">
+            <div className="form_group_terms">
               <input type="checkbox" id="terms" required />
               <label htmlFor="terms">
-                I agree with <a href="/privacy">Privacy Policy</a> and{" "}
-                <a href="/terms">Terms of Use</a>
+                I agree with <a href="/privacy_policy">Privacy Policy</a> and{" "}
+                <a href="/Terms_condition">Terms & Conditions</a>
               </label>
             </div>
+            <div className="button_container">
             <button type="submit" className="auth-button" disabled={isLoading}>
               {isLoading ? (
-                <span className="spinner">Loading...</span>
+                <Spinner size="14px" /> 
               ) : (
                 "Sign In"
               )}
@@ -217,9 +192,12 @@ const AuthPage = () => {
             >
               Sign Up Using Google
             </button>
+            </div>
+
+
           </form>
         ) : (
-          <form className="auth-form" onSubmit={handleSignIn}>
+          <form className="auth_form" onSubmit={handleSignIn}>
             <h2>Sign In</h2>
             <p>
               Don't have an account yet?{" "}
@@ -231,7 +209,7 @@ const AuthPage = () => {
                 Sign Up
               </button>
             </p>
-            <div className="form-group">
+            <div className="form_group">
               <label>Your username or email address</label>
               <input
                 type="text"
@@ -242,7 +220,7 @@ const AuthPage = () => {
                 required
               />
             </div>
-            <div className="form-group">
+            <div className="form_group">
               <label>Password</label>
               <input
                 type="password"
@@ -253,9 +231,10 @@ const AuthPage = () => {
                 required
               />
             </div>
+            <div className="button_container">
             <button type="submit" className="auth-button" disabled={isLoading}>
               {isLoading ? (
-                <span className="spinner">Loading...</span>
+                <Spinner size="14px" /> 
               ) : (
                 "Sign In"
               )}
@@ -270,6 +249,8 @@ const AuthPage = () => {
             >
               Sign In Using Google
             </button>
+            </div>
+    
           </form>
         )}
       </div>

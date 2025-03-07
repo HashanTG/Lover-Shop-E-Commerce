@@ -1,11 +1,12 @@
 import axios from "axios";
+import { config } from "../config";
 
-const BASE_URL = "http://localhost:8080/api/auth";
+const URL = `${config.apiUrl}/api/auth`;; //URL
 
 //Register a new user
 export const registerUser = async (data) => {
   try {
-    const response = await axios.post(`${BASE_URL}/register`, data);
+    const response = await axios.post(`${URL}/register`, data);
     return response.data;
   } catch (error) {
     throw (
@@ -20,7 +21,7 @@ export const registerUser = async (data) => {
 export const loginUser = async (data) => {
   try {
     const response = await axios.post(
-      `${BASE_URL}/login`,
+      `${URL}/login`,
       data,
       { withCredentials: true } // Include cookies in the request/response
     );
@@ -50,7 +51,7 @@ export const checkAuthStatus = async () => {
 export const logoutUser = async () => {
   try {
     const response = await axios.post(
-      `${BASE_URL}/logout`,
+      `${URL}/logout`,
       {},
       { withCredentials: true }
     );

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173" ,allowCredentials = "true")
@@ -44,20 +46,18 @@ public class CartController {
         CartModel updatedCart = cartService.addItemToCart(
                 userId,
                 addItemRequest.getProductId(),
-                addItemRequest.getQuantity()
+                addItemRequest.getQuantity(),
+                addItemRequest.getVariation()
         );
         return ResponseEntity.ok(updatedCart);
     }
 
     // Remove item from cart for the authenticated user
     @PreAuthorize("hasRole('USER')")
-    @DeleteMapping("/item/remove")
-    public ResponseEntity<CartModel> removeItemFromCart(@RequestBody RemoveItemRequest removeItemRequest) {
+    @DeleteMapping("/remove")
+    public ResponseEntity<CartModel> removeItemFromCart(@RequestBody RemoveFromCartRequest request) {
         String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically
-        CartModel updatedCart = cartService.removeItemFromCart(
-                userId,
-                removeItemRequest.getProductId()
-        );
+        CartModel updatedCart = cartService.removeItemFromCart(userId, request.getProductId(), request.getVariation());
         return ResponseEntity.ok(updatedCart);
     }
 
@@ -75,10 +75,13 @@ public class CartController {
     public static class AddItemRequest {
         private String productId;
         private int quantity;
+        private Map<String, String> variation; // Accept variations as a map
     }
-
+    
     @Data
-    public static class RemoveItemRequest {
+    public static class RemoveFromCartRequest {
         private String productId;
+        private Map<String, String> variation; // Accept variations as a map
     }
+  
 }

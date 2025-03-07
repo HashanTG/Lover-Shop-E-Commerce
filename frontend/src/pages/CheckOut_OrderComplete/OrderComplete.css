@@ -1,5 +1,6 @@
 .order-complete-wrapper {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -8,6 +9,7 @@
   }
   
   .order-card {
+    flex-direction: column;
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);

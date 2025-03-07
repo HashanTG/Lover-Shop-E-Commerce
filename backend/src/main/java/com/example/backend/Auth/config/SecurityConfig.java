@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .and()
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/oauth2/**","/api/products/**").permitAll() // Public endpoints
+                        .requestMatchers("/api/auth/**", "/oauth2/**","/api/products/**","/api/reviews/**").permitAll() // Public endpoints
                         .requestMatchers("/api/**").authenticated() // Protected endpoints
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Admin routes
                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // User routes

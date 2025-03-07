@@ -1,6 +1,8 @@
 package com.example.backend.Cart.Service;
 
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -54,36 +56,51 @@ public class CartService {
                 .orElseGet(() -> createEmptyCart(userId));
     }
 
-    // Add or update an item in the cart
-    public CartModel addItemToCart(String userId, String productId, int quantity) {
+    public CartModel addItemToCart(String userId, String productId, int quantity, Map<String, String> variation) {
         CartModel cart = getCartByUserId(userId);
-        
-        // Check if the item already exists in the cart
+    
+        // Check if an item with the same productId and variation exists
         Optional<CartModel.Item> existingItem = cart.getItems().stream()
-                .filter(item -> item.getProductId().equals(productId))
+                .filter(item -> item.getProductId().equals(productId) && item.getVariation().equals(variation))
                 .findFirst();
-        
+    
         if (existingItem.isPresent()) {
-            // Update quantity if item exists
+            // Update quantity if the item exists
             existingItem.get().setQuantity(existingItem.get().getQuantity() + quantity);
         } else {
-            // Add new item
+            // Add a new item with the given variation
             CartModel.Item newItem = new CartModel.Item();
             newItem.setProductId(productId);
             newItem.setQuantity(quantity);
+            newItem.setVariation(variation);
             cart.getItems().add(newItem);
         }
-
+    
         // Save and return the updated cart
         return cartRepository.save(cart);
     }
+    
 
-    // Remove an item from the cart
-    public CartModel removeItemFromCart(String userId, String productId) {
+    public CartModel removeItemFromCart(String userId, String productId, Map<String, String> variation) {
         CartModel cart = getCartByUserId(userId);
-        cart.getItems().removeIf(item -> item.getProductId().equals(productId));
+        
+        cart.getItems().forEach(item -> {
+            System.out.println("Item Product ID: " + item.getProductId() + ", Variation: " + item.getVariation());
+        });
+        
+        System.out.println(variation);
+        // Ensure the variation is not null before comparing
+        cart.getItems().removeIf(item -> 
+            item.getProductId().equals(productId) && 
+            (variation == null || variation.equals(item.getVariation()))
+        );
+    
+        // Save and return the updated cart
         return cartRepository.save(cart);
     }
+    
+
+
 
     // Clear the entire cart
     public void clearCart(String userId) {

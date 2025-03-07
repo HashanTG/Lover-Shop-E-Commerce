@@ -1,0 +1,115 @@
+.ocard-dashboard {
+  padding: 20px;
+  background-color: #f4f5f7;
+}
+
+.ocard-main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.ocard-orders-section {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.ocard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.ocard-header h3 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.ocard-orders-list {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ocard-row {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+}
+
+.header-row {
+  background-color: #fafbfc;
+  color: #333;
+  font-weight: 600;
+}
+
+.ocard-cell {
+  padding: 15px;
+  text-align: left;
+  font-size: 14px;
+  color: #555;
+}
+
+.ocard-row.no-orders .ocard-cell {
+  text-align: center;
+}
+
+.ocard-row:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.ocard-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 5px 0;
+}
+
+.ocard-item div {
+  width: 33%; /* To divide the space evenly */
+}
+
+.ocard-payment-status {
+  font-weight: bold;
+  color: #333;
+}
+
+.ocard-status-dropdown {
+  width: 150px;
+}
+
+.ocard-shipping-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ocard-shipping-info div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ocard-pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.ocard-pagination-btn {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.ocard-pagination-btn:disabled {
+  background-color: #ccc;
+}
+
+.ocard-pagination-controls button {
+  margin-right: 10px;
+}

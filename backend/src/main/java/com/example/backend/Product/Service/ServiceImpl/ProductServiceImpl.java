@@ -107,6 +107,19 @@ public class ProductServiceImpl implements ProductService {
     //Get prodcts by a Id List
     @Override
     public List<Product> getProductsByIds(List<String> productIds) {
+        System.out.println("service product");
+        System.out.println(productIds);
         return productRepository.findByIdIn(productIds);
     }
+
+    @Override
+    public List<Product> getNewArrivals() {
+        return productRepository.getNewArrivals();
+    }
+
+    @Override
+    public List<String> getDistinctCategories() {
+        return productRepository.findDistinctCategories();
+    }
+
 }

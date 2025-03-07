@@ -193,3 +193,22 @@
 .product-meta p {
   margin: 0.5rem 0;
 }
+
+/* review styles */
+
+.review-list{
+  display: flex;
+  align-items: center;
+  justify-self:center;
+  flex-direction: column;
+  max-width: 1200px; /* Limit container width */
+  margin: 20px auto; /* Center on the page */
+  max-height: 600px;
+  overflow-y: scroll;
+}
+.no-reviews {
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+  margin-top: 10px;
+}

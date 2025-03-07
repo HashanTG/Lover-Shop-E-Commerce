@@ -15,7 +15,7 @@ function Home() {
   const { isAuthenticated } = useAuth(); // Destructure isAuthenticated from useAuth()
 
   useEffect(() => {
-    console.log(isAuthenticated); // Log the authentication status when the component mounts
+    console.log(`auth Status ${isAuthenticated}`); // Log the authentication status when the component mounts
   }, [isAuthenticated]); // Dependency array should watch isAuthenticated
 
   return (

@@ -22,4 +22,8 @@ public interface ProductRepository extends MongoRepository<Product, String> ,Pro
     List<Product> findByIdIn(List<String> ids);
 
     Optional<Product> findBySku(String sku);
+
+    public List<Product> getNewArrivals();
+
+    public List<String> findDistinctCategories();
 }

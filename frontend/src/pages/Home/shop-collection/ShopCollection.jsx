@@ -2,9 +2,17 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./ShopCollection.css";
 import mug from "../../../assets/Home/Shop-Collection/mug.png"
+import { useNavigate } from "react-router-dom";
 
 
 const ShopCollection = () => {
+  const navigate = useNavigate();
+
+  const navigatetoCategory = (category) => {
+
+
+  }
+
   return (
     <div className="shop-collection">
       <h2>Shop Collection</h2>
@@ -18,7 +26,7 @@ const ShopCollection = () => {
           />
           <div className="collection-text">
             <h3>Customized Mug</h3>
-            <Link to="/products/teddy">Collection →</Link>
+            <Link to="/products?category=Mug">Collection →</Link>
           </div>
         </div>
 
@@ -28,15 +36,15 @@ const ShopCollection = () => {
           
           <div className="small-container">
             <div className="collection-text">
-              <h3>Teddy</h3>
-              <Link to="/products/teddy">Collection →</Link>
+              <h3>T-Shirt</h3>
+              <Link to="/products?category=Tshirt">Collection →</Link>
             </div>
             
           </div>
           <div className="small-container">
             <div className="collection-text">
               <h3>Teddy</h3>
-              <Link to="/products/teddy">Collection →</Link>
+              <Link to="/products?category=Teddy">Collection →</Link>
             </div>
             
           </div>
