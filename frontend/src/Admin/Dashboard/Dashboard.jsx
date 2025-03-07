@@ -25,6 +25,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [totalSales, setTotalSales] = useState(0);
 
   const fetchOrders = async (pageNumber) => {
     setLoading(true);
@@ -32,6 +33,10 @@ const Dashboard = () => {
       const data = await getAllOrders(pageNumber, 5, "createdAt", "DESC");
       setOrders(data?.content || []);
       setTotalPages(data?.totalPages || 1);
+      const sales = data?.content?.reduce((acc, order) => {
+        return acc + (order.total || 0);
+      }, 0) || 0;
+      setTotalSales(sales); // Update total sales state
     } catch (error) {
       console.error("Error fetching orders:", error);
     } finally {
@@ -76,7 +81,7 @@ const Dashboard = () => {
     <div className="dashboard-container">
       <h1>Dashboard</h1>
       <div>
-        <StatCard/>
+      <StatCard totalSales={totalSales} />
       </div>
       <div className="dashboard-header">
         <h2>Recent Orders</h2>

@@ -1,25 +1,25 @@
 import "./StatCard.css";
 
-const StatsCards = () => {
+const StatsCards = ({ totalSales }) => {
   const stats = [
     {
-      icon: "/rev.png", // Replace with actual image path
+      icon: "/rev.png",
       title: "Total Revenue",
-      value: "Rs 75,500",
-      change: "+10%",
+      value: `Rs ${totalSales.toFixed(2)}`, // Use totalSales here
+      change: "+10%", // You can calculate this dynamically if needed
       color: "blue",
     },
     {
-      icon: "/sale.png", // Replace with actual image path
+      icon: "/sale.png",
       title: "Total Sales",
-      value: "5300",
+      value: "5", // Keep this as is if it's a different metric
       change: "+15%",
       color: "green",
     },
     {
-      icon: "/sku.png", // Replace with actual image path
+      icon: "/sku.png",
       title: "Product SKU",
-      value: "247",
+      value: "12",
       change: "0%",
       color: "red",
     },
