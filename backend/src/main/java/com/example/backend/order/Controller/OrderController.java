@@ -70,7 +70,7 @@ public class OrderController {
     }
 
     // Get Orders by User
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("/user")
     public ResponseEntity<Page<Order>> getOrdersByUser( // Fetch user ID dynamically from SecurityContext
             @RequestParam(defaultValue = "0") int page,
@@ -84,7 +84,7 @@ public class OrderController {
     }
 
     // Create A Order
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<?> createOrder(@RequestBody Order order) {
         String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically
