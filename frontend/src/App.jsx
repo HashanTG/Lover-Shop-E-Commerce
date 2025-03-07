@@ -36,7 +36,6 @@ import TermsCondition from './assets/Footer_Pages/TermsConditions/termsCondition
 
 
 
-
 const App = () => {
 
 
@@ -65,6 +64,7 @@ const App = () => {
             <Route path="/loading" element={<Loading/>} />
             <Route path="/account" element={<AccountPage/>} />
 
+
             <Route path="/checkout" element={<CheckoutDetails />} />
             <Route path="/order-complete" element={<OrderComplete />} />
 
@@ -76,6 +76,7 @@ const App = () => {
 
             <Route path = "/privacy_Policy" element={<PrivacyPolicy/>}/>
             <Route path = "Terms_condition" element={<TermsCondition/>}/>
+
 
 
            
