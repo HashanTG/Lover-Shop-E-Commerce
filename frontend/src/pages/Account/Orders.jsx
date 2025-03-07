@@ -66,7 +66,7 @@ const Orders = () => {
         <tbody>
           {currentOrders.map((order) => (
             <tr key={order.id}>
-              <td>{order.id}</td>
+              <td className="order_id">{order.id.slice(0, 10)}</td>
               <td>{new Date(order.createdAt).toLocaleDateString()}</td>
               <td>{order.status}</td>
               <td>{order.paymentStatus}</td>

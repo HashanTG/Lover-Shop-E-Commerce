@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./Addresses.css";
+import "./CardTab.css";
 import { useUserDetail } from "../../context/UserDetailContext";
 // Stripe Imports
 import { loadStripe } from "@stripe/stripe-js";

@@ -11,6 +11,7 @@ import "./App.css";
 import Layout from "./Layout";
 
 //Component Import
+
 import Home from "./pages/Home/Home"; // Home page
 import AuthPage from "./pages/AuthPage/AuthPage";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
@@ -127,8 +128,10 @@ const App = () => {
             </ModalProvider>
           </AuthProvider>
         </UserDetailProvider>
+
       </WishlistProvider>
     </Router>
+
   );
 };
 
