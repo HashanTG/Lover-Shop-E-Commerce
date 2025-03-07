@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { getAllReviews, replyReview } from '../../api/reviewService';
-import './ReviewList.css';
+import React, { useState, useEffect } from "react";
+import { getAllReviews, replyReview } from "../../api/reviewService";
+import "./ReviewList.css";
 
 const StarRating = ({ rating }) => {
   return (
     <div className="star-rating">
       {[...Array(5)].map((_, index) => (
-        <span key={index} className={index < rating ? "star filled" : "star"}>★</span>
+        <span key={index} className={index < rating ? "star filled" : "star"}>
+          ★
+        </span>
       ))}
     </div>
   );
@@ -17,7 +19,7 @@ const ReviewsList = () => {
   const [currPage, setCurrPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [editingReplyId, setEditingReplyId] = useState(null);
-  const [replyText, setReplyText] = useState('');
+  const [replyText, setReplyText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch reviews with pagination
@@ -29,7 +31,7 @@ const ReviewsList = () => {
       setCurrPage(response.pageable.pageNumber);
       setTotalPages(response.totalPages);
     } catch (error) {
-      console.error('Error fetching reviews:', error);
+      console.error("Error fetching reviews:", error);
     } finally {
       setIsLoading(false);
     }
@@ -41,24 +43,26 @@ const ReviewsList = () => {
 
   const handleEditReply = (review) => {
     setEditingReplyId(review.id);
-    setReplyText(review.adminReply || '');
+    setReplyText(review.adminReply || "");
   };
 
   const handleSaveReply = (reviewId) => {
     replyReview(reviewId, replyText)
       .then((response) => {
         setReviews((prevReviews) =>
-          prevReviews.map((review) => (review.id === reviewId ? response : review))
+          prevReviews.map((review) =>
+            review.id === reviewId ? response : review
+          )
         );
         setEditingReplyId(null);
-        setReplyText('');
+        setReplyText("");
       })
-      .catch((error) => console.error('Error saving reply:', error));
+      .catch((error) => console.error("Error saving reply:", error));
   };
 
   const handleCancel = () => {
     setEditingReplyId(null);
-    setReplyText('');
+    setReplyText("");
   };
 
   return (
@@ -69,20 +73,29 @@ const ReviewsList = () => {
           {reviews.length > 0 && (
             <div className="avg-rating">
               <div className="avg-rating-stars">
-                <StarRating rating={reviews.reduce((acc, rev) => acc + rev.rating, 0) / reviews.length} />
+                <StarRating
+                  rating={
+                    reviews.reduce((acc, rev) => acc + rev.rating, 0) /
+                    reviews.length
+                  }
+                />
               </div>
               <span className="avg-rating-text">
-                {(reviews.reduce((acc, rev) => acc + rev.rating, 0) / reviews.length).toFixed(1)} / 5
+                {(
+                  reviews.reduce((acc, rev) => acc + rev.rating, 0) /
+                  reviews.length
+                ).toFixed(1)}{" "}
+                / 5
               </span>
             </div>
           )}
         </div>
       </div>
-      
+
       {isLoading ? (
         <div className="loading-spinner">
           <div className="spinner"></div>
-          <p>Loading reviews...</p>
+          <p>Loading</p>
         </div>
       ) : reviews.length === 0 ? (
         <div className="no-reviews">
@@ -96,35 +109,49 @@ const ReviewsList = () => {
               <div className="review-card-header">
                 <div className="review-user-info">
                   <div className="review-user-avatar">
-                    {(review.userId || 'A').charAt(0).toUpperCase()}
+                    {(review.userId || "A").charAt(0).toUpperCase()}
                   </div>
                   <div className="review-user-details">
-                    <h3 className="review-username">{review.userId || 'Anonymous'}</h3>
+                    <h3 className="review-username">
+                      {review.userId || "Anonymous"}
+                    </h3>
                     <span className="review-date">
-                      {review.createdAt ? new Date(review.createdAt).toLocaleDateString(undefined, {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                      }) : 'N/A'}
+                      {review.createdAt
+                        ? new Date(review.createdAt).toLocaleDateString(
+                            undefined,
+                            {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            }
+                          )
+                        : "N/A"}
                     </span>
                   </div>
                 </div>
                 <div className="review-rating-container">
-                  <span className="review-product-id">Product: {review.productId}</span>
+                  <span className="review-product-id">
+                    Product: {review.productId}
+                  </span>
                   <div className="review-rating">
                     <StarRating rating={review.rating} />
                   </div>
                 </div>
               </div>
-              
+
               <div className="review-content">
                 <p className="review-comment">{review.comment}</p>
               </div>
-              
+
               <div className="review-reply-container">
                 {editingReplyId === review.id ? (
                   <div className="reply-editor">
-                    <label htmlFor={`reply-${review.id}`} className="reply-label">Your Response:</label>
+                    <label
+                      htmlFor={`reply-${review.id}`}
+                      className="reply-label"
+                    >
+                      Your Response:
+                    </label>
                     <textarea
                       id={`reply-${review.id}`}
                       className="reply-textarea"
@@ -134,7 +161,10 @@ const ReviewsList = () => {
                       rows="3"
                     />
                     <div className="reply-buttons">
-                      <button className="btn btn-save" onClick={() => handleSaveReply(review.id)}>
+                      <button
+                        className="btn btn-save"
+                        onClick={() => handleSaveReply(review.id)}
+                      >
                         <i className="btn-icon">✓</i> Save Reply
                       </button>
                       <button className="btn btn-cancel" onClick={handleCancel}>
@@ -143,7 +173,11 @@ const ReviewsList = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className={`reply-section ${review.adminReply ? 'has-reply' : ''}`}>
+                  <div
+                    className={`reply-section ${
+                      review.adminReply ? "has-reply" : ""
+                    }`}
+                  >
                     {review.adminReply ? (
                       <div className="existing-reply">
                         <div className="reply-header">
@@ -151,22 +185,32 @@ const ReviewsList = () => {
                           <h4 className="reply-title">Admin Response</h4>
                         </div>
                         <p className="reply-text">{review.adminReply}</p>
-                        <button className="btn btn-edit" onClick={() => handleEditReply(review)}>
+                        <button
+                          className="btn btn-edit"
+                          onClick={() => handleEditReply(review)}
+                        >
                           <i className="btn-icon">✎</i> Edit Response
                         </button>
                       </div>
                     ) : (
-                      <button className="btn btn-reply" onClick={() => handleEditReply(review)}>
+                      <button
+                        className="btn btn-reply"
+                        onClick={() => handleEditReply(review)}
+                      >
                         <i className="btn-icon">✉</i> Respond to Review
                       </button>
                     )}
                   </div>
                 )}
               </div>
-              
+
               <div className="review-status">
-                <span className={`status-badge ${review.adminReply ? 'status-replied' : 'status-pending'}`}>
-                  {review.adminReply ? 'Replied' : 'Awaiting Response'}
+                <span
+                  className={`status-badge ${
+                    review.adminReply ? "status-replied" : "status-pending"
+                  }`}
+                >
+                  {review.adminReply ? "Replied" : "Awaiting Response"}
                 </span>
               </div>
             </div>
