@@ -95,12 +95,17 @@ public class UserService {
             return existingUser.get(); // Return the existing user
         }
 
+        
+
         // Create a new user for OAuth
         User newUser = new User();
         newUser.setEmail(email);
         newUser.setRole(Role.USER);// Default role for OAuth2 users
         newUser.setPassword(""); // No password as it’s OAuth2
 
+        if (newUser.getUserDetail() == null) {
+            newUser.setUserDetail(new UserDetail());
+        }
         // Save the new user to the database
         return userRepository.save(newUser);
     }

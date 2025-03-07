@@ -23,14 +23,12 @@ public class UserDetailController {
     @GetMapping()
     public UserDetail getUserDetails() {
         String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically from SecurityContext
-        System.out.println(userId);
         return userDetailService.getUserDetail(userId);
     }
 
     // Endpoint to update user details
     @PutMapping()
     public UserDetail updateUserDetails(@RequestBody UserDetail partialUserDetail) {
-        System.out.println(partialUserDetail);
         String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically from SecurityContext
         return userDetailService.updateUserDetail(userId, partialUserDetail);
     }
