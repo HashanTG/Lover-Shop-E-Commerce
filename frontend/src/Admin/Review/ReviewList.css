@@ -1,116 +1,461 @@
 /* Container for all reviews */
 .reviews-container {
-    width: 80%;
-    margin: 0 auto;
-    padding: 15px;
-    font-family: Arial, sans-serif;
+  width: 92%;
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 30px;
+  font-family: 'Poppins', sans-serif;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Header section with title and stats */
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+/* Title styling */
+.reviews-title {
+  color: #2d3748;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Reviews statistics area */
+.reviews-stats {
+  display: flex;
+  align-items: center;
+}
+
+.avg-rating {
+  display: flex;
+  align-items: center;
+  background-color: #f8fafc;
+  padding: 8px 15px;
+  border-radius: 30px;
+  border: 1px solid #e2e8f0;
+}
+
+.avg-rating-stars {
+  margin-right: 10px;
+}
+
+.avg-rating-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+/* Star rating component */
+.star-rating {
+  display: flex;
+}
+
+.star {
+  color: #e2e8f0;
+  font-size: 1.25rem;
+  margin-right: 2px;
+}
+
+.star.filled {
+  color: #f59e0b;
+}
+
+/* Loading state */
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+}
+
+.spinner {
+  width: 40px; 
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 4px solid #3498db; 
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* No reviews message */
+.no-reviews {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 0;
+  color: #64748b;
+  font-size: 1.2rem;
+}
+
+.review-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  opacity: 0.7;
+}
+
+/* Reviews list container */
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* Each review styled as a modern card */
+.review-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #f0f0f0;
+  position: relative;
+}
+
+.review-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Review card header with user info and rating */
+.review-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+/* User information area */
+.review-user-info {
+  display: flex;
+  align-items: center;
+}
+
+.review-user-avatar {
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.review-user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-username {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 3px 0;
+}
+
+.review-date {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* Rating container on the right */
+.review-rating-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.review-product-id {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+/* Review content */
+.review-content {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.review-comment {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #334155;
+  margin: 0;
+}
+
+/* Reply section */
+.review-reply-container {
+  margin-bottom: 15px;
+}
+
+.reply-section {
+  transition: all 0.3s ease;
+}
+
+.reply-section.has-reply {
+  background-color: #f8fafc;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.existing-reply {
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.reply-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.reply-icon {
+  font-size: 1.2rem;
+  margin-right: 8px;
+  color: #3b82f6;
+}
+
+.reply-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.reply-text {
+  font-size: 0.95rem;
+  color: #475569;
+  margin: 0 0 15px 0;
+  line-height: 1.5;
+}
+
+/* Reply editor */
+.reply-editor {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.reply-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #334155;
+  margin-bottom: 8px;
+}
+
+.reply-textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  resize: vertical;
+  margin-bottom: 12px;
+}
+
+.reply-textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+/* Reply buttons container */
+.reply-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+/* Button common styling */
+.btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.btn-icon {
+  margin-right: 6px;
+  font-size: 0.9rem;
+}
+
+/* Specific button colors */
+.btn-reply {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.btn-edit {
+  background-color: #6366f1;
+  color: white;
+}
+
+.btn-save {
+  background-color: #10b981;
+  color: white;
+}
+
+.btn-cancel {
+  background-color: #ef4444;
+  color: white;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Status badge */
+.review-status {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.status-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+.status-replied {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.status-pending {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+/* Pagination controls */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 35px;
+  gap: 15px;
+}
+
+.pagination-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-icon {
+  font-size: 1rem;
+}
+
+.prev .pagination-icon {
+  margin-right: 5px;
+}
+
+.next .pagination-icon {
+  margin-left: 5px;
+}
+
+.pagination-info {
+  display: flex;
+  align-items: baseline;
+  color: #475569;
+}
+
+.current-page {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.page-divider {
+  margin: 0 5px;
+  font-size: 0.9rem;
+}
+
+.total-pages {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .reviews-container {
+    width: 95%;
+    padding: 20px;
   }
   
-  /* Title styling */
-  .reviews-title {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
+  .reviews-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
   }
   
-  /* No reviews message */
-  .no-reviews {
-    text-align: center;
-    color: #888;
-    font-size: 1.2rem;
-    margin-top: 20px;
+  .review-card-header {
+    flex-direction: column;
+    gap: 15px;
   }
   
-  /* Each review is now styled as a small tab */
-  .review-tab {
-    border-bottom: 1px solid #ddd;
-    padding: 10px 0;
-    margin: 0;
-  }
-  
-  /* Header area for compact product and rating display */
-  .review-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.95rem;
-    margin-bottom: 5px;
-  }
-  
-  /* Styling for review details */
-  .review-details {
-    font-size: 0.85rem;
-    margin-bottom: 10px;
-  }
-  
-  .review-details p {
-    margin: 3px 0;
-  }
-  
-  /* Bold labels for details */
-  .label {
-    font-weight: bold;
-    color: #555;
-  }
-  
-  /* Reply section styles */
-  .reply-section {
-    margin-top: 5px;
-  }
-  
-  .existing-reply p {
-    margin: 5px 0;
-    font-size: 0.85rem;
-  }
-  
-  /* Reply editor styling */
-  .reply-editor {
-    margin-top: 5px;
-  }
-  
-  .reply-textarea {
+  .review-rating-container {
+    align-items: flex-start;
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    font-family: inherit;
-    font-size: 0.85rem;
   }
   
-  /* Reply buttons container */
-  .reply-buttons {
-    margin-top: 5px;
-    display: flex;
-    gap: 8px;
+  .review-user-info {
+    width: 100%;
   }
   
-  /* Button common styling */
-  .btn {
-    padding: 5px 10px;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 0.8rem;
+  .pagination {
+    flex-wrap: wrap;
   }
-  
-  /* Specific button colors */
-  .btn-reply {
-    background-color: #28a745;
-    color: white;
-  }
-  
-  .btn-edit {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  .btn-save {
-    background-color: #28a745;
-    color: white;
-  }
-  
-  .btn-cancel {
-    background-color: #dc3545;
-    color: white;
-  }
-  
+}
