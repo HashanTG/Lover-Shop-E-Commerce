@@ -9,6 +9,13 @@
   font-family: "Arial", sans-serif;
 }
 
+
+.error-message {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+}
+
   .auth_form{
     place-self: center;
     width: max(23vw,330px);
