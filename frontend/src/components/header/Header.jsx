@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../context/AuthContext";
-import "./header.css";
+import "./Header.css";
 import CartIndicatorCard from "../../components/shared/CartIndicator/CartIndicatorCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faUserCircle } from "@fortawesome/free-solid-svg-icons";
@@ -8,6 +8,9 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+
+  const [menu, setMenu] = useState("home");
+
 
   const [profileMenuVisible, setProfileMenuVisible] = useState(false);
 
@@ -54,9 +57,9 @@ const Header = () => {
       </div>
       <nav className="nav">
         <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/products">Product</Link></li>
-          <li><Link to="/contactus">Contact US</Link></li>
+          <li><Link to="/" onClick={()=> setMenu("home")} className={menu== "home"?"active":""}>Home</Link></li>
+          <li><Link to="/products" onClick={()=> setMenu("products")} className={menu== "products"?"active":""} >Product</Link></li>
+          <li><Link to="/contactus" onClick={()=> setMenu("contactus")} className={menu== "contactus"?"active":""}>Contact US</Link></li>
         </ul>
       </nav>
       <div className="icons">
@@ -80,7 +83,7 @@ const Header = () => {
                   <hr />
                   <ul>
                     <li><Link to="/account">Account</Link></li>
-                    <li><a href="#help-center">Help Center</a></li>
+                    <li><a href="/support_Page">Help Center</a></li>
                   </ul>
                 </>
               ) : (

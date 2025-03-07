@@ -45,7 +45,7 @@ public class ReviewController {
         review.setUserId(userId);
 
         // Check if the user has already posted a review for the given product
-        boolean reviewExists = reviewService.existsByUserIdAndProductId(userId, review.getProductId());
+        boolean reviewExists = reviewService.existsByUserIdAndProductIdAndOrderId(userId, review.getProductId(), review.getOrderId());
 
         if (reviewExists) {
             // Return a conflict response if the user has already reviewed the product

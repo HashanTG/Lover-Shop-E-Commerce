@@ -1,115 +1,628 @@
+/* OrderCard.css - Modern UI */
+
+:root {
+  --primary: #4f46e5;
+  --primary-light: #e0e7ff;
+  --primary-dark: #4338ca;
+  --success: #10b981;
+  --success-light: #d1fae5;
+  --warning: #f59e0b;
+  --warning-light: #fef3c7;
+  --danger: #ef4444;
+  --danger-light: #fee2e2;
+  --info: #3b82f6;
+  --info-light: #dbeafe;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --transition: all 0.2s ease;
+}
+
 .ocard-dashboard {
-  padding: 20px;
-  background-color: #f4f5f7;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  color: var(--gray-800);
 }
 
 .ocard-main-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.ocard-orders-section {
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  background-color: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 24px;
 }
 
 .ocard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.ocard-title-area {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .ocard-header h3 {
-  font-size: 24px;
-  font-weight: 600;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  letter-spacing: -0.025em;
+}
+
+.refresh-btn {
+  background-color: white;
+  color: var(--primary);
+  border: 2px solid var(--primary-light);
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.refresh-btn:hover {
+  background-color: var(--primary-light);
+  border-color: var(--primary);
+}
+
+.refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.refresh-btn:before {
+  content: "↻";
+  font-size: 14px;
 }
 
 .ocard-orders-list {
   width: 100%;
-  border-collapse: collapse;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
 }
 
 .ocard-row {
-  display: flex;
-  border-bottom: 1px solid #ddd;
+  display: grid;
+  grid-template-columns: 0.8fr 2fr 1fr 1.2fr 1fr 0.6fr;
+  transition: var(--transition);
+}
+
+.ocard-row:not(.header-row):hover {
+  background-color: var(--gray-50);
+}
+
+.ocard-row:not(:last-child) {
+  border-bottom: 1px solid var(--gray-200);
 }
 
 .header-row {
-  background-color: #fafbfc;
-  color: #333;
+  background-color: var(--gray-100);
   font-weight: 600;
+  color: var(--gray-600);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .ocard-cell {
-  padding: 15px;
-  text-align: left;
-  font-size: 14px;
-  color: #555;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.ocard-row.no-orders .ocard-cell {
-  text-align: center;
+.header-row .ocard-cell {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.ocard-row:nth-child(even) {
-  background-color: #f9f9f9;
+.ocard-id {
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.ocard-items {
+  font-size: 0.875rem;
 }
 
 .ocard-item {
+  margin-bottom: 10px;
   display: flex;
-  justify-content: space-between;
-  gap: 15px;
-  padding: 5px 0;
+  flex-direction: column;
+  background-color: var(--gray-50);
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
 }
 
-.ocard-item div {
-  width: 33%; /* To divide the space evenly */
+.ocard-item:hover {
+  background-color: var(--gray-100);
 }
 
-.ocard-payment-status {
-  font-weight: bold;
-  color: #333;
+.ocard-item:last-child {
+  margin-bottom: 0;
+}
+
+.product-id {
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.product-details {
+  font-size: 0.8rem;
+  color: var(--gray-600);
+  margin-top: 4px;
+}
+
+.ocard-total {
+  font-weight: 700;
+  color: var(--gray-900);
+  font-size: 1rem;
+}
+
+.ocard-payment {
+  font-size: 0.875rem;
+}
+
+.payment-status {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.payment-status.paid {
+  background-color: var(--success-light);
+  color: var(--success);
+}
+
+.payment-status.pending {
+  background-color: var(--warning-light);
+  color: var(--warning);
+}
+
+.payment-status.failed {
+  background-color: var(--danger-light);
+  color: var(--danger);
 }
 
 .ocard-status-dropdown {
-  width: 150px;
+  padding: 9px 12px;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-md);
+  background-color: white;
+  font-size: 0.875rem;
+  width: 100%;
+  max-width: 140px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  transition: var(--transition);
 }
 
-.ocard-shipping-info {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.ocard-status-dropdown:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
 }
 
-.ocard-shipping-info div {
-  display: flex;
-  justify-content: space-between;
+.status-pending {
+  background-color: var(--warning-light);
+  border-color: var(--warning);
+  color: var(--warning);
+  font-weight: 500;
+}
+
+.status-confirmed {
+  background-color: var(--info-light);
+  border-color: var(--info);
+  color: var(--info);
+  font-weight: 500;
+}
+
+.status-shipped {
+  background-color: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.status-delivered {
+  background-color: var(--success-light);
+  border-color: var(--success);
+  color: var(--success);
+  font-weight: 500;
+}
+
+.status-cancelled {
+  background-color: var(--danger-light);
+  border-color: var(--danger);
+  color: var(--danger);
+  font-weight: 500;
+}
+
+.view-details-btn {
+  background-color: white;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  width: 100%;
+  max-width: 80px;
+}
+
+.view-details-btn:hover {
+  background-color: var(--primary);
+  color: white;
 }
 
 .ocard-pagination-controls {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 28px;
+  gap: 16px;
 }
 
 .ocard-pagination-btn {
-  padding: 10px 15px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  padding: 10px 18px;
+  background-color: white;
+  color: var(--primary);
+  border: 1px solid var(--primary-light);
+  border-radius: var(--radius-md);
   cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.ocard-pagination-btn:hover:not(:disabled) {
+  background-color: var(--primary);
+  color: white;
 }
 
 .ocard-pagination-btn:disabled {
-  background-color: #ccc;
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: var(--gray-400);
+  border-color: var(--gray-200);
 }
 
-.ocard-pagination-controls button {
-  margin-right: 10px;
+.page-indicator {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  font-weight: 500;
+  background-color: var(--gray-100);
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+}
+
+.loading-indicator {
+  padding: 40px 0;
+  text-align: center;
+  color: var(--gray-600);
+  font-style: italic;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.loading-indicator:before {
+  content: "";
+  width: 30px;
+  height: 30px;
+  border: 3px solid var(--primary-light);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-message {
+  background-color: var(--danger-light);
+  color: var(--danger);
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.error-message:before {
+  content: "⚠";
+  font-weight: bold;
+}
+
+.empty-message {
+  padding: 40px 0;
+  text-align: center;
+  color: var(--gray-500);
+  font-style: italic;
+  grid-column: span 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.empty-message:before {
+  content: "📋";
+  font-size: 24px;
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 28px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  max-width: 650px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: var(--gray-900);
+  border-bottom: 1px solid var(--gray-200);
+  padding-bottom: 16px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.modal-content p {
+  margin: 10px 0;
+  line-height: 1.6;
+}
+
+.modal-content strong {
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.order-items-list {
+  margin: 14px 0;
+  padding-left: 20px;
+}
+
+.order-items-list li {
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  background-color: var(--gray-50);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  list-style-type: none;
+  position: relative;
+}
+
+.order-items-list li:before {
+  content: "•";
+  position: absolute;
+  left: -15px;
+  color: var(--primary);
+  font-size: 1.2rem;
+}
+
+.address-details {
+  color: var(--gray-600);
+  margin-left: 12px;
+  line-height: 1.6;
+  background-color: var(--gray-50);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.pending {
+  background-color: var(--warning-light);
+  color: var(--warning);
+}
+
+.status-badge.confirmed {
+  background-color: var(--info-light);
+  color: var(--info);
+}
+
+.status-badge.shipped {
+  background-color: var(--primary-light);
+  color: var(--primary);
+}
+
+.status-badge.delivered {
+  background-color: var(--success-light);
+  color: var(--success);
+}
+
+.status-badge.cancelled {
+  background-color: var(--danger-light);
+  color: var(--danger);
+}
+
+.close-modal-btn {
+  margin-top: 24px;
+  padding: 10px 18px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.close-modal-btn:hover {
+  background-color: var(--primary-dark);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .ocard-row {
+    grid-template-columns: 0.7fr 1.8fr 0.8fr 1fr 0.8fr 0.5fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .ocard-dashboard {
+    padding: 10px;
+  }
+  
+  .ocard-main-content {
+    padding: 18px;
+  }
+  
+  .ocard-row {
+    font-size: 0.85rem;
+  }
+  
+  .header-row .ocard-cell {
+    font-size: 0.75rem;
+  }
+  
+  .ocard-status-dropdown {
+    font-size: 0.8rem;
+    max-width: 100px;
+  }
+  
+  .view-details-btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ocard-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 16px;
+  }
+  
+  .header-row {
+    display: none;
+  }
+  
+  .ocard-cell {
+    padding: 8px 0;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .ocard-cell:before {
+    content: attr(data-label);
+    font-weight: 600;
+    margin-right: 10px;
+    color: var(--gray-600);
+    min-width: 80px;
+  }
+  
+  .ocard-cell.ocard-id:before {
+    content: "Order ID:";
+  }
+  
+  .ocard-cell.ocard-items:before {
+    content: "Products:";
+    align-self: flex-start;
+    margin-top: 8px;
+  }
+  
+  .ocard-cell.ocard-total:before {
+    content: "Total:";
+  }
+  
+  .ocard-cell.ocard-payment:before {
+    content: "Payment:";
+  }
+  
+  .ocard-cell.ocard-status:before {
+    content: "Status:";
+  }
+  
+  .ocard-cell.ocard-actions {
+    margin-top: 10px;
+    justify-content: flex-end;
+  }
+  
+  .ocard-item {
+    margin-bottom: 8px;
+  }
+  
+  .view-details-btn {
+    max-width: 100%;
+  }
 }

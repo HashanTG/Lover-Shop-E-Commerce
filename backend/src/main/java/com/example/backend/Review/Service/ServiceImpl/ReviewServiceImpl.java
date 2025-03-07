@@ -57,8 +57,8 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewRepository.save(review);
     }
 
-    public boolean existsByUserIdAndProductId(String userId, String productId) {
-        return reviewRepository.existsByUserIdAndProductId(userId, productId);
+    public boolean existsByUserIdAndProductIdAndOrderId(String userId, String productId, String orderId) {
+        return reviewRepository.existsByUserIdAndProductIdAndOrderId(userId,productId,orderId);
     }
     
 }

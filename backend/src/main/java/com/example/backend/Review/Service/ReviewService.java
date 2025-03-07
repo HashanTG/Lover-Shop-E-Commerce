@@ -27,6 +27,6 @@ public interface ReviewService {
     Review replyToReview(String reviewId, String reply);
 
     // Check if a review exists for a specific user and product
-    boolean existsByUserIdAndProductId(String userId, String productId);
+    boolean existsByUserIdAndProductIdAndOrderId(String userId, String productId, String orderId);
 }
 

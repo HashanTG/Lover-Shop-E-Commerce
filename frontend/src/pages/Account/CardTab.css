@@ -1,0 +1,352 @@
+.cards {
+    max-width: 800px;
+    width: 100%;
+    padding: 2rem;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    margin-top: 2px;
+  }
+  
+  .cards h2 {
+    font-family: 'Poppins', sans-serif;
+    color: #121212;
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 1.8rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid #E1AFD1;
+    position: relative;
+  }
+  
+  .cards h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 60px;
+    height: 2px;
+    background-color: #7469B6;
+  }
+  
+  .card-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  
+  .card-item {
+    flex: 1 1 300px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    border: 1px solid #e1e1e1;
+  }
+  
+  .card-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-item.primary-card {
+    border: 2px solid #7469B6;
+    background-color: rgba(116, 105, 182, 0.05);
+  }
+  
+  .card-item h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    color: #7469B6;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  
+  .card-item h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 2px;
+    background-color: #E1AFD1;
+  }
+  
+  .card-details p {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 0.7rem;
+    line-height: 1.5;
+  }
+  
+  .edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 1rem;
+  }
+  
+  .edit-form input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    color: #121212;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+  }
+  
+  .edit-form input:focus {
+    outline: none;
+    border-color: #7469B6;
+    box-shadow: 0 0 0 3px rgba(116, 105, 182, 0.15);
+    background-color: #ffffff;
+  }
+  
+  /* Stripe Card Element styling */
+  .edit-form .StripeElement {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+  }
+  
+  .edit-form .StripeElement--focus {
+    outline: none;
+    border-color: #7469B6;
+    box-shadow: 0 0 0 3px rgba(116, 105, 182, 0.15);
+    background-color: #ffffff;
+  }
+  
+  .edit-form .StripeElement--invalid {
+    border-color: #ff4d4d;
+  }
+  
+  .edit-btn,
+  .save-btn,
+  .cancel-btn,
+  .primary-btn,
+  .add-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+    margin-top: 0.8rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .edit-btn {
+    background-color: #7469B6;
+    color: white;
+  }
+  
+  .edit-btn:hover {
+    background-color: #847CB1;
+    transform: translateY(-2px);
+  }
+  
+  .save-btn {
+    background-color: #6c5ce7;
+    color: white;
+  }
+  
+  .save-btn:hover {
+    background-color: #5d4fd6;
+    transform: translateY(-2px);
+  }
+  
+  .cancel-btn {
+    background-color: #ff4d4d;
+    color: white;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #ff3333;
+    transform: translateY(-2px);
+  }
+  
+  .primary-btn {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .primary-btn:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+  }
+  
+  .add-btn {
+    background-color: #E1AFD1;
+    color: #333;
+    width: 100%;
+    padding: 12px;
+    margin-top: 0;
+  }
+  
+  .add-btn:hover {
+    background-color: #d491c0;
+    transform: translateY(-2px);
+  }
+  
+  .edit-btn:disabled,
+  .save-btn:disabled,
+  .cancel-btn:disabled,
+  .primary-btn:disabled,
+  .add-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  /* Responsiveness css */
+  @media (max-width: 950px) {
+    .cards {
+      padding: 1.8rem;
+    }
+    
+    .cards h2 {
+      font-size: 24px;
+      margin-bottom: 1.5rem;
+    }
+    
+    .card-item {
+      padding: 1.3rem;
+    }
+  }
+  
+  @media (max-width: 75px) {
+    .cards {
+      padding: 1.5rem;
+    }
+    
+    .cards h2 {
+      font-size: 22px;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.6rem;
+    }
+    
+    .card-list {
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    
+    .card-item {
+      flex: 1 1 100%;
+      margin-bottom: 0.5rem;
+      padding: 1.2rem;
+    }
+    
+    .card-item h3 {
+      font-size: 17px;
+      margin-bottom: 1rem;
+    }
+    
+    .card-details p {
+      font-size: 14px;
+      margin-bottom: 0.6rem;
+    }
+    
+    .edit-form input,
+    .edit-form .StripeElement {
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+    
+    .edit-btn,
+    .save-btn,
+    .cancel-btn,
+    .primary-btn {
+      padding: 9px 16px;
+      font-size: 13px;
+    }
+    
+    .add-btn {
+      padding: 11px;
+      font-size: 13px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .cards {
+      padding: 1.2rem;
+    }
+    
+    .cards h2 {
+      font-size: 20px;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+    }
+    
+    .card-list {
+      gap: 1rem;
+    }
+    
+    .card-item {
+      padding: 1rem;
+    }
+    
+    .card-item h3 {
+      font-size: 16px;
+      margin-bottom: 0.8rem;
+    }
+    
+    .card-details p {
+      font-size: 13px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .edit-form {
+      gap: 0.6rem;
+    }
+    
+    .edit-form input,
+    .edit-form .StripeElement {
+      padding: 9px 10px;
+      font-size: 13px;
+    }
+    
+    .edit-btn,
+    .save-btn,
+    .cancel-btn,
+    .primary-btn {
+      padding: 8px 12px;
+      font-size: 12px;
+      margin-right: 5px;
+      margin-top: 0.6rem;
+    }
+    
+    .add-btn {
+      padding: 10px;
+      font-size: 12px;
+    }
+    
+    .button-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 0.8rem;
+    }
+    
+    .button-container button {
+      margin-right: 0;
+      flex: 1 0 auto;
+    }
+  }

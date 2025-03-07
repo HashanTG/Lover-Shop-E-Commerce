@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { confirmOrder } from '../../api/orderService';
 import { addReview } from '../../api/reviewService';
 
 import { useAlert } from '../../context/GlobalAlertContext';
 import './OrderModal.css';
 
-const OrderModal = ({ order, onClose }) => {
+const OrderModal = ({ order, onClose, refreshOrders }) => {
   //Alert
   const { showAlert } = useAlert();
 
@@ -18,21 +18,27 @@ const OrderModal = ({ order, onClose }) => {
     }, {})
   );
 
+  useEffect(() => {
+    console.log(order);
+    setIsConfirmed(order?.confirmedByUser || false);
+  }, [order]);
+
   const handleConfirm = async () => {
-    if (isConfirmed){
-        setSwitchReview(true);
-        return ;
-    }; 
-  
+    if (isConfirmed) {
+      setSwitchReview(true);
+      return;
+    }
+
     try {
       await confirmOrder(order.id);
-      showAlert('Order confirmed successfully!');
+      showAlert("Order confirmed successfully!");
       setSwitchReview(true);
+      refreshOrders(); // Refresh orders list in parent component
     } catch (error) {
-      showAlert('Failed to confirm order. Please try again.', 'error');
-      console.error('Order confirmation failed:', error);
+      showAlert("Failed to confirm order. Please try again.", "error");
+      console.error("Order confirmation failed:", error);
     }
-  }
+  };
 
   const handleClose = () => {
     onClose();
@@ -62,6 +68,7 @@ const OrderModal = ({ order, onClose }) => {
   
     const review = {
       productId,
+      orderId: order.id,
       rating: reviewData.rating,
       comment: reviewData.comment,
     };

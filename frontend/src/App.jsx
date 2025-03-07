@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 //Context Import
-import { CartProvider } from './context/CartContext'
-import { AuthProvider } from './context/AuthContext';
-import { ModalProvider } from './context/ModelContext';
-import { UserDetailProvider } from './context/UserDetailContext';
-import { AlertProvider } from './context/GlobalAlertContext';
+import { CartProvider } from "./context/CartContext";
+import { AuthProvider } from "./context/AuthContext";
+import { ModalProvider } from "./context/ModelContext";
+import { UserDetailProvider } from "./context/UserDetailContext";
+import { AlertProvider } from "./context/GlobalAlertContext";
 //CSS Import
-import './App.css';
-import Layout from './Layout';
+import "./App.css";
+import Layout from "./Layout";
 
 //Component Import
+
 import Home from './pages/Home/Home'; // Home page
 import AuthPage from './pages/AuthPage/AuthPage';
 import ProductDetail from './pages/ProductDetail/ProductDetail';
@@ -36,10 +37,12 @@ import TermsCondition from './assets/Footer_Pages/TermsConditions/termsCondition
 
 
 
+
 const App = () => {
-
-
+  
   return (
+
+
     <Router>
       <WishlistProvider>
       <UserDetailProvider>
@@ -93,6 +96,7 @@ const App = () => {
       </UserDetailProvider>
       </WishlistProvider>
     </Router>
+
   );
 };
 

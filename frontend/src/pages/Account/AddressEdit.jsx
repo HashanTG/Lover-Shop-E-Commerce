@@ -1,5 +1,6 @@
 // components/UserDetails.jsx
 import React from 'react';
+import './address.css'
 
 const UserDetails = () => {
   return (

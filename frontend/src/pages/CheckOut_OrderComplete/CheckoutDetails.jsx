@@ -1,31 +1,43 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./CheckoutDetails.css";
-//Component
+// Stripe Imports
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  Elements,
+  CardElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
+// Components
 import OrderProgress from "../../components/OrderProgress/OrderProgress";
 import Spinner from "../../components/Spinner/Spinner";
-//Context
+// Context
 import { CartContext } from "../../context/CartContext";
 import { useUserDetail } from "../../context/UserDetailContext";
-//Api Service
+// API Service
 import { placeOrder } from "../../api/orderService";
 
+// Initialize Stripe with your publishable key
+const stripePromise = loadStripe("pk_test_51Qz9QKR5S1kTqIU94IEEBgnxwtoGGqL1321lJJPVARjTslkOmTjpJpr5Ex51lPlHUGTxQA3MfwTv8d1gmzUouFKW00OvNxc9sl"); // Replace with your Stripe publishable key
+
 const CheckoutDetails = () => {
-  //Navigation
   const navigate = useNavigate();
-  //Context API
-  const { cartItems,removeFromCart } = useContext(CartContext);
+  const { cartItems, removeFromCart } = useContext(CartContext);
   const { userDetail } = useUserDetail();
-  //Loading States
   const [loading, setLoading] = useState(false);
 
-  // Extract fee details from local storage
+  // Stripe hooks
+  const stripe = useStripe();
+  const elements = useElements();
+
+  // Fee details from local storage
   const [fee, setFee] = useState(() => {
     const savedFee = localStorage.getItem("feeDetails");
     return savedFee ? JSON.parse(savedFee) : null;
   });
 
-  // Extract primary address & card
+  // Primary address & card
   const primaryAddress =
     userDetail?.addresses?.find((addr) => addr.primary) ||
     userDetail?.addresses?.[0];
@@ -34,9 +46,12 @@ const CheckoutDetails = () => {
     userDetail?.cardDetails?.[0];
 
   const [selectedAddress, setSelectedAddress] = useState(primaryAddress);
-  const [selectedCard, setSelectedCard] = useState(primaryCard);
+  const [selectedCardId, setSelectedCardId] = useState(
+    primaryCard?.paymentMethodId || "new"
+  ); // Default to primary card
+  const [useNewCard, setUseNewCard] = useState(!primaryCard); // Only true if no primary card exists
 
-  // Form state. Load user details if available
+  // Form state
   const [formData, setFormData] = useState({
     firstName: userDetail?.firstName || "",
     lastName: userDetail?.lastName || "",
@@ -47,12 +62,10 @@ const CheckoutDetails = () => {
     state: primaryAddress?.state || "",
     city: primaryAddress?.city || "",
     zipCode: primaryAddress?.zipCode || "",
-    cardNumber: primaryCard?.cardNumber || "",
-    expiryDate: primaryCard?.expirationDate || "",
-    cvv: primaryCard?.cvv || "",
-    paymentMethod: "credit",
+    paymentMethod: "credit", // Default to credit
   });
-  //Update the Selected Address
+
+  // Update selected address
   useEffect(() => {
     if (selectedAddress) {
       setFormData((prev) => ({
@@ -66,41 +79,56 @@ const CheckoutDetails = () => {
       }));
     }
   }, [selectedAddress]);
-  //Update Selected Card
-  useEffect(() => {
-    if (selectedCard) {
-      setFormData((prev) => ({
-        ...prev,
-        cardNumber: selectedCard.cardNumber,
-        expiryDate: selectedCard.expirationDate,
-        cvv: selectedCard.cvv,
-      }));
-    }
-  }, [selectedCard]);
 
-  //Set the Form Data State
+  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  //Handle the submitting
+  // Handle card selection
+  const handleCardChange = (e) => {
+    const value = e.target.value;
+    setSelectedCardId(value);
+    setUseNewCard(value === "new");
+  };
+
+  // Handle form submission with Stripe
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
-      const payment = {
-        paymentMethod:
-          formData.paymentMethod === "credit" ? "credit_card" : "cod",
-        cardLast4Digits:
-          formData.paymentMethod === "credit"
-            ? selectedCard.cardNumber.slice(-4) // Extract last 4 digits
-            : null,
-        cardExpiry:
-          formData.paymentMethod === "credit"
-            ? selectedCard.expirationDate
-            : null, // Use MM/YY format
-      };
+      let paymentData;
+
+      if (formData.paymentMethod === "credit") {
+        if (!stripe || !elements) {
+          setLoading(false);
+          return; // Stripe.js hasn’t loaded
+        }
+
+        if (useNewCard) {
+          // Create new PaymentMethod with Stripe
+          const { error, paymentMethod } = await stripe.createPaymentMethod({
+            type: "card",
+            card: elements.getElement(CardElement),
+          });
+
+          if (error) {
+            console.error("Stripe error:", error);
+            alert(error.message);
+            setLoading(false);
+            return;
+          }
+
+          paymentData = { paymentMethodId: paymentMethod.id ,paymentMethod: "card"};
+        } else {
+          // Use selected saved card
+          paymentData = { paymentMethodId: selectedCardId,paymentMethod: "card" };
+        }
+      } else {
+        paymentData = { paymentMethod: "cod" }; // Cash on Delivery
+      }
 
       const reciever = {
         recieverFirstName: formData.firstName,
@@ -114,21 +142,26 @@ const CheckoutDetails = () => {
         zipCode: formData.zipCode,
         country: formData.country,
         phone: formData.phoneNumber,
-      }
+      };
+
       const orderData = await placeOrder(
         cartItems,
         fee?.total,
         reciverAdrress,
-        payment,
+        paymentData,
         reciever
       );
 
       for (const item of cartItems) {
         await removeFromCart(item.productId, item.variation);
       }
+      console.log("Order placed successfully:", orderData);
       navigate("/order-complete", { state: { orderData } });
     } catch (error) {
       console.error("Order placement failed:", error);
+      alert("Failed to place order. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -196,49 +229,43 @@ const CheckoutDetails = () => {
               ))}
             </select>
 
-            {/* Address Details Inputs */}
-
-  <div className="address-details">
-    <label>Street Address</label>
-    <input
-      type="text"
-      name="streetAddress"
-      value={formData.streetAddress || ""}
-      onChange={handleInputChange}
-    />
-
-    <label>Country</label>
-    <input
-      type="text"
-      name="country"
-      value={formData.country || ""}
-      onChange={handleInputChange}
-    />
-
-    <label>State</label>
-    <input
-      type="text"
-      name="state"
-      value={formData.state || ""}
-      onChange={handleInputChange}
-    />
-
-    <label>City</label>
-    <input
-      type="text"
-      name="city"
-      value={formData.city || ""}
-      onChange={handleInputChange}
-    />
-
-    <label>Zip Code</label>
-    <input
-      type="text"
-      name="zipCode"
-      value={formData.zipCode || ""}
-      onChange={handleInputChange}
-    />
-  </div>
+            <div className="address-details">
+              <label>Street Address</label>
+              <input
+                type="text"
+                name="streetAddress"
+                value={formData.streetAddress || ""}
+                onChange={handleInputChange}
+              />
+              <label>Country</label>
+              <input
+                type="text"
+                name="country"
+                value={formData.country || ""}
+                onChange={handleInputChange}
+              />
+              <label>State</label>
+              <input
+                type="text"
+                name="state"
+                value={formData.state || ""}
+                onChange={handleInputChange}
+              />
+              <label>City</label>
+              <input
+                type="text"
+                name="city"
+                value={formData.city || ""}
+                onChange={handleInputChange}
+              />
+              <label>Zip Code</label>
+              <input
+                type="text"
+                name="zipCode"
+                value={formData.zipCode || ""}
+                onChange={handleInputChange}
+              />
+            </div>
           </section>
 
           {/* Payment Method */}
@@ -270,64 +297,73 @@ const CheckoutDetails = () => {
             {formData.paymentMethod === "credit" && (
               <>
                 <h4>Select Card</h4>
-                <select
-                  onChange={(e) =>
-                    setSelectedCard(
-                      userDetail?.cardDetails?.find(
-                        (card) => card.cardNumber === e.target.value
-                      )
-                    )
-                  }
-                >
+                <select value={selectedCardId} onChange={handleCardChange}>
                   {userDetail?.cardDetails?.map((card, index) => (
-                    <option key={index} value={card.cardNumber}>
-                      **** **** **** {card.cardNumber.slice(-4)}
+                    <option key={index} value={card.paymentMethodId}>
+                      {card.brand.toUpperCase()} **** **** ****{" "}
+                      {card.last4 || "N/A"} (Expires:{" "}
+                      {card.expirationDate || "N/A"})
+                      {card.isPrimary ? " (Primary)" : ""}
                     </option>
                   ))}
+                  <option value="new">Add New Card</option>
                 </select>
-{/* 
-                <div className="card-details">
-                  <div className="input-group">
-                    <label htmlFor="cardNumber">Card Number</label>
-                    <input
-                      type="text"
-                      id="cardNumber"
-                      name="cardNumber"
-                      value={formData.cardNumber}
-                      onChange={handleInputChange}
-                      required
+
+                {!useNewCard && (
+                  <div className="card-preview">
+                    <p>
+                      Selected Card:{" "}
+                      {userDetail?.cardDetails
+                        ?.find(
+                          (card) => card.paymentMethodId === selectedCardId
+                        )
+                        ?.brand.toUpperCase() || "N/A"}{" "}
+                      **** **** ****{" "}
+                      {userDetail?.cardDetails?.find(
+                        (card) => card.paymentMethodId === selectedCardId
+                      )?.last4 || "N/A"}
+                    </p>
+                    <p>
+                      Expires:{" "}
+                      {userDetail?.cardDetails?.find(
+                        (card) => card.paymentMethodId === selectedCardId
+                      )?.expirationDate || "N/A"}
+                    </p>
+                    <p>
+                      Cardholder:{" "}
+                      {userDetail?.cardDetails?.find(
+                        (card) => card.paymentMethodId === selectedCardId
+                      )?.cardHolderName || "N/A"}
+                    </p>
+                  </div>
+                )}
+
+                {useNewCard && (
+                  <div className="card-details">
+                    <h4>Enter New Card Details</h4>
+                    <CardElement
+                      options={{
+                        style: {
+                          base: {
+                            fontSize: "16px",
+                            color: "#424770",
+                            "::placeholder": { color: "#aab7c4" },
+                          },
+                          invalid: { color: "#9e2146" },
+                        },
+                      }}
                     />
                   </div>
-                  <div className="form-row">
-                    <div className="input-group">
-                      <label htmlFor="expiryDate">Expiry Date</label>
-                      <input
-                        type="text"
-                        id="expiryDate"
-                        name="expiryDate"
-                        value={formData.expiryDate}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                    <div className="input-group">
-                      <label htmlFor="cvv">CVV</label>
-                      <input
-                        type="text"
-                        id="cvv"
-                        name="cvv"
-                        value={formData.cvv}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                  </div>
-                </div> */}
+                )}
               </>
             )}
           </section>
 
-          <button type="submit" className="place-order-btn">
+          <button
+            type="submit"
+            className="place-order-btn"
+            disabled={loading || !stripe}
+          >
             {loading ? <Spinner size="20px" /> : "Place Order"}
           </button>
         </form>
@@ -372,4 +408,11 @@ const CheckoutDetails = () => {
   );
 };
 
-export default CheckoutDetails;
+// Wrap the component with Stripe Elements
+const CheckoutDetailsWithStripe = (props) => (
+  <Elements stripe={stripePromise}>
+    <CheckoutDetails {...props} />
+  </Elements>
+);
+
+export default CheckoutDetailsWithStripe;
