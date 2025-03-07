@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.HttpStatus;
 
 import com.example.backend.Auth.UtilSecurity.SecurityUtil;
@@ -38,6 +39,7 @@ public class ReviewController {
     
 
     // Add a new review
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<Review> addReview(@RequestBody Review review) {
         String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically from SecurityContext
@@ -73,6 +75,7 @@ public class ReviewController {
     }
 
     // Admin reply to a review
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}/reply")
     public ResponseEntity<Review> replyToReview(
             @PathVariable String id,

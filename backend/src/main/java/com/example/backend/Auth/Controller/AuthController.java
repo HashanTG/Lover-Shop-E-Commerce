@@ -13,12 +13,12 @@ import jakarta.servlet.http.Cookie;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 
-
 import com.example.backend.Auth.Enums.Role;
 import com.example.backend.Auth.UtilSecurity.SecurityUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.Optional;
 import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -30,7 +30,6 @@ public class AuthController {
 
     @Autowired
     private JwtUtil jwtUtil;
-
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody User user, HttpServletResponse response) {
@@ -109,7 +108,8 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletResponse response) {
-        // Create a cookie with the same name as your JWT cookie, set it to expire immediately
+        // Create a cookie with the same name as your JWT cookie, set it to expire
+        // immediately
         ResponseCookie cookie = ResponseCookie.from("jwt", "")
                 .path("/")
                 .httpOnly(true)
@@ -121,6 +121,13 @@ public class AuthController {
 
         return ResponseEntity.ok("Logout successful");
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/role-status")
+    public ResponseEntity<String> checkUserRole() {
+        return ResponseEntity.ok("ADMIN");
+    }
+    
 
     // Endpoint to assign a role to a user
     @PreAuthorize("hasRole('ADMIN')")

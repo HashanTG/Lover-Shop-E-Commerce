@@ -35,7 +35,7 @@ export const loginUser = async (data) => {
 //Check Authentication status
 export const checkAuthStatus = async () => {
   try {
-    const response = await axios.get("http://localhost:8080/api/auth/status", {
+    const response = await axios.get(`${URL}/status`, {
       withCredentials: true,
     });
     if (response.status === 200 && response.data === "Authenticated") {
@@ -60,5 +60,22 @@ export const logoutUser = async () => {
     throw (
       error.response?.data || { message: "An error occurred during logout." }
     );
+  }
+};
+
+//Check For admin
+
+export const checkAdmin = async (token) => {
+  try {
+    const response = await axios.get(`${URL}/role-status`, {withCredentials: true});
+
+    // Assuming the response contains a 'role' field that tells us if the user is an admin
+    if (response.data === "ADMIN") {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error("Error checking admin status:", error);
+    return false;
   }
 };

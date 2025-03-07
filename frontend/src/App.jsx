@@ -36,6 +36,7 @@ import TermsCondition from "./assets/Footer_Pages/TermsConditions/termsCondition
 
 import ProtectedRoute from "./ProtectedRoute";
 import NotFound from "./NotFound";
+import ProtectedAdminRoute from "./ProtectedAdminRoute";
 
 const App = () => {
   return (
@@ -113,9 +114,9 @@ const App = () => {
                       <Route
                         path="/admin"
                         element={
-                          <ProtectedRoute>
+                          <ProtectedAdminRoute>
                             <Pannel />
-                          </ProtectedRoute>
+                          </ProtectedAdminRoute>
                         }
                       />
 

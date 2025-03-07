@@ -63,27 +63,7 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
-    // Add a new product
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping
-    public Product addProduct(@RequestBody Product product) {
-        return productService.addProduct(product);
-    }
-
-    // Update an existing product
-    @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{id}")
-    public Product updaProduct(@PathVariable String id, @RequestBody Product product) {
-        return productService.updaProduct(id, product);
-    }
-
-    // Delete a product by ID
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable String id) {
-        productService.deleteProduct(id);
-    }
-
+    
     // Filter of recieving Products
     @GetMapping("/filter")
     public Page<Product> filterProducts(
@@ -122,8 +102,30 @@ public class ProductController {
         productService.reduceProductStock(id, variationType, variationValue, quantity);
     }
 
-    // AWS URL generation
+    // Add a new product
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping
+    public Product addProduct(@RequestBody Product product) {
+        return productService.addProduct(product);
+    }
 
+    // Update an existing product
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
+    public Product updaProduct(@PathVariable String id, @RequestBody Product product) {
+        return productService.updaProduct(id, product);
+    }
+
+    // Delete a product by ID
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public void deleteProduct(@PathVariable String id) {
+        productService.deleteProduct(id);
+    }
+
+
+    // AWS URL generation
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/generate-presigned-url")
     public URL generatePresignedUrl(@RequestParam String fileName) {
         S3Presigner presigner = S3Presigner.create();

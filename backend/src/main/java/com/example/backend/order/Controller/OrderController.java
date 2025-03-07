@@ -8,6 +8,7 @@ import com.example.backend.Auth.UtilSecurity.SecurityUtil;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +44,7 @@ public class OrderController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<Order>> getAllOrders(
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
@@ -67,6 +69,8 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getAllOrders(pageable));
     }
 
+    // Get Orders by User
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/user")
     public ResponseEntity<Page<Order>> getOrdersByUser( // Fetch user ID dynamically from SecurityContext
             @RequestParam(defaultValue = "0") int page,
@@ -80,6 +84,7 @@ public class OrderController {
     }
 
     // Create A Order
+    @PreAuthorize("hasRole('USER')")
     @PostMapping
     public ResponseEntity<?> createOrder(@RequestBody Order order) {
         String userId = SecurityUtil.getCurrentUserId(); // Fetch user ID dynamically
@@ -111,6 +116,7 @@ public class OrderController {
     
 
     // Get order by Id
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable String id) {
         Optional<Order> order = orderService.getOrderById(id);
@@ -128,6 +134,8 @@ public class OrderController {
         return ResponseEntity.ok(updatedOrder);
     }
 
+    //Confirm Delivery
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("/{id}/confirm")
     public ResponseEntity<Order> confirmDelivery(@PathVariable String id) {
         Order updatedOrder = orderService.confirmDelivery(id);
