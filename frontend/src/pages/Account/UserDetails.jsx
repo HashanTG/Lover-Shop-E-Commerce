@@ -67,7 +67,8 @@ const UserDetails = () => {
           <input
             type="text"
             name="firstName"
-            value={editableUser.firstName || "Not Set"}
+            value={editableUser.firstName}
+            placeholder="Not Set"
             readOnly={!isEditing}
             onChange={handleInputChange}
           />
@@ -77,7 +78,8 @@ const UserDetails = () => {
           <input
             type="text"
             name="lastName"
-            value={editableUser.lastName || "Not Set"}
+            value={editableUser.lastName}
+            placeholder="Not Set"
             readOnly={!isEditing}
             onChange={handleInputChange}
           />
@@ -87,7 +89,8 @@ const UserDetails = () => {
           <input
             type="text"
             name="phoneNo"
-            value={editableUser.phoneNumber || "Not Set"}
+            value={editableUser.phoneNumber}
+            placeholder="Not Set"
             readOnly={!isEditing}
             onChange={handleInputChange}
           />

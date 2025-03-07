@@ -42,6 +42,9 @@ public class UserDetailService {
             if (updatedUserDetail.getLastName() != null) {
                 existingUserDetail.setLastName(updatedUserDetail.getLastName());
             }
+            if (updatedUserDetail.getPhoneNo() != null) {
+                existingUserDetail.setPhoneNo(updatedUserDetail.getPhoneNo());
+            }
             if (updatedUserDetail.getAddresses() != null) {
                 existingUserDetail.setAddresses(updatedUserDetail.getAddresses());
             }
